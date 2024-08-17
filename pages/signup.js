@@ -47,7 +47,7 @@ const Signup = () => {
           <h2 className="text-center text-3xl font-bold text-white">
             Create an account
           </h2>
-          <div className="bg-white p-8 shadow rounded-lg mt-4">
+          <div className="bg-white/10 backdrop-blur-lg p-8 shadow-lg rounded-lg mt-4">
             {error && (
               <div className="mb-4 text-red-500 text-sm text-center">
                 {error}
@@ -57,7 +57,7 @@ const Signup = () => {
               <div>
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white"
                 >
                   Username
                 </label>
@@ -69,14 +69,14 @@ const Signup = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white/20 text-white placeholder-white/50"
                   />
                 </div>
               </div>
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white"
                 >
                   Email
                 </label>
@@ -88,14 +88,14 @@ const Signup = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white/20 text-white placeholder-white/50"
                   />
                 </div>
               </div>
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-white"
                 >
                   Password
                 </label>
@@ -107,7 +107,7 @@ const Signup = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm bg-white/20 text-white placeholder-white/50"
                   />
                 </div>
               </div>
@@ -115,13 +115,22 @@ const Signup = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200 ease-in-out"
                 >
                   Create account
                 </button>
               </div>
             </form>
           </div>
+          <p className="mt-6 text-center text-sm text-white">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-semibold leading-6 text-blue-400 hover:text-blue-300 transition duration-200"
+            >
+              Log in
+            </Link>
+          </p>
         </div>
       </div>
       <Footer />

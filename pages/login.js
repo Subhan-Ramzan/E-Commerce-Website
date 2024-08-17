@@ -1,4 +1,3 @@
-//pages/login.js
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { signIn, useSession } from "next-auth/react";
@@ -24,7 +23,6 @@ const Login = () => {
     e.preventDefault();
     setError("");
 
-    // Fix: Correct method to handle credentials login with NextAuth
     const res = await signIn("credentials", {
       redirect: false,
       email,
@@ -43,14 +41,42 @@ const Login = () => {
   };
 
   if (sessionStatus === "loading") {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
+        <div className="text-center">
+          <svg
+            className="animate-spin h-10 w-10 text-white mx-auto"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zM12 20a8 8 0 008-8h4c0 6.627-5.373 12-12 12v-4z"
+            ></path>
+          </svg>
+          <p className="mt-4 text-white text-lg font-semibold">
+            Loading, please wait...
+          </p>
+        </div>
+      </div>
+    );
   }
 
   return (
     sessionStatus !== "authenticated" && (
       <>
         <Navbar />
-        <div className="text-white min-h-[80vh] inset-0 -z-10 items-center px-5 py-4 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]">
+        <div className="text-white min-h-[80vh] flex flex-col justify-center items-center px-5 py-4 bg-gradient-radial from-black via-[#000] to-[#63e]">
           <div className="flex justify-center items-center text-center py-1">
             <Link href="/">
               <span className="text-white text-3xl font-semibold hover:text-white transition duration-300">
@@ -60,14 +86,14 @@ const Login = () => {
               </span>
             </Link>
           </div>
-          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <h2 className="mt-1 text-center text-2xl font-bold leading-9 tracking-tight text-white">
+          <div className="sm:mx-auto sm:w-full sm:max-w-md md:max-w-lg">
+            <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-white">
               Log in your account
             </h2>
           </div>
-          <div className="flex md:flex-row justify-center md:justify-around w-[90vw] h-[60vh] flex-col md:w-[60vw] mx-auto items-center">
-            <div className=" flex flex-col gap-3 mt-4 md:mt-0">
-              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full items-center justify-center gap- bg-white p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+          <div className="flex flex-col md:flex-row justify-center md:justify-around w-full max-w-[90vw] h-auto md:h-[60vh] items-center mt-6 md:space-x-6">
+            <div className="flex flex-col gap-3 w-full md:w-auto">
+              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
                 <img
                   src="https://www.svgrepo.com/show/512317/github-142.svg"
                   alt="GitHub"
@@ -78,7 +104,7 @@ const Login = () => {
 
               <button
                 onClick={handleGoogleLogin}
-                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full items-center justify-center gap-2 bg-white p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#33398b] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#33398b] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <img
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
@@ -88,7 +114,7 @@ const Login = () => {
                 Continue with Google
               </button>
 
-              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full items-center justify-center gap-2 bg-white p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#000] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
+              <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#000] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
                 <img
                   src="https://www.svgrepo.com/show/512317/github-142.svg"
                   alt="GitHub"
@@ -97,7 +123,7 @@ const Login = () => {
                 Continue with Email
               </button>
             </div>
-            <div className="w-full mt-4 md:mt-0">
+            <div className="w-full md:w-auto mt-4 md:mt-0">
               <div className="mx-auto w-full max-w-sm lg:w-96">
                 <div className="mt-3">
                   <div>
