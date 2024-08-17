@@ -1,4 +1,4 @@
-// Corrected Navbar.jsx
+// Component/Navbar.jsx
 "use client"
 import React, { useState } from 'react';
 import Link from 'next/link';
