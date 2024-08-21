@@ -1,4 +1,3 @@
-//utils/connectDB.js
 import mongoose from 'mongoose';
 
 const connectDB = async () => {
@@ -7,10 +6,8 @@ const connectDB = async () => {
             console.log('Already connected to MongoDB');
             return mongoose.connection.db; // Return database object
         }
-        await mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        // Simplified connection without deprecated options
+        await mongoose.connect(process.env.MONGODB_URI);
         console.log('Connected to MongoDB');
         return mongoose.connection.db; // Return database object
     } catch (error) {
