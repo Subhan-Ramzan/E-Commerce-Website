@@ -1,4 +1,3 @@
-//app/profile/page.js
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaBars } from 'react-icons/fa';
@@ -6,56 +5,81 @@ import FaBar from "../profileBar/fabar"; // Adjust the import if needed
 import ProductData from "../products/page"; // Use ProductData instead of AllProducts
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { FaRegCircleUser } from "react-icons/fa6";
 
 const ProfilePage = () => {
-  const [productTroll, setProductTroll] = useState(false);
-  const [handleFaBar, setHandleFaBar] = useState(false);
+  const [productTroll, setProductTroll] = useState(false); // Toggle for product data
+  const [handleFaBar, setHandleFaBar] = useState(false); // Sidebar toggle
 
-  const toggleFaBar = () => setHandleFaBar(!handleFaBar);
+  const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
 
   const router = useRouter();
-  const { data: session, status: sessionStatus } = useSession();
+  const { data: session, status } = useSession();
+
+  console.log('Profile Data', status);
+  console.log('Session Data:', session);
 
   useEffect(() => {
-    if (sessionStatus === "unauthenticated") {
+    if (status === "unauthenticated") {
       router.push("/login");
     }
-  }, [sessionStatus, router]);
+  }, [status, router]);
 
   return (
-    <>
-      <div className={`max-md:relative flex overflow-auto h-[90vh]`}>
-        <div
-          className={`max-md:absolute max-md:hidden bg-slate-950 w-[25vw] min-h-[90vh] p-4 text-white`}
-        >
-          <div className="flex flex-col justify-center items-center pb-6">
-            <img src="" alt="UserPic" />
-            <h3 className="font-semibold text-2xl">{session?.user?.name || "UserName"}</h3>
-            <p className="font-normal">{session?.user?.role || "UserRole"}</p>
-          </div>
-          <hr />
-          <div>
-            <h3
-              onClick={() => setProductTroll(true)}
-              className="font-medium text-2xl hover:text-blue-700 py-2 cursor-pointer"
-            >
-              All Products
-            </h3>
-          </div>
+    <div className="max-md:relative flex overflow-auto h-[90vh]">
+      {/* Sidebar */}
+      <div
+        className={`max-md:absolute max-md:${handleFaBar ? "block" : "hidden"} bg-slate-950 w-[25vw] min-h-[90vh] p-4 text-white`}
+      >
+        <div className="flex flex-col justify-center items-center pb-6">
+          {status === "authenticated" ? (
+            <Link href="/profile">
+              {session?.user?.image ? (
+                <img
+                  src={session.user.image.url || session.user.image}
+                  alt="User Profile"
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                />
+              ) : (
+                <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
+              )}
+            </Link>
+          ) : (
+            <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
+          )}
+          <h3>
+            {session?.user?.name || session?.user?.email?.split(/(?=\d)/)[0] || "Guest"}
+          </h3>
         </div>
-        <div onClick={toggleFaBar} className='md:hidden p-4'>
-          <FaBars className='text-2xl' />
-        </div>
-        {handleFaBar &&
-          <div className={`flex justify-between fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 ${handleFaBar ? 'translate-x-0' : 'translate-x-full'} bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}>
-            <FaBar toggleFaBar={toggleFaBar} setProductTroll={setProductTroll} />
-          </div>
-        }
-        <div className="flex flex-col w-full overflow-auto">
-          {productTroll && <ProductData />}
+        <hr />
+        <div>
+          <h3
+            onClick={() => setProductTroll(!productTroll)}
+            className="font-medium text-2xl hover:text-blue-700 py-2 cursor-pointer"
+          >
+            All Products
+          </h3>
         </div>
       </div>
-    </>
+
+      {/* Toggle button for sidebar */}
+      <div onClick={toggleFaBar} className="md:hidden p-4">
+        <FaBars className="text-2xl" />
+      </div>
+
+      {/* Sidebar Overlay */}
+      {handleFaBar && (
+        <div className={`fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}>
+          <FaBar toggleFaBar={toggleFaBar} setProductTroll={setProductTroll} />
+        </div>
+      )}
+
+      {/* Product Section */}
+      <div className="flex flex-col w-full overflow-auto">
+        {productTroll && <ProductData />}
+      </div>
+    </div>
   );
 };
 

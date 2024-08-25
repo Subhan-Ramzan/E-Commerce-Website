@@ -8,13 +8,11 @@ connectDB();
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { username, email, password, type } = req.body;
+    const { username, email, password, type, profileImage } = req.body;
 
     try {
       if (type === 'seller') {
-        // Handle signup for Seller
         let seller = await Seller.findOne({ email });
-
         if (seller) {
           return res.status(400).json({ error: "Email already exists" });
         }
@@ -28,15 +26,12 @@ export default async function handler(req, res) {
         });
 
         await seller.save();
-
         res.status(201).json({ message: "Seller created successfully" });
 
       } else if (type === 'user') {
-        // Handle signup for Signup
-        let signup = await Signup.findOne({ 'data.username': username });
-
+        let signup = await Signup.findOne({ 'data.email': email });
         if (signup) {
-          return res.status(400).json({ error: "Username already exists" });
+          return res.status(400).json({ error: "Email already exists" });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -47,11 +42,14 @@ export default async function handler(req, res) {
             username,
             email,
             password: hashedPassword,
+            image: {
+              url: profileImage.url, // Store the single image URL
+              public_id: profileImage.public_id,
+            },
           },
         });
 
         await signup.save();
-
         res.status(201).json({ message: "User created successfully" });
 
       } else {

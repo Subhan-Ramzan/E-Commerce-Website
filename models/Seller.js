@@ -15,6 +15,9 @@ const SellerSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  image: {
+    type: String,  // Store the Cloudinary image URL
+  },
   products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 });
 

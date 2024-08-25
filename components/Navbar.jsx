@@ -9,8 +9,8 @@ import FaBar from './FaBar';
 
 const Navbar = () => {
   const { data: session, status } = useSession();
-  console.log(status);
-  console.log('Session Data:', session);
+  // console.log(status);
+  // console.log('Session Data:', session);
 
   const [handleFaBar, setHandleFaBar] = useState(false);
 
@@ -46,10 +46,24 @@ const Navbar = () => {
 
       <div className='max-md:hidden flex items-center space-x-4 justify-between'>
         <div className='relative flex items-center'>
-          <Link href="/profile">
-            <FaRegCircleUser className='text-2xl md:text-3xl cursor-pointer' />
-          </Link>
+          {status === "authenticated" ? (
+            <Link href="/profile">
+              {session.user.image ? (
+               <img
+               src={session.user.image?.url || session.user.image} 
+               alt="User Profile"
+               className='w-10 h-10 rounded-full object-cover cursor-pointer'/>
+              ) : (
+                <FaRegCircleUser className='text-2xl md:text-3xl cursor-pointer' />
+              )}
+            </Link>
+          ) : (
+            <Link href="/login">
+              <FaRegCircleUser className='text-2xl md:text-3xl cursor-pointer' />
+            </Link>
+          )}
         </div>
+
 
         <Link href="/cart">
           <div className='text-xl md:text-2xl relative cursor-pointer'>
@@ -62,7 +76,7 @@ const Navbar = () => {
 
         {status === "authenticated" ? (
           <>
-            <p>Welcome, {session.user.name ? session.user.name : session.user.email.split(/(?=\d)/)[0]}</p>
+            <p>Welcome, {session.user.name || session.user.email.split(/(?=\d)/)[0]}</p>
             <button onClick={() => signOut()} className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg">Logout</button>
           </>
         ) : (

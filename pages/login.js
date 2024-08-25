@@ -6,6 +6,8 @@ import "@/app/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Link from "next/link";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,6 +18,7 @@ const Login = () => {
 
   useEffect(() => {
     if (sessionStatus === "authenticated") {
+      toast.success("Your Account Was Login!");
       router.push("/profile");
     }
   }, [sessionStatus, router]);
@@ -43,28 +46,54 @@ const Login = () => {
 
   if (sessionStatus === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-purple-500 to-blue-500">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-radial from-black via-[#000] to-[#63e]">
         <div className="text-center">
-          <svg
-            className="animate-spin h-10 w-10 text-white mx-auto"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zM12 20a8 8 0 008-8h4c0 6.627-5.373 12-12 12v-4z"
-            ></path>
-          </svg>
+          <div className="relative w-32 h-32 mx-auto">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg
+                className="animate-spin h-24 w-24 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zM12 20a8 8 0 008-8h4c0 6.627-5.373 12-12 12v-4z"
+                ></path>
+              </svg>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg
+                className="w-24 h-24 absolute animate-ping text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zM12 20a8 8 0 008-8h4c0 6.627-5.373 12-12 12v-4z"
+                ></path>
+              </svg>
+            </div>
+          </div>
           <p className="mt-4 text-white text-lg font-semibold">
             Loading, please wait...
           </p>
@@ -77,6 +106,7 @@ const Login = () => {
     sessionStatus !== "authenticated" && (
       <>
         <Navbar />
+        <ToastContainer />
         <div className="text-white min-h-[80vh] flex flex-col justify-center items-center px-5 py-4 bg-gradient-radial from-black via-[#000] to-[#63e]">
           <div className="flex justify-center items-center text-center py-1">
             <Link href="/">

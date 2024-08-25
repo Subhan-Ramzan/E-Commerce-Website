@@ -1,19 +1,16 @@
-//pages/api/upload.js
 import { cloudinary } from "@/utils/cloudinary";
-import connectDB from "@/utils/connectDB";
 import formidable from "formidable";
 
+// Disable default body parser to handle form data
 export const config = {
   api: {
-    bodyParser: false, // Disable default body parser to handle form data
+    bodyParser: false,
   },
 };
 
 const handler = async (req, res) => {
   if (req.method === 'POST') {
     try {
-      await connectDB();
-
       const form = formidable({ multiples: false });
 
       form.parse(req, async (err, fields, files) => {
@@ -22,7 +19,7 @@ const handler = async (req, res) => {
           return res.status(500).json({ error: 'Failed to parse form' });
         }
 
-        const image = files.image[0];
+        const image = files.image?.[0]; // Access single image
         if (!image) {
           return res.status(400).json({ error: 'No image uploaded' });
         }

@@ -7,6 +7,11 @@ const SignupSchema = new mongoose.Schema({
     username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    image: {
+      url: { type: String, required: true }, // Only store a single image
+      public_id: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+    },
   },
 });
 

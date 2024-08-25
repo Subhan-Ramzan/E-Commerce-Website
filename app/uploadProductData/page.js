@@ -4,6 +4,8 @@ import React, { useState, useContext } from "react";
 import { CgClose } from "react-icons/cg";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { ProductContext } from "@/context/ProductContext";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const UploadProduct = ({ onClose }) => {
   const { addProduct } = useContext(ProductContext);
@@ -42,13 +44,13 @@ const UploadProduct = ({ onClose }) => {
         const result = await response.json();
         if (response.ok) {
           setImageUrl(result.url);
-          alert("Image uploaded successfully!");
+          toast.success("Image uploaded successfully!");
         } else {
-          alert(result.error || "Failed to upload image.");
+          toast.error(result.error || "Failed to upload image.");
         }
       } catch (error) {
         console.error("Error uploading image:", error);
-        alert("Error uploading image. Please try again.");
+        toast.error("Error uploading image. Please try again.");
       }
     }
   };
@@ -75,15 +77,15 @@ const UploadProduct = ({ onClose }) => {
 
       const result = await response.json();
       if (response.ok) {
-        alert(result.message);
+        toast.success(result.message);
         addProduct(result.product);
         onClose(); // Close the modal or perform additional actions
       } else {
-        alert(result.error || "Failed to upload product.");
+        toast.error(result.error || "Failed to upload product.");
       }
     } catch (error) {
       console.error("Error uploading product:", error);
-      alert("Error uploading product. Please try again.");
+      toast.error("Error uploading product. Please try again.");
     }
   };
 
@@ -200,6 +202,7 @@ const UploadProduct = ({ onClose }) => {
           </button>
         </form>
       </div>
+      <ToastContainer />
     </div>
   );
 };
