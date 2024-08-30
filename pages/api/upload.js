@@ -1,3 +1,4 @@
+//pages/api/upload.js
 import { cloudinary } from "@/utils/cloudinary";
 import formidable from "formidable";
 
