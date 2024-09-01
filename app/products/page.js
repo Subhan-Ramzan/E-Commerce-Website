@@ -1,3 +1,4 @@
+//app/products/page.js
 "use client";
 import React, { useState } from "react";
 import Profile from "../profile/page";

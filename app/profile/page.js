@@ -1,3 +1,4 @@
+//app/profile/page.js
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaBars } from 'react-icons/fa';

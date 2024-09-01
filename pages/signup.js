@@ -1,3 +1,4 @@
+//pages/signup.js
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -23,7 +24,7 @@ const Signup = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true); // Start loading animation
-  
+
     try {
       const res = await axios.post("/api/signup", {
         username,
@@ -32,24 +33,32 @@ const Signup = () => {
         type,
         profileImage: imageUrl,
       });
-  
+
       // Assuming response contains a success message or status
       toast.success("Account created successfully!"); // Display success toast
-  
+
       setTimeout(() => {
         router.push("/login");
       }, 300); // Wait for 1 second before redirecting
     } catch (error) {
-      setError(error.response?.data?.error || "An error occurred during signup");
-      toast.error(error.response?.data?.error || "An error occurred during signup"); // Display error toast
-  
+      setError(
+        error.response?.data?.error || "An error occurred during signup"
+      );
+      toast.error(
+        error.response?.data?.error || "An error occurred during signup"
+      ); // Display error toast
+
       setIsSubmitting(false);
     }
   };
 
   const handleFileChange = async (e) => {
     const selectedImage = e.target.files[0];
-    if (selectedImage && selectedImage.type.startsWith("image/") && selectedImage.size <= 5 * 1024 * 1024) {
+    if (
+      selectedImage &&
+      selectedImage.type.startsWith("image/") &&
+      selectedImage.size <= 5 * 1024 * 1024
+    ) {
       const formData = new FormData();
       formData.append("image", selectedImage);
 
@@ -78,7 +87,6 @@ const Signup = () => {
     }
   };
 
-
   return (
     <>
       <Navbar />
@@ -91,14 +99,22 @@ const Signup = () => {
           </span>
         </Link>
         <div className="mt-8 w-full max-w-md">
-          <h2 className="text-center text-3xl font-bold text-white">Create an account</h2>
+          <h2 className="text-center text-3xl font-bold text-white">
+            Create an account
+          </h2>
           <div className="bg-white/10 p-8 shadow-lg rounded-lg mt-4">
-            {error && <div className="mb-4 text-red-500 text-sm text-center">{error}</div>}
+            {error && (
+              <div className="mb-4 text-red-500 text-sm text-center">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col items-center mt-6">
                 <label
                   htmlFor="uploadImageInput"
-                  className={`cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-blue-500 hover:via-green-500 hover:to-purple-500 transition-all duration-500 ease-in-out flex items-center justify-center w-40 h-40 relative shadow-lg hover:shadow-xl transform hover:scale-105 ${image ? "uploaded" : ""}`}
+                  className={`cursor-pointer rounded-full border-2 border-dashed border-gray-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-blue-500 hover:via-green-500 hover:to-purple-500 transition-all duration-500 ease-in-out flex items-center justify-center w-40 h-40 relative shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                    image ? "uploaded" : ""
+                  }`}
                 >
                   {image ? (
                     <img
@@ -109,7 +125,9 @@ const Signup = () => {
                   ) : (
                     <div className="flex flex-col items-center text-white">
                       <FaCloudUploadAlt className="text-6xl mb-2 opacity-80" />
-                      <p className="text-sm font-semibold opacity-90">Upload Profile Image</p>
+                      <p className="text-sm font-semibold opacity-90">
+                        Upload Profile Image
+                      </p>
                     </div>
                   )}
                   <input
@@ -124,7 +142,12 @@ const Signup = () => {
 
               {/* Username Field */}
               <div className="relative group">
-                <label htmlFor="username" className="block text-sm font-medium text-white">Username</label>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-white"
+                >
+                  Username
+                </label>
                 <div className="mt-1">
                   <input
                     id="username"
@@ -140,7 +163,12 @@ const Signup = () => {
 
               {/* Email Field */}
               <div className="relative group">
-                <label htmlFor="email" className="block text-sm font-medium text-white">Email</label>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-white"
+                >
+                  Email
+                </label>
                 <div className="mt-1">
                   <input
                     id="email"
@@ -156,7 +184,12 @@ const Signup = () => {
 
               {/* Password Field */}
               <div className="relative group">
-                <label htmlFor="password" className="block text-sm font-medium text-white">Password</label>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-white"
+                >
+                  Password
+                </label>
                 <div className="mt-1">
                   <input
                     id="password"
@@ -182,7 +215,15 @@ const Signup = () => {
               </div>
             </form>
           </div>
-          <p className="mt-6 text-center text-sm text-white">Already have an account? <Link href="/login">Log in</Link></p>
+          <p className="mt-10 text-center text-sm text-white">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="font-bold leading-6 text-indigo-600 hover:text-indigo-500"
+            >
+              Log in
+            </Link>
+          </p>
         </div>
       </div>
       <Footer />
