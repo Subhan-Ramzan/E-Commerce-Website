@@ -2,6 +2,7 @@
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { ProductContext } from "@/context/ProductContext";
+import Image from "next/image";
 
 const AllProducts = () => {
   const { products, setProducts } = useContext(ProductContext);
@@ -28,13 +29,26 @@ const AllProducts = () => {
           key={index}
           className="max-w-sm rounded overflow-hidden shadow-lg m-3 bg-white"
         >
-           <div className="w-full h-36 md:h-60">
-            <img src={product.images.length > 0 ? product.images[0].url : "/default-image.jpg"} alt={product.name}
-              className="object-cover w-full h-full" />
-          </div>
+          <div className="w-full h-36 md:h-60">
+                     
+            <Image
+              src={
+                product.images.length > 0
+                  ? product.images[0].url
+                  : "/default-image.jpg"
+              }
+              alt={product.name}
+              width={500} // Set an appropriate width (e.g., 500px)
+              height={500} // Set an appropriate height (e.g., 500px)
+              className="object-cover w-full h-full"
+            />
+                     {" "}
+          </div>
           <div className="px-2 md:px-6 py-2 md:py-4">
             <div className="font-bold text-xl mb-2">{product.name}</div>
-            <p className="text-gray-700 text-base overflow-clip h-12">{product.description}</p>
+            <p className="text-gray-700 text-base overflow-clip h-12">
+              {product.description}
+            </p>
             <p className="text-red-700 font-bold text-lg mt-2">
               Rs. {product.price}
             </p>

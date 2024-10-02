@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import "../app/globals.css";
 import Link from "next/link";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import Image from "next/image";
 
 const Signup = () => {
   const [username, setUsername] = useState("");
@@ -117,10 +118,13 @@ const Signup = () => {
                   }`}
                 >
                   {image ? (
-                    <img
+                    <Image
                       src={image}
                       alt="Uploaded Profile"
-                      className="rounded-full object-cover w-full h-full upload-animation"
+                      layout="responsive" // Makes the image responsive
+                      width={100} // Set the width for the image (in pixels)
+                      height={100} // Set the height for the image (in pixels)
+                      className="rounded-full object-cover upload-animation" // Keep the rounded shape
                     />
                   ) : (
                     <div className="flex flex-col items-center text-white">

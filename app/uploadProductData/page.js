@@ -5,6 +5,7 @@ import { CgClose } from "react-icons/cg";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { ProductContext } from "@/context/ProductContext";
 import { ToastContainer, toast } from "react-toastify";
+import Image from "next/image";
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
 
 const UploadProduct = ({ onClose }) => {
@@ -63,7 +64,9 @@ const UploadProduct = ({ onClose }) => {
       category: data.category,
       description: data.description,
       price: data.price,
-      images: imageUrl ? [{ url: imageUrl, public_id: "example_public_id" }] : [], // Replace "example_public_id" if needed
+      images: imageUrl
+        ? [{ url: imageUrl, public_id: "example_public_id" }]
+        : [], // Replace "example_public_id" if needed
     };
 
     try {
@@ -167,13 +170,17 @@ const UploadProduct = ({ onClose }) => {
           </label>
           <div className="h-28">
             {imageUrl && (
-              <img
+              <Image
                 src={imageUrl}
                 alt="Uploaded"
-                className="h-full w-auto inline-block mr-2"
+                layout="responsive" // Makes the image responsive
+                width={100} // Ratio-based width
+                height={100} // Ratio-based height (1:1 aspect ratio)
+                className="inline-block mr-2"
               />
             )}
           </div>
+
           <label htmlFor="description">Description:</label>
           <textarea
             id="description"

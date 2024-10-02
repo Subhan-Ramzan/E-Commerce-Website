@@ -1,3 +1,4 @@
+//components/Navbar.jsx
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -5,14 +6,15 @@ import { FaSearch, FaBars, FaShoppingCart } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useSession, signOut } from "next-auth/react";
 import FaBar from "./FaBar";
+import Image from "next/image";
 
 const Navbar = ({
   productList = [
     "Abaya", "Hijab", "Shawl", "Stole", "Burqa", "Cheddar", "Kaftan",
-    "Kimono", "Jilbab", "Poncho", "Kufi", "Chador", "Poncho", "Kurta", 
+    "Kimono", "Jilbab", "Poncho", "Kufi", "Chador", "Poncho", "Kurta",
     "Shalwar", "Kameez", "Pashmina", "Rida", "Ghutra", "Izaar", "Taqiyah",
-    "Thobe", "Jubbah", "Sari", "Dupatta", "Chunni", "Lungi", "Sarong", 
-    "Kimono", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht", 
+    "Thobe", "Jubbah", "Sari", "Dupatta", "Chunni", "Lungi", "Sarong",
+    "Kimono", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht",
     "Pants", "Trousers", "Blouse", "Cardigan", "Sweater", "Vest", "Wrap",
     "Pareo", "Cover-up", "Sarouel", "Jacket", "Poncho", "Kimono", "Robe"
   ]
@@ -52,7 +54,15 @@ const Navbar = ({
   return (
     <div className="relative flex h-20 md:h-16 w-full bg-slate-900 items-center px-6 py-2 text-white justify-between">
       <Link href="/">
-        <img src="/" alt="logo" className="w-auto h-8 cursor-pointer" />
+        <Image
+          src="/" // Replace with your image source
+          alt="logo"
+          layout="responsive"   // Makes the image responsive
+          width={100}           // Width ratio
+          height={40}           // Height ratio (for example, a 2.5:1 aspect ratio)
+          className="cursor-pointer" // Add any other necessary classes
+        />
+
       </Link>
 
       <div className="hidden md:flex">
@@ -106,10 +116,13 @@ const Navbar = ({
           {status === "authenticated" ? (
             <Link href="/profile">
               {session.user.image ? (
-                <img
+                <Image
                   src={session.user.image?.url || session.user.image}
                   alt="User Profile"
-                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                  layout="responsive"   // Makes the image responsive
+                  width={40}            // Set a width ratio (40px)
+                  height={40}           // Set a height ratio (40px) for a square
+                  className="rounded-full object-cover cursor-pointer" // Styling classes
                 />
               ) : (
                 <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />

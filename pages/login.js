@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import Link from "next/link";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import Image from "next/image";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -124,32 +125,41 @@ const Login = () => {
           </div>
           <div className="flex flex-col md:flex-row justify-center md:justify-around w-full max-w-[90vw] h-auto md:h-[60vh] items-center mt-6 md:space-x-6">
             <div className="flex flex-col gap-3 w-full md:w-auto">
+              {/* Button for GitHub Login */}
               <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#333] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
-                <img
+                <Image
                   src="https://www.svgrepo.com/show/512317/github-142.svg"
                   alt="GitHub"
-                  className="h-[20px] w-[20px]"
+                  width={20} // Set width for the image
+                  height={20} // Set height for the image
+                  className="object-cover" // Maintain aspect ratio
                 />
                 Continue with GitHub
               </button>
 
+              {/* Button for Google Login */}
               <button
                 onClick={handleGoogleLogin}
                 className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#33398b] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                <img
+                <Image
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
                   alt="Google"
-                  className="h-[20px] w-[20px]"
+                  width={20} // Set width for the image
+                  height={20} // Set height for the image
+                  className="object-cover" // Maintain aspect ratio
                 />
                 Continue with Google
               </button>
 
+              {/* Button for Email Login */}
               <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#000] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60">
-                <img
+                <Image
                   src="https://www.svgrepo.com/show/512317/github-142.svg"
-                  alt="GitHub"
-                  className="h-[20px] w-[20px]"
+                  alt="Email"
+                  width={20} // Set width for the image
+                  height={20} // Set height for the image
+                  className="object-cover" // Maintain aspect ratio
                 />
                 Continue with Email
               </button>
