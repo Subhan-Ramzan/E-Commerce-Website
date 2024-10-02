@@ -1,4 +1,4 @@
-//app/allProducts/page.js
+// app/allProducts/page.js
 "use client";
 import React, { useState, useEffect, useContext } from "react";
 import { ProductContext } from "@/context/ProductContext";
@@ -23,14 +23,13 @@ const AllProducts = () => {
   }, [setProducts]);
 
   return (
-    <div className=" grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 py-8 px-1 md:gap-4 md:p-4">
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 py-8 px-1 md:gap-4 md:p-4">
       {products.map((product, index) => (
         <div
           key={index}
           className="max-w-sm rounded overflow-hidden shadow-lg m-3 bg-white"
         >
           <div className="w-full h-36 md:h-60">
-                     
             <Image
               src={
                 product.images.length > 0
@@ -42,7 +41,6 @@ const AllProducts = () => {
               height={500} // Set an appropriate height (e.g., 500px)
               className="object-cover w-full h-full"
             />
-                     {" "}
           </div>
           <div className="px-2 md:px-6 py-2 md:py-4">
             <div className="font-bold text-xl mb-2">{product.name}</div>

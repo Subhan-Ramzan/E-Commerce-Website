@@ -1,4 +1,4 @@
-//components/Navbar.jsx
+// components/Navbar.jsx
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
@@ -8,17 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 import FaBar from "./FaBar";
 import Image from "next/image";
 
-const Navbar = ({
-  productList = [
-    "Abaya", "Hijab", "Shawl", "Stole", "Burqa", "Cheddar", "Kaftan",
-    "Kimono", "Jilbab", "Poncho", "Kufi", "Chador", "Poncho", "Kurta",
-    "Shalwar", "Kameez", "Pashmina", "Rida", "Ghutra", "Izaar", "Taqiyah",
-    "Thobe", "Jubbah", "Sari", "Dupatta", "Chunni", "Lungi", "Sarong",
-    "Kimono", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht",
-    "Pants", "Trousers", "Blouse", "Cardigan", "Sweater", "Vest", "Wrap",
-    "Pareo", "Cover-up", "Sarouel", "Jacket", "Poncho", "Kimono", "Robe"
-  ]
-}) => {
+const Navbar = () => {
   const { data: session, status } = useSession();
   const [handleFaBar, setHandleFaBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -29,41 +19,46 @@ const Navbar = ({
   };
 
   // Handle search functionality
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      try {
-        window.location.href = `/search?query=${encodeURIComponent(searchTerm)}`;
-      } catch (error) {
-        console.error("Error during search:", error);
-      }
+      window.location.href = `/search?query=${encodeURIComponent(searchTerm)}`;
     }
   };
 
   useEffect(() => {
     if (searchTerm === "") {
       setSuggestions([]); // Clear suggestions if input is empty
-    } else if (Array.isArray(productList)) {
+    } else {
+      // List of products for suggestions
+      const productList = [
+        "Abaya", "Hijab", "Shawl", "Stole", "Burqa", "Cheddar", "Kaftan",
+        "Kimono", "Jilbab", "Poncho", "Kufi", "Chador", "Poncho", "Kurta",
+        "Shalwar", "Kameez", "Pashmina", "Rida", "Ghutra", "Izaar", "Taqiyah",
+        "Thobe", "Jubbah", "Sari", "Dupatta", "Chunni", "Lungi", "Sarong",
+        "Kimono", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht",
+        "Pants", "Trousers", "Blouse", "Cardigan", "Sweater", "Vest", "Wrap",
+        "Pareo", "Cover-up", "Sarouel", "Jacket", "Poncho", "Kimono", "Robe"
+      ];
+
       const filteredSuggestions = productList.filter((product) =>
         product.toLowerCase().startsWith(searchTerm.toLowerCase())
       );
       setSuggestions(filteredSuggestions);
     }
-  }, [searchTerm, productList]);
+  }, [searchTerm]);
 
   return (
     <div className="relative flex h-20 md:h-16 w-full bg-slate-900 items-center px-6 py-2 text-white justify-between">
-      <Link href="/">
-        <Image
-          src="/" // Replace with your image source
-          alt="logo"
-          layout="responsive"   // Makes the image responsive
-          width={100}           // Width ratio
-          height={40}           // Height ratio (for example, a 2.5:1 aspect ratio)
-          className="cursor-pointer" // Add any other necessary classes
-        />
-
-      </Link>
+    <Link href="/">
+      <Image
+        src="/favicon.png" // Replace with your actual logo image source
+        alt="logo"
+        width={50} // Adjusted width
+        height={10} // Adjusted height
+        className="cursor-pointer object-cover rounded-full min-sm:w-16 min-sm:h-16 min-md:w-20 min-md:h-20"
+      />
+    </Link>
 
       <div className="hidden md:flex">
         <ul className="list-none flex px-2 lg:px-4 space-x-3 lg:space-x-8">
@@ -100,7 +95,10 @@ const Navbar = ({
             {suggestions.map((suggestion, index) => (
               <li
                 key={index}
-                onClick={() => setSearchTerm(suggestion)}
+                onClick={() => {
+                  setSearchTerm(suggestion);
+                  window.location.href = `/search?query=${encodeURIComponent(suggestion)}`;
+                }}
                 className="p-3 cursor-pointer text-black hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
               >
                 {suggestion}
@@ -108,7 +106,6 @@ const Navbar = ({
             ))}
           </ul>
         )}
-
       </div>
 
       <div className="max-md:hidden flex items-center space-x-4 justify-between">
@@ -117,12 +114,12 @@ const Navbar = ({
             <Link href="/profile">
               {session.user.image ? (
                 <Image
-                  src={session.user.image?.url || session.user.image}
+                  src={session.user.image.url || session.user.image}
                   alt="User Profile"
-                  layout="responsive"   // Makes the image responsive
-                  width={40}            // Set a width ratio (40px)
-                  height={40}           // Set a height ratio (40px) for a square
-                  className="rounded-full object-cover cursor-pointer" // Styling classes
+                  layout="responsive"
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover cursor-pointer"
                 />
               ) : (
                 <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
