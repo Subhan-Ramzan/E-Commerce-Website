@@ -1,9 +1,9 @@
 import Image from 'next/image';
 
 const categories = [
-  { id: 1, name: 'Men', img: '/category-men.jpg' },
-  { id: 2, name: 'Women', img: '/category-women.jpg' },
-  { id: 3, name: 'Kids', img: '/category-kids.jpg' },
+  { id: 1, name: 'Men', img: '/Product/MenCAT.jpeg' },
+  { id: 2, name: 'Women', img: '/Product/WomenCategory.jpeg' },
+  { id: 3, name: 'Kids', img: '/Product/KidsCategory.jpeg' },
 ];
 
 export default function CategorySection() {
@@ -21,8 +21,8 @@ export default function CategorySection() {
               alt={category.name}
               width={500} // Set appropriate width
               height={256} // Set appropriate height
-              layout="responsive" // Ensures responsive image loading
-              objectFit="cover" // Similar to the object-cover class in Tailwind
+              priority // Load images with priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Responsive sizes
             />
             <div className="p-4 text-center">
               <h3 className="text-lg font-semibold">{category.name}</h3>

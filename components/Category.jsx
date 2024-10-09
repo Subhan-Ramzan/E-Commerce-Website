@@ -20,9 +20,9 @@ const Category = () => {
               <Image
                 src={`/${category}.png`} // Adjust the path as necessary
                 alt={category}
-                layout="responsive"       // Makes the image responsive
                 width={100}               // Set width according to your design
                 height={100}              // Set height according to your design
+                style={{ objectFit: 'cover' }}  // Use style for object-fit
                 className='rounded-full'   // Maintain the rounded shape
               />
             </div>

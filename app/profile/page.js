@@ -22,11 +22,11 @@ const ProfilePage = () => {
   console.log("Profile Data", status);
   console.log("Session Data:", session);
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/login");
+  //   }
+  // }, [status, router]);
 
   return (
     <div className="max-md:relative flex overflow-auto h-[90vh]">

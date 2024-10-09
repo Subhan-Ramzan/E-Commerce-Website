@@ -168,15 +168,18 @@ const UploadProduct = ({ onClose }) => {
               </div>
             </div>
           </label>
-          <div className="h-28">
+
+          <div className="flex justify-start mt-2 mb-4">
+            {" "}
+            {/* Added flex for centering */}
             {imageUrl && (
               <Image
                 src={imageUrl}
                 alt="Uploaded"
-                layout="responsive" // Makes the image responsive
-                width={100} // Ratio-based width
-                height={100} // Ratio-based height (1:1 aspect ratio)
-                className="inline-block mr-2"
+                layout="intrinsic" // Use intrinsic for controlled height and width
+                width={100} // Fixed width
+                height={100} // Fixed height (1:1 aspect ratio)
+                className="rounded-lg object-cover" // Added rounded and object-cover for styling
               />
             )}
           </div>
@@ -187,7 +190,7 @@ const UploadProduct = ({ onClose }) => {
             name="description"
             value={data.description}
             onChange={handleOnChange}
-            className="p-2 bg-slate-100 border rounded text-black h-36"
+            className="p-2 bg-slate-100 border rounded text-black h-24 mb-3" // Reduced height for better compactness
             placeholder="Enter product description"
             required
           />
@@ -198,7 +201,7 @@ const UploadProduct = ({ onClose }) => {
             name="price"
             value={data.price}
             onChange={handleOnChange}
-            className="p-2 bg-slate-100 border rounded text-black"
+            className="p-2 bg-slate-100 border rounded text-black mb-3" // Added margin for spacing
             required
           />
           <button

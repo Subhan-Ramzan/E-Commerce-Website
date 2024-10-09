@@ -31,7 +31,7 @@ const CoverImg = () => {
 
   return (
     <div className='container mx-auto px-4 rounded'>
-      <div className='h-56 md:h-[99vh] w-full bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] relative'>
+      <div className='h-60 md:h-[99vh] w-full bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] relative'>
         <div className='absolute z-10 h-full w-full md:flex items-center hidden'>
           <div className='flex justify-between w-full text-2xl'>
             <button onClick={prevImage} className='bg-white shadow-md rounded-full p-1'>
