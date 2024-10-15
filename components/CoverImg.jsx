@@ -52,12 +52,11 @@ const CoverImg = () => {
               style={{ transform: `translateX(-${currentImage * 100}%)` }} // Translate to the current image
             >
               <Image
-                className='h-full w-full object-cover object-scale-down'
+                className='h-full w-full object-cover'
                 src={`/${Cover}.png`} // Adjust path as necessary
                 alt={Cover}
-                layout="fill" // Set layout to fill for responsive behavior
-                objectFit="cover" // Ensure image covers the container
-                style={{ animationDelay: `${index * 100}ms` }} // Delay for animation
+                fill // Replaces the layout="fill" prop
+                style={{ objectFit: 'cover', animationDelay: `${index * 100}ms` }} // Set object-fit via style
               />
             </div>
           ))}
@@ -75,8 +74,8 @@ const CoverImg = () => {
                 src={`/${Cover}.png`} // Adjust path as necessary
                 className='w-full h-full object-cover'
                 alt={Cover}
-                layout="fill" // Set layout to fill for responsive behavior
-                objectFit="cover" // Ensure image covers the container
+                fill // Replaces the layout="fill" prop
+                style={{ objectFit: 'cover' }} // Set object-fit via style
               />
             </div>
           ))}

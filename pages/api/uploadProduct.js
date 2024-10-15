@@ -1,4 +1,3 @@
-//pages/api/uploadProduct.js
 import connectDB from "@/utils/connectDB";
 import Product from "@/models/Product";
 
@@ -7,11 +6,11 @@ export const config = {
     bodyParser: true,
   },
 };
+
 const handler = async (req, res) => {
   if (req.method === 'POST') {
     try {
       await connectDB();
-
       const { images, ...productData } = req.body;
 
       const newProduct = new Product({
@@ -27,13 +26,23 @@ const handler = async (req, res) => {
       });
     } catch (error) {
       console.error('Error uploading product:', error);
-      res.status(500).json({ error: 'Failed to the upload product', details: error.message });
+      res.status(500).json({ error: 'Failed to upload product', details: error.message });
     }
   } else if (req.method === 'GET') {
     try {
       await connectDB();
-      const products = await Product.find({});
-      res.status(200).json(products);
+
+      const { productId } = req.query;
+      if (productId) {
+        const product = await Product.findById(productId); // Fetch single product by ID
+        if (!product) {
+          return res.status(404).json({ error: 'Product not found' });
+        }
+        res.status(200).json(product);
+      } else {
+        const products = await Product.find({}); // Fetch all products
+        res.status(200).json(products);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Failed to fetch products', details: error.message });
@@ -45,4 +54,3 @@ const handler = async (req, res) => {
 };
 
 export default handler;
-
