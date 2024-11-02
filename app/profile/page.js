@@ -79,7 +79,7 @@ const ProfilePage = () => {
       {/* Sidebar Overlay */}
       {handleFaBar && (
         <div
-          className={`fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}
+          className={`fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 z-50 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}
         >
           <FaBar toggleFaBar={toggleFaBar} setProductTroll={setProductTroll} />
         </div>

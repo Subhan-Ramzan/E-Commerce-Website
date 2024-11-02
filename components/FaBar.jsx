@@ -14,8 +14,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-700 text-white shadow-2xl z-[9999] transform transition-transform duration-500 ease-in-out ${handleFaBar ? 'translate-x-0' : 'translate-x-full'
-        }`}
+      className={`fixed top-0 right-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-700 text-white shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${handleFaBar ? 'translate-x-0' : 'translate-x-full'}`}
     >
       {/* Close Icon */}
       <div className="flex justify-end p-4">
@@ -27,12 +26,12 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
 
       {/* Links */}
       <ul className="flex flex-col space-y-6 px-6 mt-4">
-        <li><Link href="/profile" className="hover:underline hover:text-orange-400 transition-colors duration-300">Profile</Link></li>
-        <li><Link href="/" className="hover:underline hover:text-orange-400 transition-colors duration-300">Home</Link></li>
-        <li><Link href="/about" className="hover:underline hover:text-orange-400 transition-colors duration-300">About</Link></li>
-        <li><Link href="/contact" className="hover:underline hover:text-orange-400 transition-colors duration-300">Contact</Link></li>
-        <li><Link href="/logout" className="hover:underline hover:text-orange-400 transition-colors duration-300">Logout</Link></li>
-        <li><Link href="/all-products" className="hover:underline hover:text-orange-400 transition-colors duration-300">All Products</Link></li>
+        <li><Link href="/profile" className="transition-colors duration-300 hover:underline hover:text-orange-400">Profile</Link></li>
+        <li><Link href="/" className="transition-colors duration-300 hover:underline hover:text-orange-400">Home</Link></li>
+        <li><Link href="/about" className="transition-colors duration-300 hover:underline hover:text-orange-400">About</Link></li>
+        <li><Link href="/contact" className="transition-colors duration-300 hover:underline hover:text-orange-400">Contact</Link></li>
+        <li><Link href="/logout" className="transition-colors duration-300 hover:underline hover:text-orange-400">Logout</Link></li>
+        <li><Link href="/all-products" className="transition-colors duration-300 hover:underline hover:text-orange-400">All Products</Link></li>
 
         {/* Category Dropdown */}
         <li>
@@ -41,7 +40,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
             id="category"
             value={selectedCategory}
             onChange={handleOnChange}
-            className="p-2 bg-gray-700 border border-gray-500 rounded text-white focus:outline-none focus:ring focus:ring-orange-500 transition-colors duration-300"
+            className="mt-4 p-2 bg-gray-700 border border-gray-500 rounded text-white focus:outline-none focus:ring focus:ring-orange-500 transition-colors duration-300"
             required
           >
             <option value="">Select Category</option>
