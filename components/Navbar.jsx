@@ -200,7 +200,7 @@ const Navbar = () => {
                   await signOut();
                   await logoutCookies();
                 }}
-                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
               >
                 Logout
               </button>
