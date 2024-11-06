@@ -105,9 +105,10 @@ const Navbar = () => {
           <Image
             src="/favicon.png" // Replace with your actual logo image source
             alt="logo"
-            width={50} // Adjusted width
-            height={10} // Adjusted height
-            className="cursor-pointer object-cover rounded-full min-sm:w-16 min-sm:h-16 min-md:w-20 min-md:h-20"
+            width={50} // Default width for small screens
+            height={50} // Default height for small screens
+            className="cursor-pointer object-cover rounded-full 
+             w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[45px] md:h-[45px]" // Responsive width & height
           />
         </Link>
 
@@ -119,7 +120,7 @@ const Navbar = () => {
             <li className="hover:text-gray-400">
               <Link href="/about" onClick={(e) => {
                 e.preventDefault(); // Prevent default behavior
-                window.open('https://websubhan.vercel.app', '_blank'); // Open the URL in a new tab
+                window.open('https://codewithsubhan.vercel.app', '_blank'); // Open the URL in a new tab
               }}>
                 About
               </Link>
@@ -136,21 +137,27 @@ const Navbar = () => {
 
         {/* Search Bar */}
         <div className="relative">
-          <form onSubmit={handleSearch} className="flex items-center rounded-full overflow-hidden shadow-lg transition-transform duration-300 max-w-md mx-auto">
+          <form
+            onSubmit={handleSearch}
+            className="flex items-center rounded-full overflow-hidden shadow-lg transition-transform duration-300 mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
+          >
             <input
               type="search"
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out"
+              className="w-[18vh] md:w-full px-3 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
             />
             <button
               type="submit"
-              className="bg-blue-600 p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300"
+              className="bg-blue-600 p-1.5 sm:p-2.5 md:p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center w-[38px] h-[38px] md-w-[40px] md:h-[40px] "// Fixed icon button size
             >
-              <FaSearch />
+              <FaSearch className="text-xs sm:text-sm md:text-base" /> {/* Adjusting icon size */}
             </button>
           </form>
+
+
+
 
           {/* Suggestions List */}
           {suggestions.length > 0 && (
@@ -171,13 +178,15 @@ const Navbar = () => {
           )}
         </div>
 
-        <div className="max-md:hidden flex items-center space-x-4 justify-between">
+        <div className="flex items-center space-x-4 justify-between">
+          {/* Profile icon - Always visible */}
           <div className="relative flex items-center">
             <Link href="/profile">
               <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
             </Link>
           </div>
 
+          {/* Cart icon - Always visible */}
           <Link href="/cart">
             <div className="text-xl md:text-2xl relative cursor-pointer">
               <FaShoppingCart />
@@ -187,39 +196,42 @@ const Navbar = () => {
             </div>
           </Link>
 
-          {status === "authenticated" || userData !== null ? (
-            <>
-              <p className="text-white">
-                Welcome,{" "}
-                {session?.user?.name ||
-                  userData.username ||
-                  session?.user?.email?.split(/(?=\d)/)[0]}
-              </p>
-              <button
-                onClick={async () => {
-                  await signOut();
-                  await logoutCookies();
-                }}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <>
-              <Link
-                href="/login"
-                className="text-white hover:text-blue-500 transition-colors duration-300"
-              >
-                Login
-              </Link>
-              <Link href="/signup">
-                <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
-                  Sign up
+          {/* Conditional rendering for login/signup or logout - Hidden on max-md */}
+          <div className="max-md:hidden flex items-center space-x-4">
+            {status === "authenticated" || userData !== null ? (
+              <>
+                <p className="text-white">
+                  Welcome,{" "}
+                  {session?.user?.name ||
+                    userData.username ||
+                    session?.user?.email?.split(/(?=\d)/)[0]}
+                </p>
+                <button
+                  onClick={async () => {
+                    await signOut();
+                    await logoutCookies();
+                  }}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
+                >
+                  Logout
                 </button>
-              </Link>
-            </>
-          )}
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  className="text-white hover:text-blue-500 transition-colors duration-300"
+                >
+                  Login
+                </Link>
+                <Link href="/signup">
+                  <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
+                    Sign up
+                  </button>
+                </Link>
+              </>
+            )}
+          </div>
         </div>
 
         <div onClick={toggleFaBar} className="md:hidden">

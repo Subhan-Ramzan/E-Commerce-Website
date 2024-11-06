@@ -78,39 +78,58 @@ const Signup = () => {
   };
 
   const handleFileChange = async (e) => {
+    console.log('File input change detected');
+    
     const selectedImage = e.target.files[0];
+    console.log('Selected image:', selectedImage);
+  
     if (
       selectedImage &&
       selectedImage.type.startsWith("image/") &&
       selectedImage.size <= 5 * 1024 * 1024
     ) {
+      console.log('Image is valid');
       const formData = new FormData();
       formData.append("image", selectedImage);
-
+      
+      console.log('FormData object after appending image:', formData);
+      
       try {
+        console.log('Sending request to upload image...');
         const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
         });
-
+  
+        console.log('Response received from server:', response);
+        
         const result = await response.json();
+        console.log('JSON response from server:', result);
+  
         if (response.ok) {
+          console.log('Upload successful');
           setImageUrl({
             url: result.url,
             public_id: result.public_id,
           });
+          console.log('Image URL:', result.url);
+          console.log('Public ID:', result.public_id);
           setImage(result.url);
           toast.success("Image uploaded successfully!");
         } else {
+          console.log('Upload failed:', result.error || "Unknown error");
           toast.error(result.error || "Failed to upload image.");
         }
       } catch (error) {
+        console.log('Error during image upload:', error);
         toast.error("Error uploading image. Please try again.");
       }
     } else {
+      console.log('Image is invalid or does not meet requirements');
       toast.error("Please upload a valid image file (max size: 5MB)");
     }
   };
+  
 
   return (
     <>

@@ -11,79 +11,72 @@ import "react-toastify/dist/ReactToastify.css";
 const FaBar = ({ toggleFaBar, handleFaBar }) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [userData, setUserData] = useState(null);
-  
   const { data: session, status } = useSession();
   const router = useRouter();
-  
+
   const categories = ["Abaya", "Chaddar", "Dupatta", "Hijab", "Niqab"];
 
-  const handleOnChange = (e) => {
-    const { value } = e.target;
-    setSelectedCategory(value);
-  };
-  
-  const logoutCookies = async () => {
+  const handleOnChange = (e) => setSelectedCategory(e.target.value);
+
+  const logoutHandler = async () => {
     try {
       await axios.post("/api/logout");
       setUserData(null);
-      toast.success("Logout successful!"); // Notify successful logout
+      toast.success("Logged out successfully!");
     } catch (err) {
-      console.error("Logout Error:", err);
-      toast.error("Logout failed. Please try again."); // Notify error on logout
+      console.log("Logout Error:", err);
+      toast.error("Logout failed, please try again.");
     }
   };
 
   useEffect(() => {
-    const fetchCookieData = async () => {
+    const fetchUserData = async () => {
       try {
-        const response = await axios.get("/api/protected", {
-          withCredentials: true,
-        });
+        const response = await axios.get("/api/protected", { withCredentials: true });
         setUserData(response.data.user);
       } catch (error) {
-        console.log("Failed to fetch protected data:", error);
+        console.log("Failed to fetch user data:", error);
       }
     };
 
     if (status === "unauthenticated" && !userData) {
-      fetchCookieData();
+      fetchUserData();
     }
   }, [status, userData, router]);
 
   return (
     <div
-      className={`fixed top-0 right-0 h-full w-64 bg-gradient-to-b from-gray-900 to-gray-700 text-white shadow-2xl z-50 transform transition-transform duration-500 ease-in-out ${handleFaBar ? 'translate-x-0' : 'translate-x-full'}`}
+      className={`fixed top-0 right-0 h-full w-72 bg-gradient-to-b from-gray-900 to-gray-800 text-white shadow-lg z-50 transform transition-transform duration-500 ${handleFaBar ? 'translate-x-0' : 'translate-x-full'}`}
     >
-      {/* Close Icon */}
+      {/* Header with Close Icon */}
       <div className="flex justify-end p-4">
         <IoClose
-          className="text-3xl text-white cursor-pointer transition-transform duration-300 ease-in-out hover:text-red-500 hover:scale-110"
+          className="text-3xl cursor-pointer transition-transform duration-300 hover:text-red-500 hover:scale-110"
+          aria-label="Close Sidebar"
           onClick={toggleFaBar}
         />
       </div>
 
-      {/* Links */}
+      {/* Navigation Links */}
       <ul className="flex flex-col space-y-6 px-6 mt-4">
-        <li><Link href="/profile" className="transition-colors duration-300 hover:underline hover:text-orange-400">Profile</Link></li>
-        <li><Link href="/" className="transition-colors duration-300 hover:underline hover:text-orange-400">Home</Link></li>
-        <li><Link href="/about" className="transition-colors duration-300 hover:underline hover:text-orange-400">About</Link></li>
-        <li><Link href="/contact" className="transition-colors duration-300 hover:underline hover:text-orange-400">Contact</Link></li>
-        <li><Link href="/all-products" className="transition-colors duration-300 hover:underline hover:text-orange-400">All Products</Link></li>
+        <li><Link href="/profile" className="hover:text-orange-400">Profile</Link></li>
+        <li><Link href="/" className="hover:text-orange-400">Home</Link></li>
+        <li>
+          <Link href="/about" onClick={(e) => { e.preventDefault(); window.open('https://codewithsubhan.vercel.app', '_blank'); }} className="hover:text-orange-400">
+            About
+          </Link>
+        </li>
+        <li><Link href="/contact" className="hover:text-orange-400">Contact</Link></li>
+        <li><Link href="/all-products" className="hover:text-orange-400">All Products</Link></li>
 
-        {/* Conditional rendering for login/signup/logout */}
+        {/* Authentication Actions */}
         {status === "authenticated" || userData ? (
           <>
-            <li className="text-white">
-              Welcome,{" "}
-              {session?.user?.name || userData.username || session?.user?.email?.split(/(?=\d)/)[0]}
-            </li>
+            <li className="text-white">Hello, {session?.user?.name || userData.username || session?.user?.email?.split(/(?=\d)/)[0]}</li>
             <li>
               <button
-                onClick={async () => {
-                  await signOut();
-                  await logoutCookies();
-                }}
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300"
+                onClick={async () => { await signOut(); await logoutHandler(); }}
+                className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition duration-300"
               >
                 Logout
               </button>
@@ -91,32 +84,36 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
           </>
         ) : (
           <>
-            <li><Link href="/login" className="transition-colors duration-300 hover:underline hover:text-orange-400">Login</Link></li>
+            <li>
+              <Link href="/login">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition duration-300">
+                  Login
+                </button>
+              </Link>
+            </li>
             <li>
               <Link href="/signup">
-                <button className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300">
-                  Sign up
+                <button className="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg w-full transition duration-300">
+                  Sign Up
                 </button>
               </Link>
             </li>
           </>
         )}
 
-        {/* Category Dropdown */}
+        {/* Category Selection Dropdown */}
         <li>
           <select
             name="category"
             id="category"
             value={selectedCategory}
             onChange={handleOnChange}
-            className="mt-4 p-2 bg-gray-700 border border-gray-500 rounded text-white focus:outline-none focus:ring focus:ring-orange-500 transition-colors duration-300"
-            required
+            className="p-2 bg-gray-700 border border-gray-600 rounded text-white focus:outline-none focus:ring focus:ring-orange-500 w-full transition duration-300"
+            aria-label="Select Category"
           >
             <option value="">Select Category</option>
             {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
+              <option key={category} value={category}>{category}</option>
             ))}
           </select>
         </li>

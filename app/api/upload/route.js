@@ -1,8 +1,6 @@
+// app/api/upload/route.js
 import { cloudinary } from "@/utils/cloudinary";
 import { NextResponse } from "next/server";
-
-// Set the runtime environment
-export const runtime = 'nodejs'; // Use Node.js runtime
 
 // Helper function to parse multipart form data and return buffer
 async function parseMultipartFormData(req) {
@@ -27,7 +25,6 @@ export async function POST(req) {
   try {
     const fileBuffer = await parseMultipartFormData(req);
 
-    // Upload to Cloudinary with extended timeout
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: 'nextjs-images', timeout: 120000 },  // 120 seconds timeout
@@ -42,7 +39,6 @@ export async function POST(req) {
       stream.end(fileBuffer);  // End stream after sending file buffer
     });
 
-    // Success response with uploaded image URL
     return NextResponse.json({
       message: 'Image uploaded successfully',
       url: result.secure_url,
