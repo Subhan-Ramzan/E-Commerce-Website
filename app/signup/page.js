@@ -9,6 +9,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import Image from "next/image";
+import { CldImage, CldUploadWidget } from "next-cloudinary";
 
 const Signup = () => {
   const [imageUrl, setImageUrl] = useState(""); // Initialize imageUrl first
@@ -16,13 +17,13 @@ const Signup = () => {
     username: "",
     email: "",
     password: "",
-    profileImage: imageUrl, // Use imageUrl from state
   });
+  const [publicId, setPublicId] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [image, setImage] = useState("");
+  const [uploading, setUploading] = useState(false);
   const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
@@ -76,70 +77,6 @@ const Signup = () => {
       setSuccess(null);
     }
   };
-  const handleFileChange = async (e) => {
-    console.log('File input change detected');
-    
-    const selectedImage = e.target.files[0];
-    console.log('Selected image:', selectedImage);
-  
-    // Validate file type and size
-    if (
-      selectedImage &&
-      selectedImage.type.startsWith("image/") &&
-      selectedImage.size <= 5 * 1024 * 1024 // Max 5MB
-    ) {
-      console.log('Image is valid');
-      const formData = new FormData();
-      formData.append("image", selectedImage);
-      
-      console.log('FormData object after appending image:', formData);
-  
-      try {
-        console.log('Sending request to upload image...');
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-          headers: {
-            // Headers can be set if needed, e.g., for authorization or custom headers
-            // but avoid setting 'Content-Type' as FormData sets it automatically
-          },
-        });
-  
-        console.log('Response received from server:', response);
-  
-        // Parse the JSON response safely
-        let result;
-        try {
-          result = await response.json();
-        } catch (jsonError) {
-          console.error('Error parsing JSON response:', jsonError);
-          throw new Error('Unexpected server response format');
-        }
-  
-        if (response.ok) {
-          console.log('Upload successful');
-          setImageUrl({
-            url: result.url,
-            public_id: result.public_id,
-          });
-          console.log('Image URL:', result.url);
-          console.log('Public ID:', result.public_id);
-          setImage(result.url);
-          toast.success("Image uploaded successfully!");
-        } else {
-          // Handle non-2xx responses
-          console.error('Upload failed with error:', result.error || "Unknown error");
-          toast.error(result.error || "Failed to upload image.");
-        }
-      } catch (error) {
-        console.error('Error during image upload:', error);
-        toast.error("Error uploading image. Please try again.");
-      }
-    } else {
-      console.log('Image is invalid or does not meet requirements');
-      toast.error("Please upload a valid image file (max size: 5MB)");
-    }
-  };
 
   return (
     <>
@@ -181,37 +118,44 @@ const Signup = () => {
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="flex flex-col items-center mt-6">
-                <label
-                  htmlFor="uploadImageInput"
-                  className={`cursor-pointer rounded-full relative w-40 h-40 shadow-lg hover:shadow-xl transform hover:scale-105 ${
-                    image
-                      ? ""
-                      : "border-2 border-dashed border-gray-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-blue-500 hover:via-green-500 hover:to-purple-500 transition-all duration-500 ease-in-out"
-                  }`}
+                <CldUploadWidget
+                  uploadPreset="next-image"
+                  onSuccess={({ event, info }) => {
+                    if (event === "success") {
+                      setPublicId(info?.public_id);
+                    }
+                  }}
                 >
-                  {image ? (
-                    <Image
-                      src={image}
-                      alt="Uploaded Profile"
-                      layout="fill" // Fills the entire container
-                      className="rounded-full object-cover" // Ensures it stays circular and covers fully
-                    />
-                  ) : (
-                    <div className="flex flex-col items-center text-white">
-                      <FaCloudUploadAlt className="text-6xl mb-2 opacity-80" />
-                      <p className="text-sm font-semibold opacity-90">
-                        Upload Profile Image
-                      </p>
-                    </div>
+                  {({ open }) => (
+                    <label
+                      htmlFor="uploadImageInput"
+                      className={`cursor-pointer rounded-full relative w-40 h-40 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                        publicId
+                          ? ""
+                          : "border-2 border-dashed border-gray-300 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 hover:from-blue-500 hover:via-green-500 hover:to-purple-500 transition-all duration-500 ease-in-out"
+                      }`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        open();
+                      }}
+                    >
+                      {publicId ? (
+                        <CldImage
+                          src={publicId}
+                          alt="Uploaded Image"
+                          width={300}
+                          height={200}
+                          className="rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex flex-col items-center text-white">
+                          <FaCloudUploadAlt className="text-6xl mb-2 opacity-80" />
+                          <button>Upload an Image</button>
+                        </div>
+                      )}
+                    </label>
                   )}
-                  <input
-                    type="file"
-                    id="uploadImageInput"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    onChange={handleFileChange}
-                    accept="image/*"
-                  />
-                </label>
+                </CldUploadWidget>
               </div>
 
               <div>
