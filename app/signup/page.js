@@ -76,35 +76,45 @@ const Signup = () => {
       setSuccess(null);
     }
   };
-
   const handleFileChange = async (e) => {
     console.log('File input change detected');
     
     const selectedImage = e.target.files[0];
     console.log('Selected image:', selectedImage);
   
+    // Validate file type and size
     if (
       selectedImage &&
       selectedImage.type.startsWith("image/") &&
-      selectedImage.size <= 5 * 1024 * 1024
+      selectedImage.size <= 5 * 1024 * 1024 // Max 5MB
     ) {
       console.log('Image is valid');
       const formData = new FormData();
       formData.append("image", selectedImage);
       
       console.log('FormData object after appending image:', formData);
-      
+  
       try {
         console.log('Sending request to upload image...');
         const response = await fetch("/api/upload", {
           method: "POST",
           body: formData,
+          headers: {
+            // Headers can be set if needed, e.g., for authorization or custom headers
+            // but avoid setting 'Content-Type' as FormData sets it automatically
+          },
         });
   
         console.log('Response received from server:', response);
-        
-        const result = await response.json();
-        console.log('JSON response from server:', result);
+  
+        // Parse the JSON response safely
+        let result;
+        try {
+          result = await response.json();
+        } catch (jsonError) {
+          console.error('Error parsing JSON response:', jsonError);
+          throw new Error('Unexpected server response format');
+        }
   
         if (response.ok) {
           console.log('Upload successful');
@@ -117,11 +127,12 @@ const Signup = () => {
           setImage(result.url);
           toast.success("Image uploaded successfully!");
         } else {
-          console.log('Upload failed:', result.error || "Unknown error");
+          // Handle non-2xx responses
+          console.error('Upload failed with error:', result.error || "Unknown error");
           toast.error(result.error || "Failed to upload image.");
         }
       } catch (error) {
-        console.log('Error during image upload:', error);
+        console.error('Error during image upload:', error);
         toast.error("Error uploading image. Please try again.");
       }
     } else {
@@ -129,7 +140,6 @@ const Signup = () => {
       toast.error("Please upload a valid image file (max size: 5MB)");
     }
   };
-  
 
   return (
     <>
