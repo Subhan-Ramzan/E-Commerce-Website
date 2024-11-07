@@ -12,11 +12,11 @@ import Image from "next/image";
 import { CldImage, CldUploadWidget } from "next-cloudinary";
 
 const Signup = () => {
-  const [imageUrl, setImageUrl] = useState(""); // Initialize imageUrl first
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
+    profileImage:"",
   });
   const [publicId, setPublicId] = useState(null);
   const [error, setError] = useState(null);
@@ -61,7 +61,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const formData = { ...form, profileImage: imageUrl }; // `imageUrl` is now an object
+      const formData = { ...form, profileImage: publicId }; // Use publicId as profileImage
       const response = await axios.post("/api/signup", formData);
       setSuccess("Signup successful");
       setError(null);

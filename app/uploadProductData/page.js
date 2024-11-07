@@ -1,12 +1,11 @@
-//app/uploadProductData/page.js
 "use client";
 import React, { useState, useContext } from "react";
 import { CgClose } from "react-icons/cg";
 import { FaCloudUploadAlt } from "react-icons/fa";
 import { ProductContext } from "@/context/ProductContext";
 import { ToastContainer, toast } from "react-toastify";
-import Image from "next/image";
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
+import "react-toastify/dist/ReactToastify.css";
+import { CldImage, CldUploadWidget } from "next-cloudinary";
 
 const UploadProduct = ({ onClose }) => {
   const { addProduct } = useContext(ProductContext);
@@ -17,8 +16,7 @@ const UploadProduct = ({ onClose }) => {
     description: "",
     price: "",
   });
-  const [imageUrl, setImageUrl] = useState("");
-
+  const [publicIds, setPublicIds] = useState([]); // Multiple images
   const categories = ["Abaya", "Chaddar", "Dupatta", "Hijab", "Niqab"];
 
   const handleOnChange = (e) => {
@@ -29,33 +27,6 @@ const UploadProduct = ({ onClose }) => {
     }));
   };
 
-  const handleFileChange = async (e) => {
-    const selectedImage = e.target.files[0];
-
-    if (selectedImage) {
-      const formData = new FormData();
-      formData.append("image", selectedImage);
-
-      try {
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          setImageUrl(result.url);
-          toast.success("Image uploaded successfully!");
-        } else {
-          toast.error(result.error || "Failed to upload image.");
-        }
-      } catch (error) {
-        console.error("Error uploading image:", error);
-        toast.error("Error uploading image. Please try again.");
-      }
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newProduct = {
@@ -64,9 +35,7 @@ const UploadProduct = ({ onClose }) => {
       category: data.category,
       description: data.description,
       price: data.price,
-      images: imageUrl
-        ? [{ url: imageUrl, public_id: "example_public_id" }]
-        : [], // Replace "example_public_id" if needed
+      productImage:publicIds
     };
 
     try {
@@ -94,7 +63,7 @@ const UploadProduct = ({ onClose }) => {
 
   return (
     <div className="fixed w-full h-full bg-slate-100 text-white bg-opacity-35 py-7 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-      <div className="bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] p-4 rounded w-full max-w-2xl h-full max-h-[90%] overflow-hidden">
+      <div className="bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] p-4 rounded w-full max-w-2xl h-full max-h-[90%] overflow-auto">
         <div className="flex justify-between items-center pb-3">
           <h2 className="font-bold text-2xl">Upload Product</h2>
           <div
@@ -149,39 +118,49 @@ const UploadProduct = ({ onClose }) => {
             ))}
           </select>
           <label htmlFor="productImage" className="mt-3">
-            Product Image:
+            Product Images:
           </label>
-          <label htmlFor="uploadImageInput">
-            <div className="p-2 bg-slate-100 border rounded text-black h-32 w-full flex justify-center items-center cursor-pointer">
-              <div className="text-slate-500 flex justify-center items-center flex-col gap-2">
-                <span className="text-4xl">
-                  <FaCloudUploadAlt />
-                </span>
-                <p className="text-sm">Upload Product Image</p>
-                <input
-                  type="file"
-                  id="uploadImageInput"
-                  className="hidden"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                />
-              </div>
-            </div>
-          </label>
+          <div className="flex flex-col items-center mt-6 w-full ">
+            <CldUploadWidget
+              uploadPreset="next-image"
+              multiple
+              onSuccess={({ event, info }) => {
+                if (event === "success") {
+                  setPublicIds((prev) => [...prev, info.public_id]);
+                }
+              }}
+            >
+              {({ open }) => (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    open();
+                  }}
+                  className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow-lg hover:bg-blue-600 transition duration-200 ease-in-out"
+                >
+                  <FaCloudUploadAlt className="mr-2 text-2xl" />
+                  Upload Images
+                </button>
+              )}
+            </CldUploadWidget>
 
-          <div className="flex justify-start mt-2 mb-4">
-            {" "}
-            {/* Added flex for centering */}
-            {imageUrl && (
-              <Image
-                src={imageUrl}
-                alt="Uploaded"
-                layout="intrinsic" // Use intrinsic for controlled height and width
-                width={100} // Fixed width
-                height={100} // Fixed height (1:1 aspect ratio)
-                className="rounded-lg object-cover" // Added rounded and object-cover for styling
-              />
-            )}
+            {/* Image display container with horizontal scrolling */}
+            <div className="flex mt-4 gap-4 max-w-full overflow-x-auto whitespace-nowrap">
+              {publicIds.map((id) => (
+                <div
+                  key={id}
+                  className="relative w-32 h-32 rounded-lg overflow-hidden shadow-md inline-block"
+                >
+                  <CldImage
+                    src={id}
+                    alt="Uploaded Image"
+                    width={128}
+                    height={128}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
 
           <label htmlFor="description">Description:</label>
@@ -190,7 +169,7 @@ const UploadProduct = ({ onClose }) => {
             name="description"
             value={data.description}
             onChange={handleOnChange}
-            className="p-2 bg-slate-100 border rounded text-black h-24 mb-3" // Reduced height for better compactness
+            className="p-2 bg-slate-100 border rounded text-black h-24 mb-3"
             placeholder="Enter product description"
             required
           />
@@ -201,7 +180,7 @@ const UploadProduct = ({ onClose }) => {
             name="price"
             value={data.price}
             onChange={handleOnChange}
-            className="p-2 bg-slate-100 border rounded text-black mb-3" // Added margin for spacing
+            className="p-2 bg-slate-100 border rounded text-black mb-3"
             required
           />
           <button

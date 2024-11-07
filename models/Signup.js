@@ -1,4 +1,3 @@
-// app/models/Signup.js
 import mongoose, { Schema } from "mongoose";
 
 const SignupSchema = new Schema(
@@ -17,6 +16,10 @@ const SignupSchema = new Schema(
       type: String,
       required: [true, "Please input a Password"],
     },
+    image: {
+      public_id: { type: String, required: [true, "Please upload a public_id for the image"] },
+      url: { type: String, required: [true, "Please upload an image URL"] },
+    },
     isVerified: {
       type: Boolean,
       default: false,
@@ -25,15 +28,6 @@ const SignupSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    image: {
-      url: { type: String, required: true }, // Only store a single image
-      public_id: { type: String, required: true },
-      createdAt: { type: Date, default: Date.now },
-    },
-    // phoneNumber: {
-    //   type: String,
-    //   required: true,
-    // },
     forgotPasswordToken: String,
     forgotPasswordTokenExpiry: Date,
     verifyToken: String,

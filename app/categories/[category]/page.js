@@ -1,76 +1,122 @@
-// pages/categories/[category].js
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 
 const CategoryPage = () => {
+  const { category } = useParams(); // Access dynamic route parameter
   const router = useRouter();
-  const { category } = router.query;
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Function to capitalize first letter of the category
+  const capitalizeCategory = (category) => {
+    if (category && typeof category === "string") {
+      return category.charAt(0).toUpperCase() + category.slice(1);
+    }
+    return category;
+  };
 
   useEffect(() => {
-    if (category) {
-      console.log("Category:", category);
-
-      const fetchProducts = async (category) => {
+    const fetchProducts = async () => {
+      if (category) {
+        const capitalizedCategory = capitalizeCategory(category); // Capitalize the category
+        console.log("Category:", capitalizedCategory);
         try {
-          const response = await fetch(`/api/products?category=${category}`);
-
+          const response = await fetch(`/api/products?category=${capitalizedCategory}`);
           if (!response.ok) {
             console.error(`API response status: ${response.status}`);
             return;
           }
-
           const products = await response.json();
-          return products;
+          setProducts(products);
+          setLoading(false); // Stop loading once the data is fetched
         } catch (error) {
           console.error("Error fetching products:", error);
         }
-      };
+      }
+    };
 
-      fetchProducts();
-    }
-  }, [category]);
+    fetchProducts();
+  }, [category]); // Dependency array ensures the effect runs when category changes
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+        <div className="relative">
+          {/* Animated Circle */}
+          <div className="absolute w-32 h-32 rounded-full border-8 border-t-4 border-white border-solid animate-spin-slow"></div>
+          
+          {/* Inner animated circle */}
+          <div className="absolute w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 via-teal-500 to-green-500 animate-ping"></div>
+          
+          {/* Text and message */}
+          <div className="flex flex-col items-center mt-8">
+            <div className="text-4xl font-bold text-white mb-6 animate-bounce">
+              <span className="text-yellow-300">We're</span> Getting Things Ready!
+            </div>
+            <div className="text-lg text-white font-semibold animate-pulse">Please hold on, this won't take long...</div>
+          </div>
+  
+          {/* Sparkles / Particles */}
+          <div className="absolute top-0 left-0 right-0 bottom-0 animate-pulse-sparkle">
+            <div className="absolute w-3 h-3 rounded-full bg-white opacity-50 animate-sparkle1"></div>
+            <div className="absolute w-4 h-4 rounded-full bg-white opacity-40 animate-sparkle2"></div>
+            <div className="absolute w-5 h-5 rounded-full bg-white opacity-30 animate-sparkle3"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  
+
+  if (error) {
+    return <div className="text-center text-red-600">{`Error: ${error}`}</div>;
+  }
 
   return (
-    <div>
-      <div>
-        <h1>{category} Products</h1>
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-1 py-8 px-1 md:gap-4 md:p-4">
-          {products.map((product, index) => (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-4xl font-bold text-center mb-8 text-blue-600">
+        {capitalizeCategory(category)} Products
+      </h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {products.length === 0 ? (
+          <p className="col-span-full text-center text-lg text-gray-600">No products found</p>
+        ) : (
+          products.map((product) => (
             <div
-              key={index}
-              className="max-w-sm rounded overflow-hidden shadow-lg m-3 bg-white"
+              key={product._id}
+              className="product-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
             >
-              <div className="w-full h-36 md:h-60 relative">
+              <div className="relative w-full h-64 bg-gray-200">
                 <Image
-                  src={
-                    product.images.length > 0
-                      ? product.images[0].url
-                      : "/default-image.jpg"
-                  }
+                  src={product.image || "/placeholder.jpg"} // Placeholder image if none exists
                   alt={product.name}
-                  width={400} // Set a width for the image
-                  height={240} // Set a height for the image
-                  className="object-cover rounded-lg" // Optional: Adds rounded corners to the image
+                  layout="fill"
+                  objectFit="cover"
+                  className="transition-transform duration-500 ease-in-out transform hover:scale-110"
                 />
               </div>
-              <div className="px-2 md:px-6 py-2 md:py-4">
-                <div className="font-bold text-xl mb-2">{product.name}</div>
-                <p className="text-gray-700 text-base overflow-clip h-12">
-                  {product.description}
+              <div className="p-4">
+                <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
+                <p className="text-gray-600 mt-2">
+                  <strong>Brand:</strong> {product.brand}
                 </p>
-                <p className="text-red-700 font-bold text-lg mt-2">
-                  Rs. {product.price}
+                <p className="text-gray-600 mt-1">
+                  <strong>Description:</strong> {product.description}
                 </p>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold w-full p-1 md:py-2 md:px-4 rounded mt-4">
-                  Add to Cart
+                <p className="text-lg font-semibold text-blue-500 mt-4">{`$${product.price}`}</p>
+                <button
+                  onClick={() => router.push(`/product/${product._id}`)}
+                  className="w-full mt-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                >
+                  View Details
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+          ))
+        )}
       </div>
     </div>
   );
