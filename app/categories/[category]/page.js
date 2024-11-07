@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
+import { CldImage } from "next-cloudinary";
 
 const CategoryPage = () => {
   const { category } = useParams(); // Access dynamic route parameter
@@ -90,13 +91,23 @@ const CategoryPage = () => {
               className="product-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
             >
               <div className="relative w-full h-64 bg-gray-200">
-                <Image
-                  src={product.image || "/placeholder.jpg"} // Placeholder image if none exists
-                  alt={product.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-transform duration-500 ease-in-out transform hover:scale-110"
-                />
+              {product.productImage && product.productImage[0] ? (
+              <CldImage
+                src={product.productImage[0].public_id}
+                alt={product.name}
+                width={500}
+                height={500}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <Image
+                src="/placeholder.png"  // Fallback image path
+                alt="Placeholder Image"
+                width={500}
+                height={500}
+                className="object-cover w-full h-full"
+              />
+            )}
               </div>
               <div className="p-4">
                 <h2 className="text-xl font-semibold text-gray-800">{product.name}</h2>
