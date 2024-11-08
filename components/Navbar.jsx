@@ -234,13 +234,22 @@ const Navbar = () => {
           </div>
         </div>
 
-        <div onClick={toggleFaBar} className="md:hidden">
+        <div onClick={toggleFaBar} className="md:hidden cursor-pointer">
+          {/* Clickable Icon */}
           <FaBars className="text-2xl" />
         </div>
+
+        {/* Sidebar */}
         {handleFaBar && (
           <div
-            className={`flex justify-between fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 right-2 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg z-50 ${handleFaBar ? "translate-x-0" : "translate-x-full"}`}
+            className={`flex justify-between fixed top-3 bottom-3 w-64 min-h-[96vh] px-6 py-4 right-2 bg-gray-900 text-white transition-all duration-300 ease-out rounded-2xl shadow-xl z-50 ${handleFaBar ? "translate-x-0" : "translate-x-full"
+              }`}
+            style={{
+              transitionProperty: "transform, opacity",
+              opacity: handleFaBar ? 1 : 0,
+            }}
           >
+            {/* Sidebar Content */}
             <FaBar toggleFaBar={toggleFaBar} handleFaBar={handleFaBar} />
           </div>
         )}

@@ -25,9 +25,14 @@ export async function GET(req) {
     } else {
       let query = {};
 
-      // If a category filter is provided, add it to the query
       if (category) {
-        query.category = category;
+        // Case-insensitive regex for matching category exactly or finding it in the description
+        query = {
+          $or: [
+            { category: { $regex: `^${category}$`, $options: "i" } }, // Exact match in category field
+            { description: { $regex: category, $options: "i" } },      // Partial match in description
+          ],
+        };
       }
 
       // Fetch products based on the constructed query
@@ -51,4 +56,3 @@ export async function GET(req) {
     );
   }
 }
-

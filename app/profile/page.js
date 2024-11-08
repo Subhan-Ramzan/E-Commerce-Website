@@ -9,24 +9,47 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaRegCircleUser } from "react-icons/fa6";
 import Image from "next/image";
+import axios from "axios";
+import { CldImage } from "next-cloudinary";
+// import User from "@/models/Signup";
 
 const ProfilePage = () => {
   const [productTroll, setProductTroll] = useState(false); // Toggle for product data
   const [handleFaBar, setHandleFaBar] = useState(false); // Sidebar toggle
-
-  const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
-
+  const [userData, setUserData] = useState(null);
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [publicId, setPublicId] = useState(null);
+  const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
 
   console.log("Profile Data", status);
   console.log("Session Data:", session);
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/login");
-  //   }
-  // }, [status, router]);
+  useEffect(() => {
+    const fetchCookieData = async () => {
+      try {
+        const response = await axios.get("/api/protected", {
+          withCredentials: true,
+        });
+        setUserData(response.data.user);
+       const MID = response.data.user.id
+        console.log(MID);
+        // const user = await User.findById(MID)
+        // console.log(`Id is ${user}`);
+        
+        // toast.success("User data fetched successfully!"); // Notify successful fetch
+      } catch (error) {
+        console.log("Failed to fetch protected data:", error);
+        setUserData(null);
+        router.push("/login");
+        // toast.error("Failed to fetch user data. Please try again."); // Notify fetch error
+      }
+    };
+
+    if (status === "unauthenticated" && userData === null) {
+      fetchCookieData();
+    }
+  }, [status, userData, router]);
 
   return (
     <div className="max-md:relative flex overflow-auto h-[90vh]">
@@ -37,7 +60,7 @@ const ProfilePage = () => {
         } bg-slate-950 w-[25vw] min-h-[90vh] p-4 text-white`}
       >
         <div className="flex flex-col justify-center items-center pb-6">
-          {status === "authenticated" ? (
+          {/* {status === "authenticated" || ? (
             <Link href="/profile">
               {session?.user?.image ? (
                 <Image
@@ -48,16 +71,31 @@ const ProfilePage = () => {
                   className="rounded-full object-cover cursor-pointer"
                 />
               ) : (
-                <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
+                {image  ? (
+                  <CldImage
+                    src={image.public_id}
+                    alt={image.public_id}
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover cursor-pointer"
+                  />
+                )}
               )}
             </Link>
           ) : (
             <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
-          )}
+          )} */}
           <h3>
-            {session?.user?.name ||
-              session?.user?.email?.split(/(?=\d)/)[0] ||
-              "Guest"}
+            {status === "authenticated" || userData !== null ? (
+              <p className="text-white">
+                {session?.user?.name ||
+                  userData.username ||
+                  session?.user?.email?.split(/(?=\d)/)[0] ||
+                  "Guest"}
+              </p>
+            ) : (
+              <p className="text-white">Guest</p> // Show a default message if not authenticated
+            )}
           </h3>
         </div>
         <hr />
