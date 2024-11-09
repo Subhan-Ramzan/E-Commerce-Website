@@ -45,28 +45,20 @@ const Navbar = () => {
     }
   };
   useEffect(() => {
+    console.log("status:", status); // Debugging line
+    console.log("userData:", userData); // Debugging line
+  
     const fetchCookieData = async () => {
-      console.log("Starting fetchCookieData function");
-
       try {
-        console.log("Attempting to fetch protected data with credentials");
         const response = await axios.get("/api/protected", {
           withCredentials: true,
         });
-
-        console.log("Protected data fetched successfully:", response.data);
         setUserData(response.data.user);
-
         const user = response.data.user;
-        console.log("User data set with:", user);
-
         const id = user.id;
-        console.log(`User ID is: ${id}`);
-
+  
         if (id) {
-          console.log(`Fetching profile image for user ID: ${id}`);
           const imageResponse = await axios.get(`/api/profileimage/${id}`);
-          console.log("Profile image response:", imageResponse.data.public_id);
           setPublicId(imageResponse.data.public_id);
         } else {
           console.log("No user ID found; skipping profile image fetch");
@@ -75,18 +67,14 @@ const Navbar = () => {
         console.log("Failed to fetch protected data:", error);
         setUserData(null);
         console.log("User data set to null due to fetch error");
-
-        console.log("Redirecting to login page");
-        router.push("/login");
       }
-
-      console.log("fetchCookieData function execution completed");
     };
-
+  
     if (status === "unauthenticated" && userData === null) {
       fetchCookieData();
     }
   }, [status, userData, router]);
+  
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -100,28 +88,28 @@ const Navbar = () => {
         "Kameez", "Pashmina", "Rida", "Dupatta", "Chunni", "Lungi",
         "Sarong", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht",
         "Blouse", "Cardigan", "Sweater", "Vest", "Wrap", "Robe",
-    
+
         // Men's Clothing
         "Kufi", "Ghutra", "Izaar", "Taqiyah", "Thobe", "Jubbah",
         "Shalwar Kameez", "Kurta", "Pants", "Trousers", "Jacket",
         "Bisht", "Kaftan", "Lungi", "T-shirt", "Hoodie", "Jeans",
         "Shorts", "Sweatpants", "Blazer", "Overcoat", "Chinos",
-    
+
         // Kids' Clothing
         "Kids Abaya", "Kids Hijab", "Kids Kurta", "Kids Kameez",
         "Kids T-shirt", "Kids Dress", "Kids Shorts", "Kids Pants",
         "Kids Hoodie", "Kids Sweater", "Kids Jacket", "Kids Pajamas",
         "Kids Skirt", "Kids Romper", "Kids Tracksuit", "Kids Cap",
-    
+
         // Footwear
         "Sandals", "Flats", "Heels", "Loafers", "Sneakers", "Boots",
         "Ballet Flats", "Slippers", "Wedges", "Flip Flops", "Formal Shoes",
-    
+
         // Accessories
         "Bags", "Belts", "Sunglasses", "Watches", "Jewelry", "Scarves",
         "Hair Accessories", "Wallets", "Backpacks", "Tote Bags"
-    ];
-    
+      ];
+
 
       const filteredSuggestions = productList.filter((product) =>
         product.toLowerCase().startsWith(searchTerm.toLowerCase())
@@ -187,9 +175,6 @@ const Navbar = () => {
               <FaSearch className="text-xs sm:text-sm md:text-base" /> {/* Adjusting icon size */}
             </button>
           </form>
-
-
-
 
           {/* Suggestions List */}
           {suggestions.length > 0 && (
