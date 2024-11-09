@@ -1,11 +1,11 @@
-// app/search/page.js
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 
-export default function SearchPage() {
+// Component to fetch and display search results
+function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get("query");
 
@@ -64,7 +64,7 @@ export default function SearchPage() {
   }
 
   return (
-    <div className="">
+    <div className="search-results">
       <h1>Search Results for &quot;{query}&quot;</h1>
       {products.length > 0 ? (
         <div style={{ display: "flex", flexWrap: "wrap" }}>
@@ -76,5 +76,13 @@ export default function SearchPage() {
         <p>No products found</p>
       )}
     </div>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading search page...</div>}>
+      <SearchResults />
+    </Suspense>
   );
 }
