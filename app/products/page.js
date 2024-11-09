@@ -12,7 +12,7 @@ const Page = () => {
     <div className="h-auto overflow-auto pb-24">
       <div className={`flex flex-row w-full justify-between items-center px-3`}>
         <h3 className="font-bold text-2xl p-3">Your Products</h3>
-        <div className="ml-auto ml-3">
+        <div className="ml-auto">
           <button
             onClick={() => setUploadProduct(true)}
             className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold py-2 px-4 rounded-lg"

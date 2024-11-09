@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { CldImage } from "next-cloudinary";
+import ProductCard from "@/components/ProductCard";
 
 const CategoryPage = () => {
   const { category } = useParams(); // Access dynamic route parameter
@@ -81,7 +82,7 @@ const CategoryPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 ">
       <h1 className="text-4xl font-bold text-center mb-8 text-blue-600">
         {capitalizeCategory(category)} Products
       </h1>
@@ -92,48 +93,7 @@ const CategoryPage = () => {
           </p>
         ) : (
           products.map((product) => (
-            <div
-              key={product._id}
-              className="product-item bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 transform hover:scale-105"
-            >
-              <div className="relative w-full h-64 bg-gray-200">
-                {product.productImage && product.productImage[0] ? (
-                  <CldImage
-                    src={product.productImage[0].public_id}
-                    alt={product.name}
-                    width={500}
-                    height={500}
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <Image
-                    src="/placeholder.png" // Fallback image path
-                    alt="Placeholder Image"
-                    width={500}
-                    height={500}
-                    className="object-cover w-full h-full"
-                  />
-                )}
-              </div>
-              <div className="p-4">
-                <h2 className="text-xl font-semibold text-gray-800">
-                  {product.name}
-                </h2>
-                <p className="text-gray-600 mt-2">
-                  <strong>Brand:</strong> {product.brand}
-                </p>
-                <p className="text-gray-600 mt-1">
-                  <strong>Description:</strong> {product.description}
-                </p>
-                <p className="text-lg font-semibold text-blue-500 mt-4">{`$${product.price}`}</p>
-                <button
-                  onClick={() => router.push(`/product/${product._id}`)}
-                  className="w-full mt-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                >
-                  View Details
-                </button>
-              </div>
-            </div>
+            <ProductCard key={product._id} product={product} />
           ))
         )}
       </div>

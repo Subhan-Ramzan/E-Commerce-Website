@@ -22,28 +22,46 @@ const ProfilePage = () => {
   const [publicId, setPublicId] = useState(null);
   const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
 
-  console.log("Profile Data", status);
-  console.log("Session Data:", session);
+  // console.log("Profile Data", status);
+  // console.log("Session Data:", session);
 
   useEffect(() => {
     const fetchCookieData = async () => {
+      console.log("Starting fetchCookieData function");
+
       try {
+        console.log("Attempting to fetch protected data with credentials");
         const response = await axios.get("/api/protected", {
           withCredentials: true,
         });
+
+        console.log("Protected data fetched successfully:", response.data);
         setUserData(response.data.user);
-       const MID = response.data.user.id
-        console.log(MID);
-        // const user = await User.findById(MID)
-        // console.log(`Id is ${user}`);
-        
-        // toast.success("User data fetched successfully!"); // Notify successful fetch
+
+        const user = response.data.user;
+        console.log("User data set with:", user);
+
+        const id = user.id;
+        console.log(`User ID is: ${id}`);
+
+        if (id) {
+          console.log(`Fetching profile image for user ID: ${id}`);
+          const imageResponse = await axios.get(`/api/profileimage/${id}`);
+          console.log("Profile image response:", imageResponse.data.public_id);
+          setPublicId(imageResponse.data.public_id);
+        } else {
+          console.log("No user ID found; skipping profile image fetch");
+        }
       } catch (error) {
         console.log("Failed to fetch protected data:", error);
         setUserData(null);
+        console.log("User data set to null due to fetch error");
+
+        console.log("Redirecting to login page");
         router.push("/login");
-        // toast.error("Failed to fetch user data. Please try again."); // Notify fetch error
       }
+
+      console.log("fetchCookieData function execution completed");
     };
 
     if (status === "unauthenticated" && userData === null) {
@@ -60,31 +78,31 @@ const ProfilePage = () => {
         } bg-slate-950 w-[25vw] min-h-[90vh] p-4 text-white`}
       >
         <div className="flex flex-col justify-center items-center pb-6">
-          {/* {status === "authenticated" || ? (
+          {status === "authenticated" || userData !== null ? (
             <Link href="/profile">
               {session?.user?.image ? (
                 <Image
                   src={session.user.image.url || session.user.image}
                   alt="User Profile"
-                  width={40} // Sets the width to 40px
-                  height={40} // Sets the height to 40px
+                  width={40}
+                  height={40}
+                  className="rounded-full object-cover cursor-pointer"
+                />
+              ) : publicId ? (
+                <CldImage
+                  src={publicId}
+                  alt="User Profile"
+                  width={40}
+                  height={40}
                   className="rounded-full object-cover cursor-pointer"
                 />
               ) : (
-                {image  ? (
-                  <CldImage
-                    src={image.public_id}
-                    alt={image.public_id}
-                    width={40}
-                    height={40}
-                    className="rounded-full object-cover cursor-pointer"
-                  />
-                )}
+                <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
               )}
             </Link>
           ) : (
             <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
-          )} */}
+          )}
           <h3>
             {status === "authenticated" || userData !== null ? (
               <p className="text-white">

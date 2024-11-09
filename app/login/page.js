@@ -49,7 +49,7 @@ const Login = () => {
 
   useEffect(() => {
     if (sessionStatus === "authenticated") {
-      router.push("/about");
+      router.push("/profile");
     }
   }, [sessionStatus, router]);
 

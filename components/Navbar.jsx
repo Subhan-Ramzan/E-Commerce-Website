@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { CldImage } from "next-cloudinary";
 
 const Navbar = () => {
   const { data: session, status } = useSession();
@@ -19,6 +20,7 @@ const Navbar = () => {
   const [suggestions, setSuggestions] = useState([]);
   const router = useRouter();
   const [userData, setUserData] = useState(null);
+  const [publicId, setPublicId] = useState(null);
 
 
   const toggleFaBar = () => {
@@ -44,19 +46,44 @@ const Navbar = () => {
   };
   useEffect(() => {
     const fetchCookieData = async () => {
+      console.log("Starting fetchCookieData function");
+
       try {
+        console.log("Attempting to fetch protected data with credentials");
         const response = await axios.get("/api/protected", {
           withCredentials: true,
         });
+
+        console.log("Protected data fetched successfully:", response.data);
         setUserData(response.data.user);
-        // toast.success("User data fetched successfully!"); // Notify successful fetch
+
+        const user = response.data.user;
+        console.log("User data set with:", user);
+
+        const id = user.id;
+        console.log(`User ID is: ${id}`);
+
+        if (id) {
+          console.log(`Fetching profile image for user ID: ${id}`);
+          const imageResponse = await axios.get(`/api/profileimage/${id}`);
+          console.log("Profile image response:", imageResponse.data.public_id);
+          setPublicId(imageResponse.data.public_id);
+        } else {
+          console.log("No user ID found; skipping profile image fetch");
+        }
       } catch (error) {
         console.log("Failed to fetch protected data:", error);
-        // toast.error("Failed to fetch user data. Please try again."); // Notify fetch error
+        setUserData(null);
+        console.log("User data set to null due to fetch error");
+
+        console.log("Redirecting to login page");
+        router.push("/login");
       }
+
+      console.log("fetchCookieData function execution completed");
     };
 
-    if (status === "unauthenticated" && !userData) {
+    if (status === "unauthenticated" && userData === null) {
       fetchCookieData();
     }
   }, [status, userData, router]);
@@ -68,28 +95,33 @@ const Navbar = () => {
       // List of products for suggestions
       const productList = [
         // Women's Clothing
-        "Abaya", "Hijab", "Shawl", "Stole", "Burqa", "Cheddar", "Kaftan",
+        "Abaya", "Hijab", "Shawl", "Stole", "Burqa", "Chaddar", "Kaftan",
         "Kimono", "Jilbab", "Poncho", "Chador", "Kurta", "Shalwar",
         "Kameez", "Pashmina", "Rida", "Dupatta", "Chunni", "Lungi",
         "Sarong", "Caftan", "Niqab", "Manteau", "Gilets", "Bisht",
         "Blouse", "Cardigan", "Sweater", "Vest", "Wrap", "Robe",
+    
         // Men's Clothing
         "Kufi", "Ghutra", "Izaar", "Taqiyah", "Thobe", "Jubbah",
         "Shalwar Kameez", "Kurta", "Pants", "Trousers", "Jacket",
         "Bisht", "Kaftan", "Lungi", "T-shirt", "Hoodie", "Jeans",
         "Shorts", "Sweatpants", "Blazer", "Overcoat", "Chinos",
+    
         // Kids' Clothing
         "Kids Abaya", "Kids Hijab", "Kids Kurta", "Kids Kameez",
         "Kids T-shirt", "Kids Dress", "Kids Shorts", "Kids Pants",
         "Kids Hoodie", "Kids Sweater", "Kids Jacket", "Kids Pajamas",
         "Kids Skirt", "Kids Romper", "Kids Tracksuit", "Kids Cap",
+    
         // Footwear
         "Sandals", "Flats", "Heels", "Loafers", "Sneakers", "Boots",
         "Ballet Flats", "Slippers", "Wedges", "Flip Flops", "Formal Shoes",
+    
         // Accessories
         "Bags", "Belts", "Sunglasses", "Watches", "Jewelry", "Scarves",
         "Hair Accessories", "Wallets", "Backpacks", "Tote Bags"
-      ];
+    ];
+    
 
       const filteredSuggestions = productList.filter((product) =>
         product.toLowerCase().startsWith(searchTerm.toLowerCase())
@@ -177,13 +209,35 @@ const Navbar = () => {
             </ul>
           )}
         </div>
-
         <div className="flex items-center space-x-4 justify-between">
-          {/* Profile icon - Always visible */}
-          <div className="relative flex items-center">
-            <Link href="/profile">
-              <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
-            </Link>
+          <div>
+            {status === "authenticated" || userData !== null ? (
+              <Link href="/profile">
+                {session?.user?.image ? (
+                  <Image
+                    src={session.user.image.url || session.user.image}
+                    alt="User Profile"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover cursor-pointer"
+                  />
+                ) : publicId ? (
+                  <CldImage
+                    src={publicId}
+                    alt="User Profile"
+                    width={40}
+                    height={40}
+                    className="rounded-full object-cover cursor-pointer"
+                  />
+                ) : (
+                  <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
+                )}
+              </Link>
+            ) : (
+              <Link href="/login">
+                <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
+              </Link>
+            )}
           </div>
 
           {/* Cart icon - Always visible */}
@@ -232,11 +286,11 @@ const Navbar = () => {
               </>
             )}
           </div>
-        </div>
 
-        <div onClick={toggleFaBar} className="md:hidden cursor-pointer">
-          {/* Clickable Icon */}
-          <FaBars className="text-2xl" />
+          <div onClick={toggleFaBar} className="md:hidden cursor-pointer">
+            {/* Clickable Icon */}
+            <FaBars className="text-2xl" />
+          </div>
         </div>
 
         {/* Sidebar */}
@@ -253,7 +307,7 @@ const Navbar = () => {
             <FaBar toggleFaBar={toggleFaBar} handleFaBar={handleFaBar} />
           </div>
         )}
-      </div>
+      </div >
       <ToastContainer />
     </>
   );
