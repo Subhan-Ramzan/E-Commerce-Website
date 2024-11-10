@@ -7,7 +7,6 @@ import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
 
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

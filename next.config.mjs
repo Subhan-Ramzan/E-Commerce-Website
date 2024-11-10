@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com'],
+    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com',"via.placeholder.com"],
     // You can add additional image configuration options here
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // Example sizes
     imageSizes: [16, 32, 48, 64, 96], // Example image sizes

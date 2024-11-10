@@ -4,7 +4,13 @@ import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { motion } from "framer-motion"; // Use framer-motion for advanced animations
 import { CldImage } from "next-cloudinary";
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 // Icons for increment/decrement buttons
 const PlusIcon = () => (
   <svg
@@ -38,6 +44,7 @@ const ProductDetail = () => {
   const router = useRouter();
   const params = useParams();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [shouldRunEffect, setShouldRunEffect] = useState(false);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50; // Minimum swipe distance to register a swipe
@@ -81,27 +88,29 @@ const ProductDetail = () => {
   };
 
   const handleThumbnailClick = (index) => {
+    console.log("Thumbnail clicked:", index); // To debug if the correct index is being passed
     setCurrentImageIndex(index);
   };
 
-  const handleTouchStart = (e) => setTouchStart(e.targetTouches[0].clientX);
-
-  const handleTouchMove = (e) => setTouchEnd(e.targetTouches[0].clientX);
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-
-    if (distance > minSwipeDistance) {
-      // Swipe left -> Next image
-      goToNextImage();
-    } else if (distance < -minSwipeDistance) {
-      // Swipe right -> Previous image
-      goToPreviousImage();
-    }
-    setTouchStart(null);
-    setTouchEnd(null);
+  // Navigate to the next image
+  const handleNext = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === product.productImage.length - 1 ? 0 : prevIndex + 1
+    );
   };
+
+  // Navigate to the previous image
+  const handlePrevious = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? product.productImage.length - 1 : prevIndex - 1
+    );
+  };
+
+  useEffect(() => {
+    // This useEffect will run only when currentImageIndex changes
+    setShouldRunEffect(true); // Set the flag to true when index changes
+    console.log("Current Image Index changed:", currentImageIndex);
+  }, [currentImageIndex]);
 
   // Professional Loader with Animation
   if (!product) {
@@ -130,48 +139,82 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center h-full min-h-screen p-4 bg-gray-50">
+    <div className="flex flex-col items-center justify-center h-full min-h-screen md:p-4 p-0 bg-gray-50">
       <motion.div
-        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[90vw] md:max-w-3xl w-full p-4 md:p-6"
+        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[100vw] md:max-w-3xl w-full p-0 md:p-6"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
         {/* Product Image with Navigation */}
         <div className="md:w-1/2 flex flex-col items-center md:items-start p-0 md:px-10 relative mb-6 md:mb-0">
-          <motion.div
-            className="transition-transform transform hover:scale-105 duration-500 ease-in-out"
-            whileHover={{ rotateY: 15 }}
-            whileTap={{ scale: 0.95 }}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-          >
-            {product.productImage?.length > 0 ? (
-              <CldImage
-                src={product.productImage[currentImageIndex].public_id}
-                alt={product.name}
-                width={400}
-                height={300}
-                className="object-fill w-[100vw] md:w-[30vw] h-[50vh] md:h-[40vh] rounded-lg"
-              />
-            ) : (
-              <Image
-                src="/placeholder.png"
-                alt="Placeholder Image"
-                width={300}
-                height={300}
-                className="object-cover w-full h-full rounded-lg"
-              />
-            )}
-          </motion.div>
+          {/* Carousel that displays the current image */}
+          <Carousel>
+            (
+            <CarouselContent>
+              {product.productImage?.length > 0 ? (
+                product.productImage.map((image, index) =>
+                  index === currentImageIndex ? (
+                    shouldRunEffect && (
+                      <CarouselItem key={currentImageIndex}>
+                        <motion.div
+                          className="transition-transform transform hover:scale-105 duration-500 ease-in-out"
+                          whileHover={{ rotateY: 15 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <CldImage
+                            src={image.public_id}
+                            alt={product.name}
+                            width={400}
+                            height={300}
+                            className="object-fill w-[100vw] md:w-[30vw] h-[50vh] md:h-[40vh] rounded-lg"
+                          />
+                        </motion.div>
+                      </CarouselItem>
+                    )
+                  ) : (
+                    <CarouselItem key={index}>
+                      <motion.div
+                        className="transition-transform transform hover:scale-105 duration-500 ease-in-out"
+                        whileHover={{ rotateY: 15 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        <CldImage
+                          src={image.public_id}
+                          alt={product.name}
+                          width={400}
+                          height={300}
+                          className="object-fill w-[100vw] md:w-[30vw] h-[50vh] md:h-[40vh] rounded-lg"
+                        />
+                      </motion.div>
+                    </CarouselItem>
+                  )
+                )
+              ) : (
+                <CarouselItem>
+                  <Image
+                    src="/placeholder.png"
+                    alt="Placeholder Image"
+                    width={300}
+                    height={300}
+                    className="object-cover w-full h-full rounded-lg"
+                  />
+                </CarouselItem>
+              )}
+            </CarouselContent>
+            {/* Carousel Navigation Controls */}
+            <CarouselPrevious onClick={handlePrevious} />
+            <CarouselNext onClick={handleNext} />
+          </Carousel>
 
-          {/* Thumbnail Images */}
-          <div className="flex mt-3 space-x-2 overflow-x-auto">
+          {/* Thumbnail Navigation */}
+          <div className="flex mt-3 p-1 space-x-2">
             {product.productImage.map((image, index) => (
               <div
                 key={index}
-                className="w-12 h-12 cursor-pointer"
+                className={`w-12 h-12 cursor-pointer ${
+                  index === currentImageIndex ? "border-2 border-gray-500" : ""
+                }`}
                 onClick={() => handleThumbnailClick(index)}
                 onMouseEnter={() => handleThumbnailClick(index)}
               >
@@ -180,22 +223,10 @@ const ProductDetail = () => {
                   alt={`Thumbnail ${index}`}
                   width={48}
                   height={48}
-                  className="object-cover rounded-md border border-gray-300"
+                  className="object-fill h-12 w-12 rounded-md"
                 />
               </div>
             ))}
-          </div>
-
-          {/* Image Navigation Arrows */}
-          <div className="absolute top-1/2 left-4 transform -translate-y-1/2 cursor-pointer" onClick={goToPreviousImage}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500 hover:text-gray-700 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </div>
-          <div className="absolute top-1/2 right-4 transform -translate-y-1/2 cursor-pointer" onClick={goToNextImage}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500 hover:text-gray-700 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
           </div>
         </div>
 
@@ -207,9 +238,13 @@ const ProductDetail = () => {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <div className="text-center md:text-left mb-4">
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">{product.name}</h1>
+            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+              {product.name}
+            </h1>
             <p className="text-yellow-400 mb-4">⭐⭐⭐⭐⭐ (5.0)</p>
-            <h3 className="text-xl text-green-600 font-bold">Rs. {product.price}</h3>
+            <h3 className="text-xl text-green-600 font-bold">
+              Rs. {product.price}
+            </h3>
             <p className="text-sm text-gray-600 mt-4">{product.description}</p>
           </div>
 
@@ -256,9 +291,6 @@ const ProductDetail = () => {
       </motion.div>
     </div>
   );
-
-
-
 };
 
 export default ProductDetail;
