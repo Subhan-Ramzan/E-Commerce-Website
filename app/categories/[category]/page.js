@@ -47,7 +47,7 @@ const CategoryPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-r from-purple-400 via-pink-500 to-red-500">
+      <div className="flex justify-center items-center h-screen bg-gradient-to-r from-teal-400 via-purple-500 to-indigo-600">
         <div className="relative">
           {/* Animated Circle */}
           <div className="absolute w-32 h-32 rounded-full border-8 border-t-4 border-white border-solid animate-spin-slow"></div>
