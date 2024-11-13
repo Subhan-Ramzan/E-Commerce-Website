@@ -66,7 +66,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
             About
           </Link>
         </li>
-        <li><Link href="/contact" className="hover:text-orange-400">Contact</Link></li>
+        <li><Link href="https://wa.me/+923250826305" className="hover:text-orange-400" target="_blank" rel="noopener noreferrer">Contact</Link></li>
         <li><Link href="/all-products" className="hover:text-orange-400">All Products</Link></li>
 
         {/* Authentication Actions */}
@@ -102,7 +102,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
         )}
 
         {/* Category Selection Dropdown */}
-        <li>
+        {/* <li>
           <select
             name="category"
             id="category"
@@ -116,7 +116,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
               <option key={category} value={category}>{category}</option>
             ))}
           </select>
-        </li>
+        </li> */}
       </ul>
       <ToastContainer />
     </div>

@@ -7,6 +7,8 @@ import ProductImage from "@/components/Cart/ProductImage"; // Image carousel com
 import QuantitySelector from "@/components/Cart/QuantitySelector"; // Quantity select component
 import ActionButtons from "@/components/Cart/ActionButtons"; // Add to cart and buy now buttons component
 import MapPage from "@/components/Cart/MapComponent";
+import { FaStar } from 'react-icons/fa';
+
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1); // Manage product quantity
@@ -75,7 +77,7 @@ const ProductDetail = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-screen md:p-4 p-0 bg-gray-50">
       <motion.div
-        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[90vw] md:max-w-[100vw] w-full p-0 md:p-6"
+        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[100vw] md:max-w-[100vw] w-full p-0 md:p-6"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -87,27 +89,31 @@ const ProductDetail = () => {
           shouldRunEffect={shouldRunEffect}
         />
         <motion.div
-          className="flex flex-col justify-between md:w-1/2 p-4"
+          className="flex flex-col justify-between md:w-[30vw] p-4"
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
-          <div className="text-center md:text-left mb-4">
-            <h1 className="text-xl font-semibold text-gray-800 mb-2">
+          <div className="text-start md:text-left mb-4">
+            <h1 className="text-xl font-semibold text-gray-800 mb-2 w-[90vw] md:w-[27vw] break-words">
               {product.name}
             </h1>
-            <p className="text-yellow-400 mb-4">⭐⭐⭐⭐⭐ (5.0)</p>
+            <span className="flex items-center gap-2">
+              <FaStar size={20} color="#FFD700" />
+              <p className="text-lg">4.5</p>
+            </span>
             <h3 className="text-xl text-green-600 font-bold">
               Rs. {product.price}
             </h3>
             <p className="text-sm text-gray-600 mt-4">{product.description}</p>
           </div>
 
-          <QuantitySelector
+
+          {/* <QuantitySelector
             quantity={quantity}
             handleIncrement={handleIncrement}
             handleDecrement={handleDecrement}
-          />
+          /> */}
           <ActionButtons />
         </motion.div>
         <div>

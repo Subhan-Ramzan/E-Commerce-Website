@@ -134,10 +134,10 @@ const Navbar = () => {
 
         <div className="hidden md:flex">
           <ul className="list-none flex px-2 lg:px-4 space-x-3 lg:space-x-8">
-            <li className="hover:text-gray-400">
+            <li className="hover:text-blue-500">
               <Link href="/">Home</Link>
             </li>
-            <li className="hover:text-gray-400">
+            <li className="hover:text-blue-500">
               <Link href="/about" onClick={(e) => {
                 e.preventDefault(); // Prevent default behavior
                 window.open('https://codewithsubhan.vercel.app', '_blank'); // Open the URL in a new tab
@@ -146,7 +146,7 @@ const Navbar = () => {
               </Link>
             </li>
 
-            <li className="hover:text-gray-400">
+            <li className="hover:text-blue-500">
               <Link href="https://wa.me/+923250826305" target="_blank" rel="noopener noreferrer">
                 Contact
               </Link>

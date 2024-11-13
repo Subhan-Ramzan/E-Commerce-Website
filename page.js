@@ -130,3 +130,48 @@
             ))}
           </div>
         </div>
+
+
+
+
+
+
+
+
+
+
+
+export default function WarrantyIcon() {
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="blue"
+          width="40px"
+          height="40px"
+        >
+          <path d="M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3zm0 18c-3.74-1.17-6-5.22-6-10V6.26L12 4.34l6 1.92V10c0 4.78-2.26 8.83-6 10z" />
+        </svg>
+        <span
+          style={{
+            position: "absolute",
+            top: "0",
+            right: "0",
+            backgroundColor: "blue",
+            color: "white",
+            borderRadius: "50%",
+            padding: "2px 6px",
+            fontSize: "0.7rem",
+          }}
+        >
+          7
+        </span>
+      </div>
+      <span style={{ color: "#4A4A4A", fontSize: "0.9rem" }}>
+        7-Day Warranty
+      </span>
+    </div>
+  );
+}
