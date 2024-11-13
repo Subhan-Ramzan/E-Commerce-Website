@@ -1,8 +1,9 @@
 import connectDB from '@/utils/connectDB';
 import Product from '@/models/Product';
 
-export async function GET(req, { params }) {
-  const { productId } = params; // Use params to get the dynamic productId
+export async function GET(req, context) {
+  const { params } = context;
+  const { productId } = await params; // Await params to ensure it's resolved
 
   await connectDB(); // Ensure database is connected
 

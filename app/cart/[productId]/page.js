@@ -75,7 +75,7 @@ const ProductDetail = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full min-h-screen md:p-4 p-0 bg-gray-50">
       <motion.div
-        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[100vw] md:max-w-[100vw] w-full p-0 md:p-6"
+        className="flex flex-col md:flex-row bg-white rounded-lg shadow-lg overflow-hidden max-w-[90vw] md:max-w-[100vw] w-full p-0 md:p-6"
         initial={{ opacity: 0, y: 100 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
@@ -119,3 +119,4 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
