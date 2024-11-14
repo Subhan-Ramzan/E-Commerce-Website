@@ -35,7 +35,7 @@ export default function HomeProducts() {
             // Get the current scroll position and the total scrollable height
             const scrollPosition = window.innerHeight + window.scrollY;
             const scrollHeight = document.documentElement.scrollHeight;
-    
+
             // Trigger fetch when we are at the bottom
             if (scrollPosition >= scrollHeight - 10) { // You can adjust the 10px threshold
                 if (callCount < 25) {
@@ -44,16 +44,16 @@ export default function HomeProducts() {
                 }
             }
         };
-    
+
         // Add event listener for scroll
         window.addEventListener("scroll", handleScroll);
-    
+
         // Cleanup the event listener on component unmount
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
     }, [skip, callCount, fetchRelatedProducts]);
-    
+
 
     return (
         <section className="py-8">
@@ -79,7 +79,10 @@ export default function HomeProducts() {
                 ))}
             </div>
             {loading && (
-                <div className="text-center mt-4">Loading more products...</div>
+                <div className="flex justify-center items-center mt-5">
+                    {/* Circle Loader */}
+                    <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                </div>
             )}
         </section>
     );

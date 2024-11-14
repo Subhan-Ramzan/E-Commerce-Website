@@ -47,7 +47,7 @@ const Navbar = () => {
   useEffect(() => {
     console.log("status:", status); // Debugging line
     console.log("userData:", userData); // Debugging line
-  
+
     const fetchCookieData = async () => {
       try {
         const response = await axios.get("/api/protected", {
@@ -56,7 +56,7 @@ const Navbar = () => {
         setUserData(response.data.user);
         const user = response.data.user;
         const id = user.id;
-  
+
         if (id) {
           const imageResponse = await axios.get(`/api/profileimage/${id}`);
           setPublicId(imageResponse.data.public_id);
@@ -69,12 +69,12 @@ const Navbar = () => {
         console.log("User data set to null due to fetch error");
       }
     };
-  
+
     if (status === "unauthenticated" && userData === null) {
       fetchCookieData();
     }
   }, [status, userData, router]);
-  
+
 
   useEffect(() => {
     if (searchTerm === "") {
@@ -166,7 +166,7 @@ const Navbar = () => {
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[18vh] md:w-full px-3 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
+              className="w-[30vw] md:w-full px-3 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
             />
             <button
               type="submit"
@@ -229,9 +229,17 @@ const Navbar = () => {
           <Link href="/cart">
             <div className="text-xl md:text-2xl relative cursor-pointer">
               <FaShoppingCart />
-              <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
-                <p className="text-sm">0</p> {/* Assuming you want to show the cart item count */}
-              </div>
+              {status === "authenticated" || userData !== null ? (
+                <>
+                  <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
+                    <p className="text-sm">0</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                </>
+              )}
+              {/* Assuming you want to show the cart item count */}
             </div>
           </Link>
 
