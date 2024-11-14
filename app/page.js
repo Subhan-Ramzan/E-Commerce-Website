@@ -4,26 +4,17 @@ import Coverimg from "@/components/CoverImg";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import CategorySection from "@/components/CategorySection";
-
+import HomeProducts from "@/components/HomeProducts";
 export default function Home() {
   return (
     <>
       <Category />
       <HeroSection />
-      <FeaturedProducts />
       <CategorySection />
-      <Coverimg />
-      <Main />
+      <FeaturedProducts />
+      <HomeProducts />
+      {/* <Coverimg /> */}
+      {/* <Main /> */}
     </>
   );
 }
-
-// import ImageUpload from "@/components/ImageUpload";
-
-// export default function Home() {
-//   return (
-//     <>
-//       <ImageUpload />
-//     </>
-//   );
-// }

@@ -9,6 +9,7 @@ import ActionButtons from "@/components/Cart/ActionButtons"; // Add to cart and 
 import MapPage from "@/components/Cart/MapComponent";
 import { FaStar } from "react-icons/fa";
 import BottomProducts from "@/components/Cart/BottomProducts";
+import { useCallback } from "react";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -21,6 +22,7 @@ const ProductDetail = () => {
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [callCount, setCallCount] = useState(0); // Track function calls
 
   useEffect(() => {
     if (productId) {
@@ -41,29 +43,32 @@ const ProductDetail = () => {
     }
   }, [productId]);
 
-  const fetchRelatedProducts = async (category, name, skipCount) => {
-    if (loading) return;
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `/api/products/related?category=${category}&name=${name}&skip=${skipCount}&limit=1`
-      );
-      const data = await response.json();
+  const fetchRelatedProducts = useCallback(
+    async (category, name, skipCount) => {
+      if (loading) return;
+      setLoading(true);
+      try {
+        const response = await fetch(
+          `/api/products/related?category=${category}&name=${name}&skip=${skipCount}&limit=1`
+        );
+        const data = await response.json();
 
-      // Deduplicate by `_id`
-      setRelatedProducts((prev) => {
-        const existingIds = new Set(prev.map((p) => p._id));
-        const newProducts = data.filter((p) => !existingIds.has(p._id));
-        return [...prev, ...newProducts];
-      });
+        // Deduplicate by `_id`
+        setRelatedProducts((prev) => {
+          const existingIds = new Set(prev.map((p) => p._id));
+          const newProducts = data.filter((p) => !existingIds.has(p._id));
+          return [...prev, ...newProducts];
+        });
 
-      setSkip(skipCount + 1);
-    } catch (error) {
-      console.error("Error fetching related products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setSkip(skipCount + 1);
+      } catch (error) {
+        console.error("Error fetching related products:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loading] // Dependencies for useCallback
+  );
 
   useEffect(() => {
     const handleScroll = () => {
@@ -71,26 +76,31 @@ const ProductDetail = () => {
         window.innerHeight + document.documentElement.scrollTop >=
         document.documentElement.scrollHeight
       ) {
-        if (product) {
+        if (product && callCount < 5) {
           fetchRelatedProducts(product.category, product.name, skip);
+          setCallCount((prevCount) => prevCount + 1); // Increment the counter
         }
       }
     };
 
-    // Add scroll event listener
+    // Scroll listener
     window.addEventListener("scroll", handleScroll);
 
-    // Check scroll logic every 3 seconds
+    // Interval to check scroll logic every 3 seconds
     const interval = setInterval(() => {
-      handleScroll();
+      if (callCount < 25) {
+        handleScroll();
+      } else {
+        clearInterval(interval); // Stop interval after 5 calls
+      }
     }, 3000);
 
-    // Cleanup function
+    // Cleanup on component unmount
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      clearInterval(interval); // Clear the interval on unmount
+      clearInterval(interval);
     };
-  }, [skip, product, router, fetchRelatedProducts]);
+  }, [skip, product, callCount, fetchRelatedProducts])
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1); // Increase quantity

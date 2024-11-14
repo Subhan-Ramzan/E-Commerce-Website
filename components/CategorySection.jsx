@@ -8,9 +8,9 @@ const categories = [
 
 export default function CategorySection() {
   return (
-    <section className="py-16">
+    <section className="py-6">
       <h2 className="text-3xl font-bold text-center mb-12">Shop by Category</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-3 gap-4 p-2">
         {categories.map((category) => (
           <div
             key={category.id}
@@ -22,7 +22,7 @@ export default function CategorySection() {
               width={500} // Set appropriate width
               height={256} // Set appropriate height
               priority // Load images with priority
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" // Responsive sizes
+              className='h-32 md:h-80 object-fill w-full'
             />
             <div className="p-4 text-center">
               <h3 className="text-lg font-semibold">{category.name}</h3>
