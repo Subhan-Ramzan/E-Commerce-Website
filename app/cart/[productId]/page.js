@@ -1,4 +1,4 @@
-// components/ProductDetail.js
+// app/cart/[productId]/page.js
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
@@ -7,7 +7,8 @@ import ProductImage from "@/components/Cart/ProductImage"; // Image carousel com
 import QuantitySelector from "@/components/Cart/QuantitySelector"; // Quantity select component
 import ActionButtons from "@/components/Cart/ActionButtons"; // Add to cart and buy now buttons component
 import MapPage from "@/components/Cart/MapComponent";
-import { FaStar } from 'react-icons/fa';
+import { FaStar } from "react-icons/fa";
+import BottomProducts from "@/components/Cart/BottomProducts";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -17,6 +18,9 @@ const ProductDetail = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [shouldRunEffect, setShouldRunEffect] = useState(false);
   const productId = params?.productId; // Get product ID from params
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (productId) {
@@ -24,15 +28,69 @@ const ProductDetail = () => {
         try {
           const response = await fetch(`/api/uploadProduct/${productId}`);
           const data = await response.json();
-          setProduct(data); // Set product details
+          setProduct(data);
+
+          // Fetch initial related products
+          fetchRelatedProducts(data.category, data.name, 0);
         } catch (error) {
           console.error("Error fetching product details:", error);
         }
       };
 
-      fetchProductDetails(); // Call function to fetch product details
+      fetchProductDetails();
     }
   }, [productId]);
+
+  const fetchRelatedProducts = async (category, name, skipCount) => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/products/related?category=${category}&name=${name}&skip=${skipCount}&limit=1`
+      );
+      const data = await response.json();
+
+      // Deduplicate by `_id`
+      setRelatedProducts((prev) => {
+        const existingIds = new Set(prev.map((p) => p._id));
+        const newProducts = data.filter((p) => !existingIds.has(p._id));
+        return [...prev, ...newProducts];
+      });
+
+      setSkip(skipCount + 1);
+    } catch (error) {
+      console.error("Error fetching related products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.scrollHeight
+      ) {
+        if (product) {
+          fetchRelatedProducts(product.category, product.name, skip);
+        }
+      }
+    };
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Check scroll logic every 3 seconds
+    const interval = setInterval(() => {
+      handleScroll();
+    }, 3000);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(interval); // Clear the interval on unmount
+    };
+  }, [skip, product, router, fetchRelatedProducts]);
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1); // Increase quantity
@@ -108,7 +166,6 @@ const ProductDetail = () => {
             <p className="text-sm text-gray-600 mt-4">{product.description}</p>
           </div>
 
-
           {/* <QuantitySelector
             quantity={quantity}
             handleIncrement={handleIncrement}
@@ -120,9 +177,13 @@ const ProductDetail = () => {
           <MapPage />
         </div>
       </motion.div>
+      <BottomProducts relatedProducts={relatedProducts} />
+
+      {loading && (
+        <div className="text-center mt-4">Loading more products...</div>
+      )}
     </div>
   );
 };
 
 export default ProductDetail;
-
