@@ -100,7 +100,7 @@ const ProductDetail = () => {
       window.removeEventListener("scroll", handleScroll);
       clearInterval(interval);
     };
-  }, [skip, product, callCount, fetchRelatedProducts])
+  }, [skip, product, callCount, fetchRelatedProducts]);
 
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1); // Increase quantity
@@ -170,8 +170,11 @@ const ProductDetail = () => {
               <FaStar size={20} color="#FFD700" />
               <p className="text-lg">4.5</p>
             </span>
-            <h3 className="text-xl text-green-600 font-bold">
-              Rs. {product.price}
+            <h3 className="text-xl text-blue-600 font-bold">
+              <span className="text-xl font-bold mr-1 transition-transform duration-300 hover:scale-125">
+                ₨.
+              </span>
+              {product.price.toLocaleString("en-IN")}
             </h3>
             <p className="text-sm text-gray-600 mt-4">{product.description}</p>
           </div>

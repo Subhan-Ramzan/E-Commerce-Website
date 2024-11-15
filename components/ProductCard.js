@@ -18,9 +18,7 @@ const ProductCard = ({ product }) => {
         margin: "8px",
       }}
     >
-      <div
-        className="relative w-full h-56 md:h-64 bg-gray-100"
-      >
+      <div className="relative w-full h-56 md:h-64 bg-gray-100">
         {product.productImage && product.productImage[0] ? (
           <CldImage
             src={product.productImage[0].public_id}
@@ -49,7 +47,12 @@ const ProductCard = ({ product }) => {
         <p className="text-sm text-gray-600 mt-1 line-clamp-2">
           {product.description}
         </p>
-        <p className="text-lg font-semibold text-blue-600 mt-4">{`$${product.price}`}</p>
+        <p className="flex items-center text-lg font-medium text-blue-600 bg-clip-text text-transparent">
+          <span className="text-xl font-bold mr-1 transition-transform duration-300 hover:scale-125">
+            ₨.
+          </span>
+          {product.price.toLocaleString("en-IN")}
+        </p>
         <button className="w-full mt-4 py-2 bg-gradient-to-bl from-orange-500 to-pink-500 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg transition-colors duration-200">
           View Details
         </button>
