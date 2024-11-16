@@ -35,7 +35,7 @@ const UploadProduct = ({ onClose }) => {
       category: data.category,
       description: data.description,
       price: data.price,
-      productImage:publicIds
+      productImage: publicIds,
     };
 
     try {
@@ -62,8 +62,8 @@ const UploadProduct = ({ onClose }) => {
   };
 
   return (
-    <div className="fixed w-full h-full bg-slate-100 text-white bg-opacity-35 py-7 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-      <div className="bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] p-4 rounded w-full max-w-2xl h-full max-h-[90%] overflow-auto">
+    <div className="fixed w-full h-full bg-slate-100 text-white bg-opacity-35 top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50 ">
+      <div className="bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] p-4 rounded w-full max-w-2xl h-full max-h-[100%] overflow-auto z-50">
         <div className="flex justify-between items-center pb-3">
           <h2 className="font-bold text-2xl">Upload Product</h2>
           <div

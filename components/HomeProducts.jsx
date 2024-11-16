@@ -84,7 +84,12 @@ export default function HomeProducts() {
             </div>
             {loading && (
                 <div className="flex justify-center items-center mt-5">
-                    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
+                    <div className="flex flex-col justify-center items-center mt-4">
+                        <div className="loader-circle h-8 w-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                        <p className="text-gray-600 font-medium mt-4">
+                            Loading products, please wait...
+                        </p>
+                    </div>
                 </div>
             )}
         </section>

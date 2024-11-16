@@ -10,6 +10,7 @@ import MapPage from "@/components/Cart/MapComponent";
 import { FaStar } from "react-icons/fa";
 import BottomProducts from "@/components/Cart/BottomProducts";
 import { useCallback } from "react";
+import Buynow from "@/components/Cart/Buynow";
 
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
@@ -23,6 +24,7 @@ const ProductDetail = () => {
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
   const [callCount, setCallCount] = useState(0); // Track function calls
+  const [uploadProduct, setUploadProduct] = useState(false);
 
   useEffect(() => {
     if (productId) {
@@ -190,11 +192,20 @@ const ProductDetail = () => {
           <MapPage />
         </div>
       </motion.div>
+
+      <button onClick={() => setUploadProduct(true)}>Click Me </button>
+      <div>
+        {uploadProduct && (
+          <Buynow onClose={() => setUploadProduct(false)} />
+        )}
+      </div>
+      
       <BottomProducts relatedProducts={relatedProducts} />
 
       {loading && (
         <div className="text-center mt-4">Loading more products...</div>
       )}
+
     </div>
   );
 };

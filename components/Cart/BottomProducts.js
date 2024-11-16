@@ -30,7 +30,8 @@ export default function BottomProducts({ relatedProducts }) {
                   height={200}
                   className="rounded-lg w-full h-40 object-cover"
                 />
-                <h3 className="text-lg font-semibold text-gray-800 mt-3 truncate w-full text-center">
+                <h3 className="text-lg font-semibold text-gray-800 mt-3 
+                 w-full text-center">
                   {product.name}
                 </h3>
                 <p className="text-sm text-gray-600 mt-1">Rs. {product.price}</p>

@@ -4,12 +4,18 @@ import { IoClose } from "react-icons/io5";
 
 const FaBar = ({ toggleFaBar, setProductTroll }) => {
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const categories = ["Abaya", "Chaddar", "Dupatta", "Hijab", "Niqab"];
 
   const handleOnChange = (e) => {
     const { value } = e.target;
     setSelectedCategory(value);
+  };
+  const handleLoader = () => {
+    setLoading(true); 
+    setTimeout(() => {
+      setLoading(false); 
+    }, 1500);
   };
 
   return (
@@ -22,27 +28,50 @@ const FaBar = ({ toggleFaBar, setProductTroll }) => {
       </div>
       <ul className="flex flex-col space-y-4 px-6 mt-4">
         <li>
-          <Link href="/" className="transition-colors duration-300 hover:underline hover:text-orange-400">
+          <Link
+            href="/"
+            className="transition-colors duration-300 hover:underline hover:text-orange-400"
+          >
             Home
           </Link>
         </li>
         <li>
-          <Link href="/about" className="transition-colors duration-300 hover:underline hover:text-orange-400">
+          <Link
+            href="/about"
+            className="transition-colors duration-300 hover:underline hover:text-orange-400"
+          >
             About
           </Link>
         </li>
         <li>
-          <Link href="/contact" className="transition-colors duration-300 hover:underline hover:text-orange-400">
+          <Link
+            href="/contact"
+            className="transition-colors duration-300 hover:underline hover:text-orange-400"
+          >
             Contact
           </Link>
         </li>
         <li>
-          <h3
-            onClick={() => setProductTroll(true)}
-            className="font-medium text-2xl hover:text-blue-400 py-2 cursor-pointer transition-colors duration-300"
-          >
-            All Products
-          </h3>
+          {loading ? (
+            <div className="flex flex-col justify-center items-center mt-4">
+              {/* Loader Circle */}
+              <div className="loader-circle h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              {/* Optional Message */}
+              <p className="text-gray-600 font-medium mt-4">
+                Loading products, please wait...
+              </p>
+            </div>
+          ) : (
+            <h3
+              onClick={() => {
+                setProductTroll(true);
+                handleLoader();
+              }}
+              className="font-medium text-xl hover:text-blue-400 py-2 cursor-pointer transition-colors duration-300"
+            >
+              Show All Products
+            </h3>
+          )}
         </li>
         <li>
           <select

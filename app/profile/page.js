@@ -1,67 +1,49 @@
-//app/profile/page.js
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
-import FaBar from "../profileBar/fabar"; // Adjust the import if needed
-import ProductData from "../products/page"; // Use ProductData instead of AllProducts
+import { FaRegCircleUser } from "react-icons/fa6";
+import FaBar from "../profileBar/fabar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FaRegCircleUser } from "react-icons/fa6";
 import Image from "next/image";
 import axios from "axios";
 import { CldImage } from "next-cloudinary";
-// import User from "@/models/Signup";
+import AllProducts from "../allProducts/page";
+import UplaodData from "../uploadProductData/page";
 
-const ProfilePage = () => {
-  const [productTroll, setProductTroll] = useState(false); // Toggle for product data
+const Page = () => {
+  const [uploadProduct, setUploadProduct] = useState(false);
   const [handleFaBar, setHandleFaBar] = useState(false); // Sidebar toggle
+  const [productTroll, setProductTroll] = useState(false); // Toggle for product data
   const [userData, setUserData] = useState(null);
+  const [publicId, setPublicId] = useState(null);
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [publicId, setPublicId] = useState(null);
-  const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
+  const [loading, setLoading] = useState(false);
 
-  // console.log("Profile Data", status);
-  // console.log("Session Data:", session);
+  const toggleProducts = () => {
+    setProductTroll(!productTroll); // Toggle product display
+  };
+  const toggleFaBar = () => setHandleFaBar(!handleFaBar); // Toggle sidebar
 
   useEffect(() => {
     const fetchCookieData = async () => {
-      console.log("Starting fetchCookieData function");
-
       try {
-        console.log("Attempting to fetch protected data with credentials");
         const response = await axios.get("/api/protected", {
           withCredentials: true,
         });
-
-        console.log("Protected data fetched successfully:", response.data);
         setUserData(response.data.user);
 
-        const user = response.data.user;
-        console.log("User data set with:", user);
-
-        const id = user.id;
-        console.log(`User ID is: ${id}`);
-
+        const id = response.data.user.id;
         if (id) {
-          console.log(`Fetching profile image for user ID: ${id}`);
           const imageResponse = await axios.get(`/api/profileimage/${id}`);
-          console.log("Profile image response:", imageResponse.data.public_id);
           setPublicId(imageResponse.data.public_id);
-        } else {
-          console.log("No user ID found; skipping profile image fetch");
         }
       } catch (error) {
-        console.log("Failed to fetch protected data:", error);
         setUserData(null);
-        console.log("User data set to null due to fetch error");
-
-        console.log("Redirecting to login page");
         router.push("/login");
       }
-
-      console.log("fetchCookieData function execution completed");
     };
 
     if (status === "unauthenticated" && userData === null) {
@@ -112,41 +94,93 @@ const ProfilePage = () => {
                   "Guest"}
               </p>
             ) : (
-              <p className="text-white">Guest</p> // Show a default message if not authenticated
+              <p className="text-white">Guest</p>
             )}
           </h3>
         </div>
         <hr />
         <div>
-          <h3
-            onClick={() => setProductTroll(!productTroll)}
-            className="font-medium text-2xl hover:text-blue-700 py-2 cursor-pointer"
-          >
-            All Products
-          </h3>
+          {loading ? (
+            <div className="flex flex-col justify-center items-center mt-4">
+              <div className="loader-circle h-12 w-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-gray-600 font-medium mt-4">
+                Loading products, please wait...
+              </p>
+            </div>
+          ) : (
+            <h3
+              onClick={toggleProducts}
+              className="font-medium text-2xl hover:text-blue-700 py-2 cursor-pointer"
+            >
+              Show All Products
+            </h3>
+          )}
         </div>
       </div>
 
-      {/* Toggle button for sidebar */}
-      <div onClick={toggleFaBar} className="md:hidden p-4">
-        <FaBars className="text-2xl" />
-      </div>
-
-      {/* Sidebar Overlay */}
-      {handleFaBar && (
-        <div
-          className={`fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 z-50 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}
-        >
-          <FaBar toggleFaBar={toggleFaBar} setProductTroll={setProductTroll} />
-        </div>
-      )}
-
-      {/* Product Section */}
+      {/* Main Content */}
       <div className="flex flex-col w-full overflow-auto">
-        {productTroll && <ProductData />}
+        {/* Toggle button for sidebar */}
+        <div
+          onClick={toggleFaBar}
+          className="md:hidden p-4 flex items-center justify-center"
+        >
+          <FaBars className="text-2xl" />
+          <div className="flex flex-row w-full justify-between items-center px-3">
+            <h3 className="font-bold text-lg md:text-2xl ">Your Products</h3>
+            <div className="ml-auto">
+              <button
+                onClick={() => setUploadProduct(true)}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold px-2 py-2 md:px-4 rounded-lg"
+              >
+                Upload Product
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Sidebar Overlay */}
+        {handleFaBar && (
+          <div
+            className={`fixed w-64 top-3 bottom-3 min-h-[96vh] px-6 py-4 left-2 z-50 bg-gray-900 text-white transform transition-transform duration-300 ease-in-out rounded-2xl shadow-lg`}
+          >
+            <FaBar
+              toggleFaBar={toggleFaBar}
+              setProductTroll={setProductTroll}
+            />
+          </div>
+        )}
+
+        {/* Product Management */}
+        <div className="h-auto pb-2 md:pb-2">
+          <div className="flex max-md:hidden flex-row w-full justify-between items-center px-3">
+            <h3 className="font-bold text-lg md:text-2xl p-3">Your Products</h3>
+            <div className="ml-auto">
+              <button
+                onClick={() => setUploadProduct(true)}
+                className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold px-2 py-2 md:px-4 rounded-lg"
+              >
+                Upload Product
+              </button>
+            </div>
+          </div>
+          {/* <div>
+            <AllProducts />
+          </div> */}
+        </div>
+        {productTroll && <AllProducts setLoading={setLoading} />}
       </div>
+      <div>
+        {uploadProduct && (
+          <UplaodData onClose={() => setUploadProduct(false)} />
+        )}
+      </div>
+      <div></div>
+      {/* </div>
+        {productTroll && <AllProducts />}
+      </div> */}
     </div>
   );
 };
 
-export default ProfilePage;
+export default Page;
