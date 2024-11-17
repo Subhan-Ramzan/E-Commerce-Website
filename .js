@@ -151,3 +151,76 @@
 </div>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { MdLocationOn } from "react-icons/md";
+import io from "socket.io-client";
+
+const socket = io("https://boggy-shadowed-plain.glitch.me"); // Backend server URL
+
+export default function LocationComponent() {
+  const [location, setLocation] = useState({
+    latitude: null,
+    longitude: null,
+    locationName: "",
+  });
+
+  useEffect(() => {
+    // Listen for location updates from the server
+    socket.on("receive-location", (data) => {
+      console.log("Location received:", data);
+      setLocation({
+        latitude: data.latitude,
+        longitude: data.longitude,
+        locationName: data.locationName,
+      });
+    });
+
+    return () => {
+      socket.off("receive-location"); // Cleanup on component unmount
+    };
+  }, []);
+
+  return (
+    <div className="flex justify-between items-center gap-2">
+      <div>
+        <MdLocationOn className="text-blue-500 text-3xl" />
+      </div>
+      <div>
+        <p className="text-[12px] font-semibold">
+          {location.locationName || "Fetching..."}
+        </p>
+      </div>
+      <div>
+        <Link
+          href={`https://boggy-shadowed-plain.glitch.me`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button className="px-4 py-2 text-blue-600 font-semibold rounded-lg text-base">
+            Change
+          </button>
+        </Link>
+      </div>
+    </div>
+  );
+}

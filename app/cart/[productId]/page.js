@@ -11,7 +11,6 @@ import { FaStar } from "react-icons/fa";
 import BottomProducts from "@/components/Cart/BottomProducts";
 import { useCallback } from "react";
 import Buynow from "@/components/Cart/Buynow";
-
 const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1); // Manage product quantity
@@ -172,8 +171,8 @@ const ProductDetail = () => {
               <FaStar size={20} color="#FFD700" />
               <p className="text-lg">4.5</p>
             </span>
-            <h3 className="text-xl text-blue-600 font-bold">
-              <span className="text-xl font-bold mr-1 transition-transform duration-300 hover:scale-125">
+            <h3 className="text-xl text-blue-600 font-semibold">
+              <span className="text-xl font-semibold mr-1 transition-transform duration-300 hover:scale-125">
                 ₨.
               </span>
               {product.price.toLocaleString("en-IN")}
@@ -186,17 +185,15 @@ const ProductDetail = () => {
             handleIncrement={handleIncrement}
             handleDecrement={handleDecrement}
           /> */}
-          <ActionButtons />
+          <ActionButtons setUploadProduct={setUploadProduct} />
         </motion.div>
         <div>
           <MapPage />
         </div>
       </motion.div>
-
-      <button onClick={() => setUploadProduct(true)}>Click Me </button>
       <div>
         {uploadProduct && (
-          <Buynow onClose={() => setUploadProduct(false)} />
+          <Buynow product={product} onClose={() => setUploadProduct(false)} />
         )}
       </div>
       
