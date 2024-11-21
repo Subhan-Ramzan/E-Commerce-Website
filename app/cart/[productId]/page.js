@@ -195,6 +195,7 @@ const ProductDetail = () => {
         {uploadProduct && (
           <Buynow product={product} onClose={() => setUploadProduct(false)} />
         )}
+        
       </div>
       
       <BottomProducts relatedProducts={relatedProducts} />
