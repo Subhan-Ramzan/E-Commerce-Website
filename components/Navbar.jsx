@@ -140,7 +140,7 @@ const Navbar = () => {
             <li className="hover:text-blue-500">
               <Link href="/about" onClick={(e) => {
                 e.preventDefault(); // Prevent default behavior
-                window.open('https://codewithsubhan.vercel.app', '_blank'); // Open the URL in a new tab
+                window.open('https://subhanportfolio.vercel.app', '_blank'); // Open the URL in a new tab
               }}>
                 About
               </Link>

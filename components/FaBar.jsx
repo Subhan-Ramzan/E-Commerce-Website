@@ -62,7 +62,7 @@ const FaBar = ({ toggleFaBar, handleFaBar }) => {
         <li><Link href="/profile" className="hover:text-orange-400">Profile</Link></li>
         <li><Link href="/" className="hover:text-orange-400">Home</Link></li>
         <li>
-          <Link href="/about" onClick={(e) => { e.preventDefault(); window.open('https://codewithsubhan.vercel.app', '_blank'); }} className="hover:text-orange-400">
+          <Link href="/about" onClick={(e) => { e.preventDefault(); window.open('https://subhanportfolio.vercel.app', '_blank'); }} className="hover:text-orange-400">
             About
           </Link>
         </li>
