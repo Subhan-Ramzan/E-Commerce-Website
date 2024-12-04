@@ -1,4 +1,5 @@
-"use client"
+"use client";
+
 export default function HeroSection() {
   const handleScrollToBottom = () => {
     window.scrollTo({
@@ -8,21 +9,20 @@ export default function HeroSection() {
   };
 
   return (
-    <div className="relative h-[80vh] flex items-center justify-center bg-cover bg-center bg-fixed transition-all duration-1000 ease-in-out bg-hero-pattern">
-      {/* Background with rounded corners */}
-      <div className="absolute inset-0 rounded-sm bg-[#000000] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px]"></div>
+    <div className="relative h-[35vh] md:h-[50vh] overflow-hidden flex items-center justify-center bg-gradient-to-r from-purple-700 via-blue-800 to-blue-900 text-white">
+      <div className="absolute inset-0 z-0 bg-hero-pattern bg-cover bg-center"></div>
 
-      {/* Text content */}
-      <div className="text-center text-white z-10">
-        <h1 className="text-5xl md:text-7xl font-bold mb-4 animate-fadeInUp">
+      {/* Content */}
+      <div className="z-10 text-center px-4">
+        <h1 className="text-3xl md:text-5xl font-extrabold mb-4">
           Elevate Your Style
         </h1>
-        <p className="text-lg md:text-2xl mb-8 animate-fadeInUp delay-500">
+        <p className="text-lg md:text-xl mb-6">
           Discover the latest trends and shop exclusive collections.
         </p>
         <button
           onClick={handleScrollToBottom}
-          className="px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 transition-all duration-500 ease-in-out rounded-lg text-white font-semibold animate-fadeInUp delay-1000"
+          className="px-6 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 rounded-lg font-semibold transition-all duration-300"
         >
           Shop Now
         </button>

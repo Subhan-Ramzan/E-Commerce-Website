@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const Category = () => {
-  const categories = ['Abaya', 'Chaddar', 'Dupatta', 'Hijab', 'Niqab'];
+  const categories = ['Abaya', 'Chaddar', 'Dupatta', 'Hijab', 'Niqab' ,'Stoler'];
 
   return (
     <div className="flex flex-wrap justify-around px-2 py-4">
@@ -15,7 +15,7 @@ const Category = () => {
           <Link href={`/categories/${category.toLowerCase()}`} passHref>
             <div
               aria-label={`Navigate to ${category}`}
-              className="relative rounded-full bg-slate-100 p-1 h-10 w-10 sm:h-16 sm:w-16 md:h-20 md:w-20 overflow-hidden cursor-pointer shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:scale-105 group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-purple-700"
+              className="relative rounded-full bg-slate-100 p-1 h-6 w-6 sm:h-8 sm:w-8 overflow-hidden cursor-pointer shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:scale-105 group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-purple-700"
             >
               <Image
                 src={`/${category}.png`}
@@ -26,7 +26,7 @@ const Category = () => {
               />
             </div>
           </Link>
-          <h3 className="text-center text-[9px] sm:text-xs md:text-sm font-medium text-slate-900 transition-all duration-300 group-hover:text-indigo-700">
+          <h3 className="text-center text-[9px] sm:text-xs md:text-xs font-medium text-slate-900 transition-all duration-300 group-hover:text-indigo-700">
             {category}
           </h3>
         </div>

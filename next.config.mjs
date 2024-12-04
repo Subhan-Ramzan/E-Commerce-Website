@@ -1,14 +1,18 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['lh3.googleusercontent.com', 'res.cloudinary.com',"via.placeholder.com"],
-    // You can add additional image configuration options here
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048], // Example sizes
-    imageSizes: [16, 32, 48, 64, 96], // Example image sizes
-    path: '/_next/image', // Default path for Next.js image optimization
-    loader: 'default', // Loader type, can be adjusted if using custom loaders
+    domains: [
+      "lh3.googleusercontent.com",
+      "res.cloudinary.com",
+      "via.placeholder.com",
+      "avatars.githubusercontent.com",
+    ],
+
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96],
+    path: "/_next/image",
+    loader: "default",
   },
-  // Add other Next.js configurations if needed
 };
 
 export default nextConfig;

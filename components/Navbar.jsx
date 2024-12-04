@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { FaSearch, FaBars, FaShoppingCart } from "react-icons/fa";
+import { FaSearch, FaBars, FaShoppingCart, FaTimes } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { useSession, signOut } from "next-auth/react";
 import FaBar from "./FaBar";
@@ -12,8 +12,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CldImage } from "next-cloudinary";
-
-const Navbar = () => {
+const Navbar = ({ isOpen, onToggle }) => {
   const { data: session, status } = useSession();
   const [handleFaBar, setHandleFaBar] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -119,17 +118,45 @@ const Navbar = () => {
   }, [searchTerm]);
 
   return (
-    <>
-      <div className="relative flex h-20 md:h-16 w-full bg-slate-900 items-center px-6 py-2 text-white justify-between">
+    <div className="fixed top-0 left-0 w-full z-40 bg-slate-900 items-center">
+      <div className="relative flex h-16 w-full items-center px-6 py-2 text-white justify-between">
+        <div>
+          {isOpen ? (
+            ""
+          ) : (
+            <button
+              onClick={onToggle}
+              className="flex items-center text-white rounded-full shadow-lg transition-all duration-300"
+              aria-label={isOpen ? "Close Sidebar" : "Open Sidebar"}>
+              {isOpen ? (
+                className = "flex items-center rounded-full shadow-lg ransition-all duration-300"
+              ) : (
+                <FaBars className="w-6 h-6" />
+              )}
+            </button>
+          )}
+        </div>
         <Link href="/">
-          <Image
+          {/* <Image
             src="/favicon.png" // Replace with your actual logo image source
             alt="logo"
             width={50} // Default width for small screens
             height={50} // Default height for small screens
-            className="cursor-pointer object-cover rounded-full 
-             w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[45px] md:h-[45px]" // Responsive width & height
-          />
+            className="cursor-pointer object-cover rounded-full w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[45px] md:h-[45px]" // Responsive width & height
+          /> */}
+          {/* <div className="flex items-center"> */}
+          {/* <Link href="/"> */}
+          <div>
+            <span className="relative group text-white text-lg md:text-2xl font-semibold hover:animate-spin transition-colors duration-300 transform hover:scale-110">
+              <span className="text-blue-500">&lt;</span>
+              <span className="text-white group-hover:rotate-45 transition-transform duration-500">
+                New
+              </span>
+              <span className="text-blue-500 group-hover:text-blue-900 group-hover:rotate-45 transition-all duration-1000">
+                Fashion/&gt;
+              </span>
+            </span>
+          </div>
         </Link>
 
         <div className="hidden md:flex">
@@ -166,11 +193,11 @@ const Navbar = () => {
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[30vw] md:w-full px-3 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
+              className="w-[30vw] md:w-full px-3 py-1.5 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
             />
             <button
               type="submit"
-              className="bg-blue-600 p-1.5 sm:p-2.5 md:p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center w-[38px] h-[38px] md-w-[40px] md:h-[40px] "// Fixed icon button size
+              className="bg-blue-600 p-1.5 sm:p-2.5 md:p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center w-[38px] h-[34px] md-w-[40px] md:h-[40px] "// Fixed icon button size
             >
               <FaSearch className="text-xs sm:text-sm md:text-base" /> {/* Adjusting icon size */}
             </button>
@@ -194,7 +221,7 @@ const Navbar = () => {
             </ul>
           )}
         </div>
-        <div className="flex items-center space-x-4 justify-between">
+        <div className="max-md:hidden flex items-center space-x-4 justify-between">
           <div>
             {status === "authenticated" || userData !== null ? (
               <Link href="/profile">
@@ -302,7 +329,7 @@ const Navbar = () => {
         )}
       </div >
       <ToastContainer />
-    </>
+    </div >
   );
 };
 
