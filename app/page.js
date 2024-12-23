@@ -6,20 +6,21 @@ import HeroSection from "@/components/HeroSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
 import CategorySection from "@/components/CategorySection";
 import HomeProducts from "@/components/HomeProducts";
-import Sidebar from "@/components/app-sidebar";
 import CoverImg from "@/components/CoverImg";
+import ProductCard2 from "@/components/ProductCard2";
+import HomeHeading from "@/components/HomeHeading";
 export default function Home() {
   return (
     <>
-      <Category />
-      <HeroSection />
-      {/* <section className="py-8">
-        <CoverImg />
-      </section> */}
-      <Sidebar />
       {/* <CategorySection /> */}
-      <FeaturedProducts />
-      <HomeProducts />
+      <div className="md:w-[90vw] w-[95vw] mx-auto">
+        <Category />
+        <HeroSection />
+        <HomeHeading />
+        <ProductCard2 />
+        <FeaturedProducts />
+      </div>
+      {/* <HomeProducts /> */}
       {/* <Main /> */}
     </>
   );

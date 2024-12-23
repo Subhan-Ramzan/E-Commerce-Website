@@ -118,34 +118,10 @@ const Navbar = ({ isOpen, onToggle }) => {
   }, [searchTerm]);
 
   return (
-    <div className="fixed top-0 left-0 w-full z-40 bg-slate-900 items-center">
+    <div className="fixed top-0 left-0 w-full z-10 bg-slate-900 items-center">
       <div className="relative flex h-16 w-full items-center px-6 py-2 text-white justify-between">
-        <div>
-          {isOpen ? (
-            ""
-          ) : (
-            <button
-              onClick={onToggle}
-              className="flex items-center text-white rounded-full shadow-lg transition-all duration-300"
-              aria-label={isOpen ? "Close Sidebar" : "Open Sidebar"}>
-              {isOpen ? (
-                className = "flex items-center rounded-full shadow-lg ransition-all duration-300"
-              ) : (
-                <FaBars className="w-6 h-6" />
-              )}
-            </button>
-          )}
-        </div>
+
         <Link href="/">
-          {/* <Image
-            src="/favicon.png" // Replace with your actual logo image source
-            alt="logo"
-            width={50} // Default width for small screens
-            height={50} // Default height for small screens
-            className="cursor-pointer object-cover rounded-full w-[35px] h-[35px] sm:w-[40px] sm:h-[40px] md:w-[45px] md:h-[45px]" // Responsive width & height
-          /> */}
-          {/* <div className="flex items-center"> */}
-          {/* <Link href="/"> */}
           <div>
             <span className="relative group text-white text-lg md:text-2xl font-semibold hover:animate-spin transition-colors duration-300 transform hover:scale-110">
               <span className="text-blue-500">&lt;</span>
@@ -193,7 +169,7 @@ const Navbar = ({ isOpen, onToggle }) => {
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-[30vw] md:w-full px-3 py-1.5 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
+              className="w-[30vw] md:w-full px-3 py-2 outline-none text-black placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
             />
             <button
               type="submit"
@@ -221,8 +197,8 @@ const Navbar = ({ isOpen, onToggle }) => {
             </ul>
           )}
         </div>
-        <div className="max-md:hidden flex items-center space-x-4 justify-between">
-          <div>
+        <div className="flex items-center space-x-4 justify-between">
+          <div className="max-md:hidden ">
             {status === "authenticated" || userData !== null ? (
               <Link href="/profile">
                 {session?.user?.image ? (
@@ -253,7 +229,7 @@ const Navbar = ({ isOpen, onToggle }) => {
           </div>
 
           {/* Cart icon - Always visible */}
-          <Link href="/cart">
+          <Link href="/cart" className="max-md:hidden ">
             <div className="text-xl md:text-2xl relative cursor-pointer">
               <FaShoppingCart />
               {status === "authenticated" || userData !== null ? (
@@ -307,14 +283,25 @@ const Navbar = ({ isOpen, onToggle }) => {
             )}
           </div>
 
-          <div onClick={toggleFaBar} className="md:hidden cursor-pointer">
-            {/* Clickable Icon */}
-            <FaBars className="text-2xl" />
+          <div>
+            {isOpen ? (
+              ""
+            ) : (
+              <button
+                onClick={onToggle}
+                className="flex items-center text-white rounded-full shadow-lg transition-all duration-300" >
+                {isOpen ? (
+                  className = "flex items-center rounded-full shadow-lg ransition-all duration-300"
+                ) : (
+                  <FaBars className="w-6 h-6" />
+                )}
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Sidebar */}
-        {handleFaBar && (
+        {/* Sidebar 
+        {/* {handleFaBar && (
           <div
             className={`flex justify-between fixed top-3 bottom-3 w-64 min-h-[96vh] px-6 py-4 right-2 bg-gray-900 text-white transition-all duration-300 ease-out rounded-2xl shadow-xl z-50 ${handleFaBar ? "translate-x-0" : "translate-x-full"
               }`}
@@ -323,10 +310,11 @@ const Navbar = ({ isOpen, onToggle }) => {
               opacity: handleFaBar ? 1 : 0,
             }}
           >
-            {/* Sidebar Content */}
+            {/* Sidebar Content
             <FaBar toggleFaBar={toggleFaBar} handleFaBar={handleFaBar} />
           </div>
-        )}
+        )} */}
+
       </div >
       <ToastContainer />
     </div >

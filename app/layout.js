@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
+import Sidebar from "@/components/app-sidebar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -22,12 +23,10 @@ export default function RootLayout({ children }) {
     <html lang="en" className="scroll-smooth">
       <body className="relative">
         <ClientSessionProvider>
+          <Sidebar />
           <ProductProvider>
             <Navbar />
-            <div className="pt-16 max-md:pt-20">
-              {" "}
-              {children}
-            </div>
+            <div className="pt-16 max-md:pt-20"> {children}</div>
             <MobileFooter />
             <Footer />
           </ProductProvider>
