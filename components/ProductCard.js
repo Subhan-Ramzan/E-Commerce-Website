@@ -1,62 +1,57 @@
-"use client";
-
-import React from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { CldImage } from "next-cloudinary";
+import Link from "next/link";
+import React from "react";
 
-const ProductCard = ({ product }) => {
-  const router = useRouter();
-
+const ProductCard = () => {
   return (
-    <div
-      className="product-item bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 transform hover:scale-105"
-      onClick={() => router.push(`/cart/${product._id}`)}
-      style={{
-        border: "1px solid #e5e7eb",
-        padding: "16px",
-        margin: "8px",
-      }}
-    >
-      <div className="relative w-full h-56 md:h-64 bg-gray-100">
-        {product.productImage && product.productImage[0] ? (
-          <CldImage
-            src={product.productImage[0].public_id}
-            alt={product.name}
-            width={500}
-            height={500}
-            className="object-cover w-full h-full"
-          />
-        ) : (
-          <Image
-            src="/placeholder.png" // Fallback image path
-            alt="Placeholder Image"
-            width={500}
-            height={500}
-            className="object-cover w-full h-full"
-          />
-        )}
-      </div>
-      <div className="p-4">
-        <h2 className="text-xl font-semibold text-gray-800 truncate">
-          {product.name}
-        </h2>
-        <p className="text-sm text-gray-600 mt-2">
-          <strong>Brand:</strong> {product.brand}
-        </p>
-        <p className="text-sm text-gray-600 mt-1 line-clamp-2">
-          {product.description}
-        </p>
-        <p className="flex items-center text-lg font-medium text-blue-600 bg-clip-text text-transparent">
-          <span className="text-xl font-bold mr-1 transition-transform duration-300 hover:scale-125">
-            ₨.
-          </span>
-          {product.price.toLocaleString("en-IN")}
-        </p>
-        <button className="w-full mt-4 py-2 bg-gradient-to-bl from-orange-500 to-pink-500 hover:from-orange-700 hover:to-pink-700 text-white rounded-lg transition-colors duration-200">
-          View Details
-        </button>
-      </div>
+    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+      {[...Array(12)].map((_, index) => (
+        <Link
+          key={index}
+          href={`/productdetail`}
+          className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer shadow-lg rounded-lg flex flex-col"
+        >
+          {/* Product Image */}
+          <div className="relative w-full h-[200px] md:h-[250px] lg:h-[300px]">
+            <Image
+              src={"/slide-2.png"}
+              alt="Product Name"
+              layout="fill"
+              objectFit="cover"
+              className="rounded-t-lg"
+            />
+          </div>
+
+          {/* Product Details */}
+          <div className="p-4 text-black/[0.9]">
+            {/* Product Name */}
+            <h2 className="md:text-lg text-sm sm:text-base font-normal md:font-medium truncate line-clamp-2">
+              Nameafsddddddddddddddddddddddddddddddddddddddddddddaaaaaaaaaaaaaaaaaaaaaaaaafffffffffffffffffffffffffafafafa
+            </h2>
+            <div className="flex flex-col sm:flex-row sm:justify-between items-start text-black/[0.5]">
+              {/* Price Section */}
+              <div className="flex flex-col">
+                {/* Mobile View: Price and Discount in One Line */}
+                <div className="flex justify-between md:hidden text-sm">
+                  <p className="font-semibold text-black">Rs.price</p>
+                  <p className="font-medium text-green-500">20% off</p>
+                </div>
+                {/* Desktop View: Price and Original Price */}
+                <p className="text-lg font-semibold text-black hidden md:block">
+                  Rs.price
+                </p>
+                <p className="text-base font-medium line-through text-red-500">
+                  Rs.original_price
+                </p>
+              </div>
+              {/* Desktop View: Discount */}
+              <div className="mt-2 sm:mt-0 hidden md:block">
+                <p className="text-base font-medium text-green-500">20% off</p>
+              </div>
+            </div>
+          </div>
+        </Link>
+      ))}
     </div>
   );
 };

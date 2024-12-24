@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
+import SearchBar from "@/components/SearchNavbar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -26,7 +27,8 @@ export default function RootLayout({ children }) {
           <Sidebar />
           <ProductProvider>
             <Navbar />
-            <div className="pt-16 max-md:pt-20"> {children}</div>
+            <SearchBar />
+            <div className="pt-16 max-md:pt-32"> {children}</div>
             <MobileFooter />
             <Footer />
           </ProductProvider>

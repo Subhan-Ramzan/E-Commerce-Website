@@ -7,7 +7,7 @@ import FeaturedProducts from "@/components/FeaturedProducts";
 import CategorySection from "@/components/CategorySection";
 import HomeProducts from "@/components/HomeProducts";
 import CoverImg from "@/components/CoverImg";
-import ProductCard2 from "@/components/ProductCard2";
+import ProductCard from "@/components/ProductCard";
 import HomeHeading from "@/components/HomeHeading";
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
         <Category />
         <HeroSection />
         <HomeHeading />
-        <ProductCard2 />
+        <ProductCard />
         <FeaturedProducts />
       </div>
       {/* <HomeProducts /> */}
