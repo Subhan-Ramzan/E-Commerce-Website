@@ -159,7 +159,7 @@ const Navbar = ({ isOpen, onToggle }) => {
         </div>
 
         {/* Search Bar */}
-        <div className="relative">
+        <div className="relative max-md:hidden">
           <form
             onSubmit={handleSearch}
             className="flex items-center rounded-full overflow-hidden shadow-lg transition-transform duration-300 mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
