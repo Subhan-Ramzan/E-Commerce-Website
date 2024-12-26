@@ -2,6 +2,9 @@
 const nextConfig = {
   images: {
     domains: [
+      "localhost",
+      "127.0.0.1",
+      "your-strapi-domain.com",
       "lh3.googleusercontent.com",
       "res.cloudinary.com",
       "via.placeholder.com",

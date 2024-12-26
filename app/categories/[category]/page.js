@@ -1,79 +1,64 @@
-"use client";
+import Category from "./Category";
+import { fetchDataFromApi } from "@/utils/api";
 
-import React, { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-import ProductCard from "@/components/ProductCard2";
+// Generate static paths for categories
+export async function generateStaticParams() {
+  const category = await fetchDataFromApi("/api/categories?populate=*");
 
-const CategoryPage = () => {
-  const { category } = useParams();
-  const router = useRouter();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const params = category?.data?.map((c) => ({
+    category: c.slug, // Use "category" to match the folder name
+  }));
 
-  const capitalizeCategory = (category) => {
-    if (category && typeof category === "string") {
-      return category.charAt(0).toUpperCase() + category.slice(1);
-    }
-    return category;
+  return params;
+}
+
+// Generate metadata for categories
+export async function generateMetadata({ params }) {
+  // Await params before accessing
+  const par = await params
+  const category = await fetchDataFromApi(
+    `/api/categories?filters[slug][$eq]=${par?.category}` // Use "category" here
+  );
+
+  return {
+    title: category?.data?.[0]?.name || "Category",
   };
+}
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      if (category) {
-        const capitalizedCategory = capitalizeCategory(category);
-        try {
-          const response = await fetch(`/api/products?category=${capitalizedCategory}`);
-          if (!response.ok) {
-            setError(`Failed to fetch products: ${response.status}`);
-            return;
-          }
-          const products = await response.json();
-          setProducts(products);
-          setLoading(false);
-        } catch (error) {
-          setError("Error fetching products");
-          console.error(error);
-        }
-      }
-    };
+// Render the CategoryPage
+export default async function CategoryPage({ params }) {
+  // Await the category param to ensure it's available
+  const { category } = await params;  // This will now work correctly
+  const categoryData = await fetchDataFromApi(
+    `/api/categories?filters[slug][$eq]=${category}` // Use "category" here
+  );
 
-    fetchProducts();
-  }, [category]);
+  // Fetch all products if no category found
+  const products = await fetchDataFromApi(
+    `/api/products?populate=*&pagination[page]=1&pagination[pageSize]=6`
+  );
 
-  if (loading) {
+  // Handle no category found
+  if (!categoryData?.data?.length) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-r from-teal-400 via-purple-500 to-indigo-600">
-        <div className="relative animate-pulse">
-          <div className="w-20 h-20 border-8 border-t-4 border-white rounded-full animate-spin"></div>
-          <p className="mt-8 text-white text-xl font-semibold">Loading...</p>
+      <div className="w-full min-h-[80vh]">
+        {/* Highlighted message for category not found */}
+        <div className="bg-red-100 text-red-600 p-4 text-center font-medium">
+          Category &apos;{category}&apos; not found. Showing all available
+          products.
         </div>
+
+        {/* Products grid for all products */}
+        <Category initialCategory={""} initialProducts={products} slug="" />
       </div>
     );
   }
 
-  if (error) {
-    return <div className="text-center text-red-600">{`Error: ${error}`}</div>;
-  }
-
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
-        {capitalizeCategory(category)} Products
-      </h1>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.length === 0 ? (
-          <p className="col-span-full text-center text-lg text-gray-600">
-            No products found
-          </p>
-        ) : (
-          products.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))
-        )}
-      </div>
-    </div>
+    <Category
+      initialCategory={categoryData}
+      initialProducts={products}
+      slug={category}
+    />
   );
-};
-
-export default CategoryPage;
+}

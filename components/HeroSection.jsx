@@ -1,17 +1,20 @@
-"use client";  // This marks this component as a Client Component
+"use client"; // This marks this component as a Client Component
 
 import React from "react";
 import dynamic from "next/dynamic";  // Dynamic import for the Carousel component
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { BiArrowBack } from "react-icons/bi";
 import Image from "next/image";
+import { API_URL } from "@/utils/urls";
 
 // Dynamically import Carousel component with SSR disabled
 const Carousel = dynamic(() => import("react-responsive-carousel").then((mod) => mod.Carousel), {
   ssr: false,
 });
 
-const HeroSection = () => {
+const url = API_URL;
+
+const HeroSection = ({ CoverImages }) => {
   return (
     <div className="relative text-white w-full max-w-[1360px] mx-auto">
       <Carousel
@@ -37,53 +40,23 @@ const HeroSection = () => {
           </div>
         )}
       >
-        {/* Slide 1 */}
-        <div className="relative">
-          <Image
-            src="/slide-1.png"
-            alt="Slide 1"
-            layout="responsive"
-            width={1360}
-            height={700} // Reduced height for large screens
-            className="object-cover"
-            priority={true}
-          />
-          <div className="absolute bottom-[15px] md:bottom-[30px] left-5 md:left-10 bg-white/90 text-black font-oswald text-[13px] md:text-[20px] px-4 py-2 md:px-6 md:py-3 uppercase font-medium cursor-pointer hover:opacity-80">
-            Shop now
+        {/* Dynamically render the images */}
+        {CoverImages?.map((CoverImage, index) => (
+          <div key={index} className="relative">
+            <Image
+              src={`${url}${CoverImage.url}`} // Assuming each image object has a `url` field
+              alt={`Cover Image ${index + 1}`}
+              layout="responsive"
+              width={1360}
+              height={700}
+              className="object-cover"
+              priority={true}
+            />
+            <div className="absolute bottom-[15px] md:bottom-[30px] left-5 md:left-10 bg-white/90 text-black font-oswald text-[13px] md:text-[20px] px-4 py-2 md:px-6 md:py-3 uppercase font-medium cursor-pointer hover:opacity-80">
+              Shop now
+            </div>
           </div>
-        </div>
-
-        {/* Slide 2 */}
-        <div className="relative">
-          <Image
-            src="/slide-2.png"
-            alt="Slide 2"
-            layout="responsive"
-            width={1360}
-            height={700} // Reduced height for large screens
-            className="object-cover"
-            priority={true}
-          />
-          <div className="absolute bottom-[15px] md:bottom-[30px] left-5 md:left-10 bg-white/90 text-black font-oswald text-[13px] md:text-[20px] px-4 py-2 md:px-6 md:py-3 uppercase font-medium cursor-pointer hover:opacity-80">
-            Shop now
-          </div>
-        </div>
-
-        {/* Slide 3 */}
-        <div className="relative">
-          <Image
-            src="/slide-3.png"
-            alt="Slide 3"
-            layout="responsive"
-            width={1360}
-            height={700} // Reduced height for large screens
-            className="object-cover"
-            priority={true}
-          />
-          <div className="absolute bottom-[15px] md:bottom-[30px] left-5 md:left-10 bg-white/90 text-black font-oswald text-[13px] md:text-[20px] px-4 py-2 md:px-6 md:py-3 uppercase font-medium cursor-pointer hover:opacity-80">
-            Shop now
-          </div>
-        </div>
+        ))}
       </Carousel>
     </div>
   );

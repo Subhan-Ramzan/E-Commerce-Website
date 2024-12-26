@@ -68,7 +68,7 @@ const SearchBar = ({ onSearch }) => {
 
   return (
     <div
-      className={`fixed top-[70px] left-0 w-full z-20 shadow-lg transition-transform duration-300 ${show} md:hidden`}
+      className={`fixed top-[70px] left-0 w-full z-20 shadow-lg transition-transform duration-300 ${show} lg:hidden`}
     >
       <form
         onSubmit={handleSearch}
@@ -79,11 +79,11 @@ const SearchBar = ({ onSearch }) => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-4 outline-none text-black bg-slate-20 placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
+          className="w-full px-3 py-2 outline-none text-black bg-gray-50 placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
         />
         <button
           type="submit"
-          className="bg-blue-600 p-1.5 sm:p-2.5 md:p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center w-[38px] h-[34px] md:w-[40px] md:h-[40px]"
+          className="bg-blue-600 p-3 rounded-r-full text-white hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center w-[38px] h-[34px] md:w-[40px] md:h-[40px]"
         >
           <FaSearch className="text-xs sm:text-sm md:text-base" />
         </button>
@@ -99,7 +99,7 @@ const SearchBar = ({ onSearch }) => {
                 setSearchTerm(suggestion);
                 onSearch(suggestion); // Pass the selected suggestion back to parent
               }}
-              className="p-3 cursor-pointer text-black hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
+              className="p-3 z-50 cursor-pointer text-black hover:bg-gray-100 transition-colors duration-300 transform hover:scale-105"
             >
               {suggestion}
             </li>
