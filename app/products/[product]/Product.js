@@ -1,3 +1,4 @@
+//app/products/[product]/Product.js
 "use client";
 import React, { useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -16,7 +17,7 @@ import Image from "next/image";
 const Product = ({ product }) => {
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
-  const [selectedColor, setSelectedColor] = useState(null);  // State for color
+  const [selectedColor, setSelectedColor] = useState(null); // State for color
   const [showError, setShowError] = useState(false);
   const p = product;
   const { data: session } = useSession();
@@ -26,13 +27,12 @@ const Product = ({ product }) => {
 
   const [number, setNumber] = useState(0);
 
-
   const handleShowError = () => {
     if (!selectedSize || !selectedColor) {
-      setShowError(true);  // Show the error if no size or color is selected
-      return false;  // Prevent further action
+      setShowError(true); // Show the error if no size or color is selected
+      return false; // Prevent further action
     }
-    return true;  // Allow action if size and color are selected
+    return true; // Allow action if size and color are selected
   };
 
   const handleBuyNow = () => {
@@ -40,7 +40,6 @@ const Product = ({ product }) => {
       router.push(`/buynow/${p?.documentId}?selectedColor=${selectedColor}`);
     }
     window.scrollBy({ top: -100, behavior: "smooth" });
-
   };
 
   const handleAddToCart = (productId) => {
@@ -98,7 +97,6 @@ const Product = ({ product }) => {
             {p?.name}
           </div>
           <div className="text-lg font-semibold mb-5">{p?.subtitle}</div>
-
           {/* Product Price */}
           <div className="flex items-center">
             <p className="mr-2 text-lg font-semibold">
@@ -116,12 +114,10 @@ const Product = ({ product }) => {
               </>
             )}
           </div>
-
           <div className="text-md font-medium text-black/[0.5]">
             incl. of taxes
           </div>
           <div className="text-md font-medium text-black/[0.5] mb-20">{`(Also includes all applicable duties)`}</div>
-
           {/* Size Selection */}
           <div className="mb-10">
             <div className="flex justify-between mb-2">
@@ -173,10 +169,11 @@ const Product = ({ product }) => {
               {p?.size.data.map((item, i) => (
                 <div
                   key={i}
-                  className={`border rounded-md text-center py-3 font-medium ${item.enabled
-                    ? "hover:border-black cursor-pointer"
-                    : "cursor-not-allowed bg-black/[0.1] opacity-50"
-                    } ${selectedSize === item.size ? "border-black" : ""}`}
+                  className={`border rounded-md text-center py-3 font-medium ${
+                    item.enabled
+                      ? "hover:border-black cursor-pointer"
+                      : "cursor-not-allowed bg-black/[0.1] opacity-50"
+                  } ${selectedSize === item.size ? "border-black" : ""}`}
                   onClick={() => {
                     if (!item.enabled) return; // Prevent click if disabled
                     setSelectedSize(item.size);
@@ -187,21 +184,24 @@ const Product = ({ product }) => {
                 </div>
               ))}
             </div>
-
           </div>
-
           <div className="mb-10">
             <div className="flex justify-between mb-2">
               <div className="text-md font-semibold">Select thumbnail</div>
             </div>
             <div id="colorGrid" className="grid grid-cols-3 gap-2">
               {p?.thumbnail.map((thumbnail, i) => (
-                <div key={thumbnail.id} onClick={() => {
-                  setNumber(i);
-                  setSelectedColor(i);
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                  className={`relative rounded cursor-pointer transition-all ${selectedColor === i ? "bg-black p-1" : ""}`}>
+                <div
+                  key={thumbnail.id}
+                  onClick={() => {
+                    setNumber(i);
+                    setSelectedColor(i);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className={`relative rounded cursor-pointer transition-all ${
+                    selectedColor === i ? "bg-black p-1" : ""
+                  }`}
+                >
                   <Image
                     src={`${url}${thumbnail.url}`}
                     alt={thumbnail.name}
@@ -217,9 +217,8 @@ const Product = ({ product }) => {
                 Size and color selection are required
               </div>
             )}
-          </div>;
-
-          {/* Add to Cart Button */}
+          </div>
+          ;{/* Add to Cart Button */}
           <button
             className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
             onClick={() => {
@@ -228,14 +227,13 @@ const Product = ({ product }) => {
           >
             Add to Cart
           </button>
-
           {/* BuyNow Button */}
           <button
             className="w-full py-4 rounded-full bg-blue-600 text-white text-lg font-medium transition-transform active:scale-95 mb-10 hover:bg-blue-800 flex items-center justify-center gap-2 shadow-lg"
-            onClick={handleBuyNow}>
+            onClick={handleBuyNow}
+          >
             Buy Now
           </button>
-
           {/* Product Description */}
           <div>
             <div className="text-lg font-bold mb-5">Product Details</div>
@@ -281,8 +279,8 @@ const Product = ({ product }) => {
           </div>
           <RelatedProducts currentProductId={p.documentId} />
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 

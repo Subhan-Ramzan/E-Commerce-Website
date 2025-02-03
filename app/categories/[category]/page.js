@@ -5,8 +5,12 @@ import { fetchDataFromApi } from "@/utils/api";
 export async function generateStaticParams() {
   const category = await fetchDataFromApi("/api/categories?populate=*");
 
-  const params = category?.data?.map((c) => ({
-    category: c.slug, // Use "category" to match the folder name
+  if (!category || !category.data) {
+    return []; // Return an empty array to avoid the error
+  }
+
+  const params = category.data.map((c) => ({
+    category: c.slug,
   }));
 
   return params;
@@ -15,7 +19,7 @@ export async function generateStaticParams() {
 // Generate metadata for categories
 export async function generateMetadata({ params }) {
   // Await params before accessing
-  const par = await params
+  const par = await params;
   const category = await fetchDataFromApi(
     `/api/categories?filters[slug][$eq]=${par?.category}` // Use "category" here
   );
@@ -28,7 +32,7 @@ export async function generateMetadata({ params }) {
 // Render the CategoryPage
 export default async function CategoryPage({ params }) {
   // Await the category param to ensure it's available
-  const { category } = await params;  // This will now work correctly
+  const { category } = params; // This will now work correctly
   const categoryData = await fetchDataFromApi(
     `/api/categories?filters[slug][$eq]=${category}` // Use "category" here
   );
@@ -42,13 +46,10 @@ export default async function CategoryPage({ params }) {
   if (!categoryData?.data?.length) {
     return (
       <div className="w-full min-h-[80vh]">
-        {/* Highlighted message for category not found */}
         <div className="bg-red-100 text-red-600 p-4 text-center font-medium">
           Category &apos;{category}&apos; not found. Showing all available
           products.
         </div>
-
-        {/* Products grid for all products */}
         <Category initialCategory={""} initialProducts={products} slug="" />
       </div>
     );

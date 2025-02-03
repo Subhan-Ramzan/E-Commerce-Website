@@ -1,3 +1,4 @@
+//app/products/[product]/page.js
 import Product from "./Product";
 import { fetchDataFromApi } from "@/utils/api";
 

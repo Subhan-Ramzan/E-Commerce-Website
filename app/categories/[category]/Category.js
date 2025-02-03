@@ -11,14 +11,19 @@ const Category = ({ initialCategory, initialProducts, slug }) => {
   const [pageIndex, setPageIndex] = useState(1);
 
   // Check if initialCategory or slug is empty and adjust the API URL accordingly
-  const apiUrl = slug && initialCategory ?
-    `/api/products?populate=*&[filters][categories][slug][$eq]=${slug}&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}` :
-    `/api/products?populate=*&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}`;
+  const apiUrl =
+    slug && initialCategory
+      ? `/api/products?populate=*&[filters][categories][slug][$eq]=${slug}&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}`
+      : `/api/products?populate=*&pagination[page]=${pageIndex}&pagination[pageSize]=${maxResult}`;
 
   // Use SWR to fetch data from the correct API URL
   const { data, error, isLoading } = useSWR(apiUrl, fetchDataFromApi, {
-    fallbackData: initialProducts, // Use fallback data for when loading
+    fallbackData: initialProducts, // Use fallback data if `data` is undefined
   });
+
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
   const categoryName = initialCategory?.data?.[0]?.name || "All Products";
 
