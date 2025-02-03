@@ -1,8 +1,9 @@
+import { API_URL } from "@/utils/urls";
 import axios from "axios";
 
 export async function GET(req, { params }) {
   const { email } = params;
-  const strapiUrl = `http://localhost:1337/api/cart/${email}`;
+  const strapiUrl = `${API_URL}/api/cart/${email}`;
   const strapiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 
   try {

@@ -1,3 +1,4 @@
+import { API_URL } from "@/utils/urls";
 import axios from "axios";
 
 export async function PUT(req) {
@@ -8,7 +9,7 @@ export async function PUT(req) {
     console.log("STRAPI_API_TOKEN:", process.env.NEXT_PUBLIC_STRAPI_API_TOKEN);
 
     const response = await axios.put(
-      "http://127.0.0.1:1337/api/cart/quantity",
+      `${API_URL}/api/cart/quantity`,
       { email, productId, quantity },
       {
         headers: {

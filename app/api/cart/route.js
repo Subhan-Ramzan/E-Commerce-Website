@@ -1,5 +1,6 @@
 // app/api/cart/route.js
 
+import { API_URL } from "@/utils/urls";
 import axios from "axios";
 
 export async function POST(req) {
@@ -7,7 +8,7 @@ export async function POST(req) {
 
   try {
     const response = await axios.post(
-      "http://localhost:1337/api/cart",
+      `${API_URL}/api/cart`,
       {
         email,
         productId,
@@ -33,7 +34,7 @@ export async function PUT(req) {
 
   try {
     const response = await axios.put(
-      "http://127.0.0.1:1337/api/cart/quantity",
+      `${API_URL}/api/cart/quantity`,
       { email, productId, quantity },
       {
         headers: {
@@ -62,14 +63,11 @@ export async function GET({ params }) {
   const { email } = params;
 
   try {
-    const response = await axios.get(
-      `http://localhost:1337/api/cart/${email}`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
-        },
-      }
-    );
+    const response = await axios.get(`${API_URL}/api/cart/${email}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
+      },
+    });
     return new Response(JSON.stringify(response.data), { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: "Failed to fetch cart" }), {
@@ -88,7 +86,7 @@ export async function DELETE(req) {
       });
     }
 
-    const response = await axios.delete(`http://localhost:1337/api/cart`, {
+    const response = await axios.delete(`${API_URL}/api/cart`, {
       params: { email, productId },
       headers: {
         Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
