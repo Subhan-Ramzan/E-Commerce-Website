@@ -9,7 +9,7 @@ const ProductCard = ({ products }) => {
       {products?.data?.map((product, index) => {
         // Safely extract thumbnail URL
         const thumbnailUrl =
-          product?.thumbnail?.url || product?.thumbnail?.formats?.small?.url;
+          product?.thumbnail[0]?.url || product?.thumbnail[0]?.formats?.small?.url;
 
         // Ensure thumbnailUrl is defined and starts with '/'
         const fullImageUrl =
@@ -27,7 +27,7 @@ const ProductCard = ({ products }) => {
         return (
           <Link
             key={product?.id}
-            href={`/categories/${product?.categories[index]?.slug}`} // Assuming product detail route uses ID
+            href={`/products/${product?.slug}`} // Assuming product detail route uses ID
             className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer shadow-lg rounded-lg flex flex-col"
           >
             {/* Product Image */}
@@ -55,14 +55,16 @@ const ProductCard = ({ products }) => {
               </h2>
               <div className="flex flex-col sm:flex-row sm:justify-between items-start text-black/[0.5]">
                 {/* Price Section */}
-                <div className="flex flex-col">
+                <div className="flex flex-col max-md:w-full">
                   {/* Mobile View: Price and Discount in One Line */}
-                  <div className="flex justify-between md:hidden text-sm">
+                  <div className="flex justify-between w-full mx-auto md:hidden text-sm">
                     <p className="font-semibold text-black">
                       Rs. {product?.price}
                     </p>
                     <p className="font-medium text-green-500">
-                      {discountPercentage ? `${discountPercentage}% off` : "No Discount"}
+                      {discountPercentage
+                        ? `${discountPercentage}% off`
+                        : "No Discount"}
                     </p>
                   </div>
                   {/* Desktop View: Price and Original Price */}

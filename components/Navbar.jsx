@@ -12,6 +12,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CldImage } from "next-cloudinary";
+
 const Navbar = ({ isOpen, onToggle }) => {
   const { data: session, status } = useSession();
   const [handleFaBar, setHandleFaBar] = useState(false);
@@ -21,6 +22,25 @@ const Navbar = ({ isOpen, onToggle }) => {
   const [userData, setUserData] = useState(null);
   const [publicId, setPublicId] = useState(null);
 
+  const [cart, setCart] = useState([]);
+  console.log("cart is", cart?.length);
+
+  useEffect(() => {
+    if (session) {
+      // Log session to check if email is available
+      console.log("Session data:", session);
+
+      axios
+        .get(`/api/cart/${session.user.email}`)
+        .then((res) => {
+          console.log("Cart data:", res.data); // Log the response data
+          setCart(res.data.items || []); // Set cart data to state
+        })
+        .catch((error) => {
+          console.log("Error fetching cart:", error);
+        });
+    }
+  }, [session]);
 
   const toggleFaBar = () => {
     setHandleFaBar(!handleFaBar);
@@ -45,7 +65,10 @@ const Navbar = ({ isOpen, onToggle }) => {
   };
   useEffect(() => {
     console.log("status:", status); // Debugging line
-    console.log("userData:", userData); // Debugging line
+    console.log("userData:", userData);
+    if (session) {// Debugging line
+      console.log("session:", session);
+    }
 
     const fetchCookieData = async () => {
       try {
@@ -72,7 +95,7 @@ const Navbar = ({ isOpen, onToggle }) => {
     if (status === "unauthenticated" && userData === null) {
       fetchCookieData();
     }
-  }, [status, userData, router]);
+  }, [session, status, userData, router]);
 
 
   useEffect(() => {
@@ -198,23 +221,23 @@ const Navbar = ({ isOpen, onToggle }) => {
           )}
         </div>
         <div className="flex items-center space-x-4 justify-between">
-          <div className="max-md:hidden ">
+          <div className="">
             {status === "authenticated" || userData !== null ? (
               <Link href="/profile">
                 {session?.user?.image ? (
                   <Image
                     src={session.user.image.url || session.user.image}
                     alt="User Profile"
-                    width={40}
-                    height={40}
+                    width={30}
+                    height={30}
                     className="rounded-full object-cover cursor-pointer"
                   />
                 ) : publicId ? (
                   <CldImage
                     src={publicId}
                     alt="User Profile"
-                    width={40}
-                    height={40}
+                    width={30}
+                    height={30}
                     className="rounded-full object-cover cursor-pointer"
                   />
                 ) : (
@@ -229,13 +252,13 @@ const Navbar = ({ isOpen, onToggle }) => {
           </div>
 
           {/* Cart icon - Always visible */}
-          <Link href="/cart" className="max-md:hidden ">
+          <Link href="/cart" className="">
             <div className="text-xl md:text-2xl relative cursor-pointer">
               <FaShoppingCart />
               {status === "authenticated" || userData !== null ? (
                 <>
                   <div className="bg-red-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
-                    <p className="text-sm">0</p>
+                    <p className="text-sm">{cart?.length}</p>
                   </div>
                 </>
               ) : (

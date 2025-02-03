@@ -17,6 +17,7 @@ export default function CategorySection() {
             className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300"
           >
             <Image
+              loading="lazy"
               src={category.img}
               alt={category.name}
               width={500} // Set appropriate width

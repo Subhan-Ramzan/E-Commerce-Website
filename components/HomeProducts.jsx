@@ -64,6 +64,7 @@ export default function HomeProducts() {
                         onClick={() => router.push(`/cart/${product._id}`)}
                         className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg hover:scale-105 transition-all duration-300 cursor-pointer">
                         <CldImage
+                            loading="lazy"
                             src={product.productImage[0].public_id}
                             alt={product.name}
                             width={100}

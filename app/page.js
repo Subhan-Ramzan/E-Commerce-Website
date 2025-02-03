@@ -17,8 +17,6 @@ export default async function Home() {
   // Fetching products data
   const products = await fetchDataFromApi("/api/products?populate=*");
   const CoverImg = await fetchDataFromApi("/api/cover-images?populate=*");
-  console.log(CoverImg);
-  console.log(products);
 
   return (
     <>

@@ -3,14 +3,14 @@ import React, { useState, useEffect } from "react";
 import { FaBars } from "react-icons/fa";
 import { FaRegCircleUser } from "react-icons/fa6";
 import FaBar from "../profileBar/fabar";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
 import { CldImage } from "next-cloudinary";
-import AllProducts from "../allProducts/page";
-import UplaodData from "../uploadProductData/page";
+import AllProducts from "../../api123/allProducts/page";
+import UplaodData from "../../api123/uploadProductData/page";
 
 const Page = () => {
   const [uploadProduct, setUploadProduct] = useState(false);
@@ -42,7 +42,7 @@ const Page = () => {
         }
       } catch (error) {
         setUserData(null);
-        router.push("/login");
+        signIn("google"); // Automatically sign in with Google
       }
     };
 

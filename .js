@@ -1,4 +1,3 @@
-
 // <div className="md:w-1/2 flex flex-col items-center md:items-start p-0 md:px-10 relative mb-6 md:mb-0">
 //   <motion.div
 //     className="transition-transform transform hover:scale-105 duration-500 ease-in-out"
@@ -80,13 +79,8 @@
 //   </div>
 // </div>;
 
-
-
-
-
-
-
-{/* <div className="md:w-1/2 flex flex-col items-center md:items-start p-0 md:px-10 relative mb-6 md:mb-0">
+{
+  /* <div className="md:w-1/2 flex flex-col items-center md:items-start p-0 md:px-10 relative mb-6 md:mb-0">
 {/* Carousel that displays the current image 
 <Carousel>
   <CarouselContent>
@@ -149,25 +143,8 @@
     </div>
   ))}
 </div>
-</div> */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</div> */
+}
 
 // "use client";
 // import { useEffect, useState } from "react";
@@ -225,9 +202,6 @@
 //   );
 // }
 
-
-
-
 // hero section
 // "use client";
 
@@ -261,7 +235,6 @@
 //     </div>
 //   );
 // }
-
 
 //ProductCard
 
@@ -343,3 +316,43 @@
 // };
 
 // export default ProductCard;
+
+import Product from "./Product";
+import { fetchDataFromApi } from "@/utils/api";
+
+export async function generateStaticParams() {
+  // Fetch the list of products to generate dynamic paths for each product
+  const products = await fetchDataFromApi("/api/products?populate=*");
+  return products?.data?.map((product) => ({
+    slug: product?.slug, // Use the product slug to create dynamic paths
+  }));
+}
+
+export async function generateStaticProps({ params }) {
+  // Fetch product data by slug for the specific product
+  const product = await fetchDataFromApi(
+    `/api/products?populate=*&filters[slug][$eq]=${params.slug}`
+  );
+
+  // Fetch other products to display as related products (excluding the current product)
+  const products = await fetchDataFromApi(
+    `/api/products?populate=*&filters[slug][$ne]=${params.slug}`
+  );
+
+  return {
+    props: {
+      product,
+      products,
+    },
+  };
+}
+
+const ProductPage = ({ product, products }) => {
+  return (
+    <div className="product-page">
+      <Product product={product} products={products} />
+    </div>
+  );
+};
+
+export default ProductPage;

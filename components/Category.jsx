@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 const Category = () => {
-  const categories = ['Abaya', 'Chaddar', 'Dupatta', 'Hijab', 'Niqab' ,'Stoler'];
+  const categories = ['Abaya', 'Chaddar', 'Dupatta', 'Hijab', 'Niqab', 'Stoler'];
 
   return (
     <div className="flex flex-wrap justify-around px-2 py-4">
@@ -18,6 +18,7 @@ const Category = () => {
               className="relative rounded-full bg-slate-100 p-1 h-6 w-6 sm:h-8 sm:w-8 overflow-hidden cursor-pointer shadow-sm transition-all duration-300 group-hover:shadow-lg group-hover:scale-105 group-hover:bg-gradient-to-r group-hover:from-slate-900 group-hover:to-purple-700"
             >
               <Image
+                loading='lazy'
                 src={`/${category}.png`}
                 alt={category}
                 fill

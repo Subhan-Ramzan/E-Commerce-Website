@@ -180,7 +180,7 @@ const Login = () => {
                 Continue with Google
               </button>
 
-              <button
+              {/* <button
                 onClick={() => handleLogin("facebook")}
                 className="bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-lg inline-flex h-10 w-full md:w-64 items-center justify-center gap-2 p-3 text-sm hover:bg-blue-300 outline-none focus:ring-2 focus:ring-[#000] focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-60"
               >
@@ -192,7 +192,7 @@ const Login = () => {
                   className="h-[20px] w-[20px] mr-2" // Add margin to right for spacing
                 />
                 Continue with Facebook
-              </button>
+              </button> */}
             </div>
             <div className="w-full md:w-auto mt-4 md:mt-0">
               <div className="mx-auto w-full max-w-sm lg:w-96">

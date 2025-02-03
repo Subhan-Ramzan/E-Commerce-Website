@@ -14,12 +14,13 @@ export default function FeaturedProducts() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 p-2">
                 {products.map((product) => (
                     <div key={product.id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:scale-105 transition-transform duration-300">
-                        <Image 
+                        <Image
+                            loading="lazy"
                             width={100} // Adjust these values according to your image
-                            height={100} 
-                            src={product.img} 
-                            alt={product.name} 
-                            className="w-full h-48 md:h-80 object-fill" 
+                            height={100}
+                            src={product.img}
+                            alt={product.name}
+                            className="w-full h-48 md:h-80 object-fill"
                             quality={100} // Set quality for better clarity
                         />
                         <div className="p-4 text-center">

@@ -1,15 +1,69 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCog, FaTimes } from "react-icons/fa";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 import Link from "next/link";
 import Navbar from "./Navbar";
 import { FaHome, FaInfoCircle, FaListAlt, FaPhoneAlt } from "react-icons/fa";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { CldImage } from "next-cloudinary";
+import { useRouter } from "next/navigation";
+import { FaRegCircleUser } from "react-icons/fa6";
+import Image from "next/image";
+import axios from "axios";
 
 const Sidebar = () => {
+    const { data: session, status } = useSession();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [showSubMenu, setShowSubMenu] = useState(false);
+    const router = useRouter();
+    const [userData, setUserData] = useState(null);
+    const [publicId, setPublicId] = useState(null);
+    const [isClient, setIsClient] = useState(false); // Prevent hydration issues
+
+    const logoutCookies = async () => {
+        try {
+            await axios.post("/api/logout");
+            setUserData(null);
+            toast.success("Logout successful!"); // Notify successful logout
+        } catch (err) {
+            console.error("Logout Error:", err);
+            toast.error("Logout failed. Please try again."); // Notify error on logout
+        }
+    };
+    useEffect(() => {
+        setIsClient(true);
+        if (session) {// Debugging line
+            console.log("session:", session);
+        }
+
+        const fetchCookieData = async () => {
+            try {
+                const response = await axios.get("/api/protected", {
+                    withCredentials: true,
+                });
+                setUserData(response.data.user);
+                const user = response.data.user;
+                const id = user.id;
+
+                if (id) {
+                    const imageResponse = await axios.get(`/api/profileimage/${id}`);
+                    setPublicId(imageResponse.data.public_id);
+                } else {
+                    console.log("No user ID found; skipping profile image fetch");
+                }
+            } catch (error) {
+                console.log("Failed to fetch protected data:", error);
+                setUserData(null);
+                console.log("User data set to null due to fetch error");
+            }
+        };
+
+        if (status === "unauthenticated" && userData === null) {
+            fetchCookieData();
+        }
+    }, [session, status, userData, router]);
 
     const data = [
         { id: 1, name: "Home", url: "/" },
@@ -24,6 +78,8 @@ const Sidebar = () => {
         { id: 3, name: "Running shoes", doc_count: 64 },
         { id: 4, name: "Football shoes", doc_count: 107 },
     ];
+
+    if (!isClient) return null;
 
     return (
         <div className="relative z-50">
@@ -41,19 +97,59 @@ const Sidebar = () => {
                 {/* User Profile Section */}
                 <div className="flex items-center z-50 justify-between gap-4 mb-6 ">
                     <div className="flex items-center gap-4">
-                        <img
-                            src="https://via.placeholder.com/50"
-                            alt="User Profile"
-                            className="w-12 h-12 rounded-full"
-                        />
+
+                        <div className="">
+                            {status === "authenticated" || userData !== null ? (
+                                <Link href="/profile">
+                                    {session?.user?.image ? (
+                                        <Image
+                                            loading="lazy"
+                                            src={session.user.image.url || session.user.image}
+                                            alt="User Profile"
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full object-cover cursor-pointer"
+                                        />
+                                    ) : publicId ? (
+                                        <CldImage
+                                            loading="lazy"
+                                            src={publicId}
+                                            alt="User Profile"
+                                            width={40}
+                                            height={40}
+                                            className="rounded-full object-cover cursor-pointer"
+                                        />
+                                    ) : (
+                                        <FaRegCircleUser className="text-3xl md:text-3xl cursor-pointer" />
+                                    )}
+                                </Link>
+                            ) : (
+                                <Link href="/login">
+                                    <FaRegCircleUser className="text-3xl md:text-3xl cursor-pointer" />
+                                </Link>
+                            )}
+                        </div>
                         <div className="flex flex-col">
-                            <h2 className="text-lg font-semibold">John Doe</h2>
-                            <p
-                                className="text-gray-400 text-sm truncate max-w-[120px]"
-                                title="johndoe@example.com"
-                            >
-                                johndoe@example.com
-                            </p>
+                            {status === "authenticated" || userData !== null ? (
+                                <>
+                                    <p className="text-white">
+                                        {session?.user?.name ||
+                                            userData?.username ||
+                                            session?.user?.email?.split(/(?=\d)/)[0]}
+                                    </p>
+                                    <p className="text-gray-400 text-sm truncate max-w-[120px]">
+                                        {session?.user?.email ||
+                                            userData?.email ||
+                                            session?.user?.email}
+                                    </p>
+                                </>
+                            ) : (
+                                <>
+                                    <p className="text-white">
+                                        Guest
+                                    </p>
+                                </>
+                            )}
                         </div>
                     </div>
                     {/* Close Button */}
@@ -119,6 +215,35 @@ const Sidebar = () => {
                         </React.Fragment>
                     ))}
                 </ul>
+                <div className="mt-6 flex flex-col gap-4">
+                    {status === "authenticated" || userData !== null ? (
+                        <button
+                            onClick={async () => {
+                                await signOut();
+                                await logoutCookies();
+                            }}
+                            className="bg-red-500 hover:bg-red-600 text-white font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-transform duration-300 transform hover:scale-105"
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <div className="flex flex-col items-start gap-2">
+                            <Link
+                                href="/login"
+                                className="w-full bg-blue-500 hover:bg-blue-600 text-white text-center font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-transform duration-300 transform hover:scale-105"
+                            >
+                                Login
+                            </Link>
+                            <Link
+                                href="/signup"
+                                className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white text-center font-medium py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-transform duration-300 transform hover:scale-105"
+                            >
+                                Sign up
+                            </Link>
+                        </div>
+
+                    )}
+                </div>
 
                 {/* Footer Buttons */}
                 <div className="absolute bottom-4 left-6 w-full pr-6">

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import dynamic from "next/dynamic";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri"; // Importing React icons
+import Image from "next/image";
 
 // Dynamically import Carousel with ssr: false to avoid SSR issues
 const CarouselWithNoSSR = dynamic(
@@ -13,8 +14,8 @@ const CarouselWithNoSSR = dynamic(
   }
 );
 
-const ProductDetail = () => {
-  // Set state to track the current slide index
+const ProductDetail = ({ images, thumbnail }) => {
+  // State to track the current slide index
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   // Handle slide change event
@@ -22,9 +23,13 @@ const ProductDetail = () => {
     setSelectedIndex(index);
   };
 
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const ThumbnailImage = `${url}${thumbnail}`;
+
   return (
     <div className="text-white text-[20px] w-full max-w-[1360px] mx-auto sticky top-[50px]">
       <div className="relative">
+        {/* Main Carousel */}
         <CarouselWithNoSSR
           selectedItem={selectedIndex}
           onChange={handleOnChange}
@@ -53,42 +58,46 @@ const ProductDetail = () => {
             </button>
           )}
         >
-          <img
-            src="/p1.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[70vh] md:h-[70vh] h-[50vh] object-cover"
-          />
-          <img
-            src="/p2.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] md:h-[70vh] h-[50vh] object-cover"
-          />
-          <img
-            src="/p3.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] md:h-[70vh] h-[50vh] object-cover"
-          />
-          <img
-            src="/p4.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] md:h-[70vh] h-[50vh] object-cover"
-          />
-          <img
-            src="/p5.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] md:h-[70vh] h-[50vh] object-cover"
-          />
-          <img
-            src="/p6.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] h-[300px] object-cover"
-          />
-          <img
-            src="/p7.png"
-            alt="Product Name"
-            className="rounded-t-lg w-[300px] md:h-[70vh] h-[50vh] object-cover"
-          />
+          {/* Main Images */}
+          {images?.map((image, index) => (
+            <div key={index} className="flex justify-center">
+              <Image
+                width={800}
+                height={800}
+                src={`${url}${image?.url}`}
+                alt={`Product Image ${index + 1}`}
+                className="rounded-t-lg w-[70vh] md:h-[70vh] h-[50vh] object-cover"
+              />
+            </div>
+          ))}
         </CarouselWithNoSSR>
+      </div>
+
+      {/* Thumbnail Images */}
+      <div className="flex justify-center mt-4 gap-2">
+        {/* <Image
+          width={80}
+          height={80}
+          src={`${url}${images[3].url}`}
+          alt={`Thumbnai`}
+          className="rounded-md object-cover w-[60px] h-[60px]"
+        /> */}
+        {images?.map((image, index) => (
+          <button
+            key={index}
+            onClick={() => setSelectedIndex(index)} // Change the slide on thumbnail click
+            className={`border-2 ${selectedIndex === index ? "border-white" : "border-transparent"
+              } p-1 rounded-md hover:border-white transition`}
+          >
+            <Image
+              width={80}
+              height={80}
+              src={`${url}${image?.url}`}
+              alt={`Thumbnail ${index + 1}`}
+              className="rounded-md object-cover w-[60px] h-[60px]"
+            />
+          </button>
+        ))}
       </div>
     </div>
   );

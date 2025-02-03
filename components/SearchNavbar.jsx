@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaSearch } from "react-icons/fa";
 
 const SearchBar = ({ onSearch }) => {
@@ -46,7 +46,7 @@ const SearchBar = ({ onSearch }) => {
   }, [searchTerm]);
 
   // Control scroll behavior similar to the navbar logic
-  const controlSearchBar = () => {
+  const controlSearchBar = useCallback(() => {
     if (window.scrollY > 0) {
       if (window.scrollY > lastScrollY) {
         setShow("-translate-y-[80px]"); // Hide on scroll down
@@ -57,18 +57,19 @@ const SearchBar = ({ onSearch }) => {
       setShow("translate-y-0"); // Reset position when scrolled to top
     }
     setLastScrollY(window.scrollY);
-  };
+  }, [lastScrollY]); // Memoize based on `lastScrollY`
 
   useEffect(() => {
     window.addEventListener("scroll", controlSearchBar);
     return () => {
       window.removeEventListener("scroll", controlSearchBar);
     };
-  }, [lastScrollY]);
+  }, [controlSearchBar]); // Only depend on controlSearchBar
+
 
   return (
     <div
-      className={`fixed top-[70px] left-0 w-full z-20 shadow-lg transition-transform duration-300 ${show} lg:hidden`}
+      className={`fixed top-[70px] left-0 w-full z-20 shadow-sm transition-transform duration-300 ${show} lg:hidden`}
     >
       <form
         onSubmit={handleSearch}
@@ -79,7 +80,7 @@ const SearchBar = ({ onSearch }) => {
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-3 py-2 outline-none text-black bg-gray-50 placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
+          className="w-full px-3 py-2 outline-none text-black bg-slate-100 placeholder-gray-500 transition-all duration-300 ease-in-out text-sm md:text-base"
         />
         <button
           type="submit"
@@ -91,7 +92,7 @@ const SearchBar = ({ onSearch }) => {
 
       {/* Suggestions List */}
       {suggestions.length > 0 && (
-        <ul className="absolute top-full left-0 mt-2 w-full border border-gray-200 rounded-lg shadow-lg transition-opacity duration-300 opacity-100 z-50">
+        <ul className="absolute top-full left-0 bg-white mt-2 w-full border border-gray-300 rounded-lg shadow-lg transition-opacity duration-300 opacity-100 z-50">
           {suggestions.map((suggestion, index) => (
             <li
               key={index}

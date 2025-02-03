@@ -86,7 +86,8 @@
 // export default CoverImg;
 
 "use client";
-import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import React, { useState, useEffect, lazy } from "react";
 
 const images = [
   "/AbayaCover.png",
@@ -111,7 +112,10 @@ const CoverImg = () => {
   return (
     <div className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
       {images.map((image, index) => (
-        <img
+        <Image
+          loading="lazy"
+          width={300}
+          height={300}
           key={index}
           src={image}
           alt={`Slide ${index + 1}`}

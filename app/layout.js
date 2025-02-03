@@ -8,6 +8,8 @@ import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
 import SearchBar from "@/components/SearchNavbar";
+import ReduxProvider from "./ReduxProvider"; // Import the new ReduxProvider component
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -26,11 +28,11 @@ export default function RootLayout({ children }) {
         <ClientSessionProvider>
           <Sidebar />
           <ProductProvider>
-            <Navbar />
-            <SearchBar />
-            <div className="pt-16 max-md:pt-32"> {children}</div>
-            <MobileFooter />
-            <Footer />
+              <Navbar />
+              <SearchBar />
+              <div className="pt-16 max-md:pt-32">{children}</div>
+              <MobileFooter />
+              <Footer />
           </ProductProvider>
         </ClientSessionProvider>
       </body>
