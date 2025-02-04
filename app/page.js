@@ -14,33 +14,24 @@ import Head from "next/head";
 export const revalidate = 3600;
 
 export default async function Home() {
-  // Fetching products data
-  const products = await fetchDataFromApi("/api/products?populate=*");
-  const CoverImg = await fetchDataFromApi("/api/cover-images?populate=*");
+  try {
+    // Fetching products data
+    const products = await fetchDataFromApi("/api/products?populate=*");
+    const coverImg = await fetchDataFromApi("/api/cover-images?populate=*");
 
-  return (
-    <>
-      {/* SEO Metadata */}
-      {/* <Head>
-        <title>My E-commerce Store</title>
-        <meta
-          name="description"
-          content="Explore our wide range of products at My E-commerce Store. High-quality products at the best prices."
-        />
-        <meta name="keywords" content="ecommerce, products, shopping, deals" />
-        <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://your-domain.com/" />
-      </Head> */}
-
-      {/* Page Content */}
-      <div className="md:w-[90vw] w-[95vw] mx-auto">
-        <Category />
-        {/* Pass the CoverImg data to HeroSection */}
-        <HeroSection CoverImages={CoverImg?.data[0]?.CoverImage || []} />
-        <HomeHeading />
-        <ProductCard products={products} />
-        {/* <FeaturedProducts products={products} /> */}
-      </div>
-    </>
-  );
+    return (
+      <>
+        <div className="md:w-[90vw] w-[95vw] mx-auto">
+          <Category />
+          {/* Ensure CoverImages has a fallback array */}
+          <HeroSection CoverImages={coverImg?.data?.[0]?.CoverImage || []} />
+          <HomeHeading />
+          <ProductCard products={products || []} />
+        </div>
+      </>
+    );
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return <div>Error loading the page. Please try again later.</div>;
+  }
 }
