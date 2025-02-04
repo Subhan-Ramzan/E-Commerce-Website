@@ -6,7 +6,10 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 
 const CartItem = ({ data, onTotalPrice }) => {
-    const { documentId, quantity } = data;
+    const safeData = data || {};
+    // Destructure with fallback values (quantity defaults to 1)
+    const { documentId, quantity } = safeData;
+    // const { documentId, quantity } = data;
     const [productData, setProductData] = useState(null);
     const { data: session } = useSession();
     const Token = STRAPI_API_TOKEN;
