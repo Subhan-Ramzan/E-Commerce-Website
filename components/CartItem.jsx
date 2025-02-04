@@ -125,7 +125,8 @@ const CartItem = ({ data, onTotalPrice }) => {
     }
 
     const { name, price, subtitle, thumbnail } = productData.data;
-    const thumbnailUrl = `${url}${thumbnail.url}`;
+    const thumbnailUrl = `${thumbnail.url}`;
+    // const thumbnailUrl = `${url}${thumbnail.url}`;
     const totalPrice = price * selectedQuantity;
     const totalPrice2 = totalPrice
 

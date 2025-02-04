@@ -9,13 +9,14 @@ const ProductCard = ({ products }) => {
       {products?.data?.map((product, index) => {
         // Safely extract thumbnail URL
         const thumbnailUrl =
-          product?.thumbnail[0]?.url || product?.thumbnail[0]?.formats?.small?.url;
+          product?.thumbnail[0]?.url ||
+          product?.thumbnail[0]?.formats?.small?.url;
 
         // Ensure thumbnailUrl is defined and starts with '/'
         const fullImageUrl =
           thumbnailUrl && thumbnailUrl.startsWith("/")
             ? `${process.env.NEXT_PUBLIC_API_URL}${thumbnailUrl}` ||
-              `http://127.0.0.1:1337${thumbnailUrl}`
+              `${thumbnailUrl}`
             : thumbnailUrl;
 
         // Calculate the discount percentage using the provided function

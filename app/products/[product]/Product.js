@@ -203,7 +203,8 @@ const Product = ({ product }) => {
                   }`}
                 >
                   <Image
-                    src={`${url}${thumbnail.url}`}
+                    // src={`${url}${thumbnail.url}`}
+                    src={`${thumbnail.url}`}
                     alt={thumbnail.name}
                     width={150} // Fixed width
                     height={150} // Fixed height

@@ -33,7 +33,8 @@ const RelatedProducts = ({ currentProductId }) => {
                             <Link href={`/products/${product.slug}`}>
                                 <div className="relative">
                                     <Image
-                                        src={product.thumbnail && product.thumbnail.length > 0 ? `${url}${product.thumbnail[0]?.url}` : '/default-thumbnail.jpg'} // Default image if no thumbnail is available
+                                        src={product.thumbnail && product.thumbnail.length > 0 ? `${product.thumbnail[0]?.url}` : '/default-thumbnail.jpg'} // Default image if no thumbnail is available
+                                        // src={product.thumbnail && product.thumbnail.length > 0 ? `${url}${product.thumbnail[0]?.url}` : '/default-thumbnail.jpg'}
                                         alt={product.name}
                                         width={250}
                                         height={250}
