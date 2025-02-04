@@ -87,7 +87,7 @@ const Product = ({ product }) => {
       <ToastContainer />
       <div className="flex flex-col lg:flex-row md:px-10 gap-[50px] lg:gap-[100px]">
         {/* Left Column: Product Image Carousel */}
-        <div className="w-full md:w-auto flex-[1.5] max-w-[500px] lg:max-w-full mx-auto lg:mx-0">
+        <div className="w-full md:w-auto flex-[1.5] max-w-full lg:max-w-[50vw] mx-auto lg:mx-0">
           <ProductDetail thumbnail={p?.thumbnail?.url} images={images} />
         </div>
 
@@ -203,7 +203,8 @@ const Product = ({ product }) => {
                   }`}
                 >
                   <Image
-                    src={`${url}${thumbnail.url}`}
+                    // src={`${url}${thumbnail.url}`}
+                    src={`${thumbnail.url}`}
                     alt={thumbnail.name}
                     width={150} // Fixed width
                     height={150} // Fixed height
@@ -218,7 +219,7 @@ const Product = ({ product }) => {
               </div>
             )}
           </div>
-          ;{/* Add to Cart Button */}
+          {/* Add to Cart Button */}
           <button
             className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75"
             onClick={() => {

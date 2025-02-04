@@ -1,20 +1,24 @@
-"use client"; // This marks this component as a Client Component
+"use client";
 
-import React from "react";
-import dynamic from "next/dynamic";  // Dynamic import for the Carousel component
-import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { BiArrowBack } from "react-icons/bi";
 import Image from "next/image";
 import { API_URL } from "@/utils/urls";
 
-// Dynamically import Carousel component with SSR disabled
 const Carousel = dynamic(() => import("react-responsive-carousel").then((mod) => mod.Carousel), {
   ssr: false,
 });
-
-const url = API_URL;
-
+const url = API_URL
 const HeroSection = ({ CoverImages }) => {
+  // State ko component ke andar define karein
+  const [imageLoaded, setImageLoaded] = useState({});
+
+  const handleImageLoad = (index) => {
+    setImageLoaded((prevState) => ({ ...prevState, [index]: true }));
+  };
+
   return (
     <div className="relative text-white w-full max-w-[1360px] mx-auto">
       <Carousel
@@ -40,18 +44,30 @@ const HeroSection = ({ CoverImages }) => {
           </div>
         )}
       >
-        {/* Dynamically render the images */}
         {CoverImages?.map((CoverImage, index) => (
-          <div key={index} className="relative">
+          <div key={index} className="relative w-[90vw] h-[32vh] sm:h-[40vh] lg:h-[50vh] mx-auto">
+            {/* Thumbnail Image (Show until main image loads) */}
+            {!imageLoaded[index] && (
+              <Image
+                src={CoverImage.formats.thumbnail.url.startsWith("https://") ? CoverImage.formats.thumbnail.url : `${url}${CoverImage.formats.thumbnail.url}`}
+                alt={`Thumbnail ${index + 1}`}
+                width={900}
+                height={400}
+                className="w-full h-full object-cover blur-md"
+                priority={true}
+              />
+            )}
+
+            {/* Main Image (Fade-in effect) */}
             <Image
-              src={`${CoverImage.url}`}
-              // src={`${url}${CoverImage.url}`} // Assuming each image object has a `url` field
+              src={CoverImage.url.startsWith("https://") ? CoverImage.url : `${url}${CoverImage.url}`}
               alt={`Cover Image ${index + 1}`}
-              layout="responsive"
-              width={1360}
-              height={700}
-              className="object-cover"
+              width={900}
+              height={400}
+              className={`w-full h-full object-cover transition-opacity duration-500 ${imageLoaded[index] ? "opacity-100" : "opacity-0"
+                }`}
               priority={true}
+              onLoad={() => handleImageLoad(index)}
             />
             <div className="absolute bottom-[15px] md:bottom-[30px] left-5 md:left-10 bg-white/90 text-black font-oswald text-[13px] md:text-[20px] px-4 py-2 md:px-6 md:py-3 uppercase font-medium cursor-pointer hover:opacity-80">
               Shop now

@@ -26,8 +26,8 @@ export default function Page() {
   const [cart, setCart] = useState([]);
   const url = API_URL;
   const fetchUrl = `${url}/api/products/${id}?populate=*`;
+  const [thumbnailLoaded, setThumbnailLoaded] = useState(false); // Track main thumbnail loading
   const [isOpen, setIsOpen] = useState(false);
-
   const subtotal = productData ? productData.data.price : 0;
   const shipping = 150;
   const total = subtotal + shipping;
@@ -35,10 +35,21 @@ export default function Page() {
   const { name, price, subtitle, thumbnail } = productData?.data
     ? productData.data
     : {};
-  const thumbnailUrl =
-    thumbnail && selectedColor !== null
-      ? `${url}${thumbnail[selectedColor]?.url}`
-      : "";
+
+  const mainThumbnail = `${thumbnail[selectedColor]?.url}` || "";
+  const placeholderThumbnail =
+    `${thumbnail[selectedColor]?.formats?.thumbnail?.url}` || "";
+
+  // Handle main image load
+  const handleThumbnailLoad = () => {
+    setThumbnailLoaded(true);
+  };
+
+  // const thumbnailUrl =
+  //   thumbnail && selectedColor !== null
+  //     ? `${thumbnail[selectedColor]?.url}` ||
+  //       `${url}${thumbnail[selectedColor]?.url}`
+  //     : "";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -155,13 +166,28 @@ export default function Page() {
             >
               {/* Product Details */}
               <div className="flex items-center gap-4">
-                {thumbnailUrl && (
+                {/* Show Blurry Placeholder First */}
+                {!thumbnailLoaded && placeholderThumbnail && (
                   <Image
                     width={200}
                     height={200}
-                    src={thumbnailUrl}
+                    src={placeholderThumbnail}
+                    alt="Thumbnail Placeholder"
+                    className="w-20 h-20 object-cover rounded-lg border blur-md"
+                    priority
+                  />
+                )}
+
+                {/* Load Main Thumbnail */}
+                {mainThumbnail && (
+                  <Image
+                    width={200}
+                    height={200}
+                    src={`${url}${mainThumbnail}`}
                     alt="Product Image"
                     className="w-20 h-20 object-cover rounded-lg border"
+                    priority
+                    onLoad={handleThumbnailLoad}
                   />
                 )}
                 <div>
