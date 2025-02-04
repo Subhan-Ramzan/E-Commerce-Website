@@ -13,11 +13,12 @@ const ProductCard = ({ products }) => {
           product?.thumbnail[0]?.formats?.small?.url;
 
         // Ensure thumbnailUrl is defined and starts with '/'
-        const fullImageUrl =
-          thumbnailUrl && thumbnailUrl.startsWith("/")
-            ? `${process.env.NEXT_PUBLIC_API_URL}${thumbnailUrl}` ||
-              `${thumbnailUrl}`
-            : thumbnailUrl;
+        // const fullImageUrl =
+        //   thumbnailUrl && thumbnailUrl.startsWith("/")
+        //     ? `${process.env.NEXT_PUBLIC_API_URL}${thumbnailUrl}` ||
+        //       `http://127.0.0.1:1337${thumbnailUrl}`
+        //     : thumbnailUrl;
+        const fullImageUrl = thumbnailUrl;
 
         // Calculate the discount percentage using the provided function
         const discountPercentage = getDiscountedPricePercentage(

@@ -17,17 +17,18 @@ export default async function Home() {
   try {
     // Fetching products data
     const products = await fetchDataFromApi("/api/products?populate=*");
-    const coverImg = await fetchDataFromApi("/api/cover-images?populate=*");
+    const CoverImg = await fetchDataFromApi("/api/cover-images?populate=*");
 
     return (
       <>
-        <div className="md:w-[90vw] w-[95vw] mx-auto">
-          <Category />
-          {/* Ensure CoverImages has a fallback array */}
-          <HeroSection CoverImages={coverImg?.data?.[0]?.CoverImage || []} />
-          <HomeHeading />
-          <ProductCard products={products || []} />
-        </div>
+          <div className="md:w-[90vw] w-[95vw] mx-auto">
+        <Category />
+        {/* Pass the CoverImg data to HeroSection */}
+        <HeroSection CoverImages={CoverImg?.data[0]?.CoverImage || []} />
+        <HomeHeading />
+        <ProductCard products={products} />
+        {/* <FeaturedProducts products={products} /> */}
+      </div>
       </>
     );
   } catch (error) {

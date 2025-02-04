@@ -44,8 +44,8 @@ const HeroSection = ({ CoverImages }) => {
         {CoverImages?.map((CoverImage, index) => (
           <div key={index} className="relative">
             <Image
-              // src={`${url}${CoverImage.url}`}
               src={`${CoverImage.url}`}
+              // src={`${url}${CoverImage.url}`} // Assuming each image object has a `url` field
               alt={`Cover Image ${index + 1}`}
               layout="responsive"
               width={1360}

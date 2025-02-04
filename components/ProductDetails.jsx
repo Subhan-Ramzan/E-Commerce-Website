@@ -24,8 +24,7 @@ const ProductDetail = ({ images, thumbnail }) => {
   };
 
   const url = process.env.NEXT_PUBLIC_API_URL;
-  // const ThumbnailImage = `${url}${thumbnail}`;
-  const ThumbnailImage = `${thumbnail}`;
+  const ThumbnailImage = `${url}${thumbnail}`;
 
   return (
     <div className="text-white text-[20px] w-full max-w-[1360px] mx-auto sticky top-[50px]">
@@ -65,8 +64,7 @@ const ProductDetail = ({ images, thumbnail }) => {
               <Image
                 width={800}
                 height={800}
-                // src={`${url}${image?.url}`}
-                src={`${image?.url}`}
+                src={`${url}${image?.url}`}
                 alt={`Product Image ${index + 1}`}
                 className="rounded-t-lg w-[70vh] md:h-[70vh] h-[50vh] object-cover"
               />
@@ -94,8 +92,7 @@ const ProductDetail = ({ images, thumbnail }) => {
             <Image
               width={80}
               height={80}
-              // src={`${url}${image?.url}`}
-              src={`${image?.url}`}
+              src={`${url}${image?.url}`}
               alt={`Thumbnail ${index + 1}`}
               className="rounded-md object-cover w-[60px] h-[60px]"
             />

@@ -37,7 +37,7 @@ export default function Page() {
     : {};
   const thumbnailUrl =
     thumbnail && selectedColor !== null
-      ? `${thumbnail[selectedColor]?.url}`|| `${url}${thumbnail[selectedColor]?.url}`
+      ? `${url}${thumbnail[selectedColor]?.url}`
       : "";
 
   useEffect(() => {
