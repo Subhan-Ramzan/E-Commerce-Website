@@ -13,15 +13,12 @@ const Cart = () => {
 
   const router = useRouter();
   const [cart, setCart] = useState([]);
-  // console.log("cart is", cart?.length);
-
-  // Fetch cart data once the session is available
+  
   useEffect(() => {
     if (session) {
       axios
         .get(`/api/cart/${session.user.email}`)
         .then((res) => {
-          console.log("Cart data:", res.data); // Log the response data
           setCart(res.data.items || []); // Set cart data to state
         })
         .catch((error) => {

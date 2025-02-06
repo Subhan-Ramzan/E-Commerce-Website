@@ -4,6 +4,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { API_URL, STRAPI_API_TOKEN } from "@/utils/urls";
 import { useSession } from "next-auth/react";
 import axios from "axios";
+import Link from "next/link";
 
 const CartItem = ({ data, onTotalPrice }) => {
     const safeData = data || {};
@@ -102,22 +103,9 @@ const CartItem = ({ data, onTotalPrice }) => {
         };
 
         fetchData();
-    }, [Token, fetchUrl]);
-
-    // useEffect(() => {
-    //     if (productData) {
-    //         const { price } = productData.data; // Destructure price only if productData is available
-    //         const newTotalPrice = price * selectedQuantity;
-
-    //         if (newTotalPrice !== totalPrice) {  // Only update if the price has changed
-    //             onTotalPrice(newTotalPrice);
-    //         }
-    //     }
-    // }, [selectedQuantity, productData, onTotalPrice, totalPrice]); // Ensure price is available only after productData is set
+    }, [fetchUrl]);
 
 
-
-    // If product data is not yet fetched, show a loading message
     const [totalPriceCheck, setTotalPriceCheck] = useState([]);
 
     if (!productData) {
@@ -125,49 +113,51 @@ const CartItem = ({ data, onTotalPrice }) => {
     }
 
     const { name, price, subtitle, thumbnail } = productData.data;
-    const thumbnailUrl = `${thumbnail.url}`;
-    // const thumbnailUrl = `${url}${thumbnail.url}`;
+
+    const thumbnailUrl = `${thumbnail[0].url}`;
+    // const thumbnailUrl = `${url}${thumbnail[0].url}`;
     const totalPrice = price * selectedQuantity;
     const totalPrice2 = totalPrice
 
-    // if (totalPrice2) {
-    //     setTotalPriceCheck([totalPrice2])
-    //     console.log(`price is ${totalPriceCheck}`);
-    // }
+    const Domain = process.env.NEXT_PULIC_DOMAIN
 
     return (
         <div className="flex py-5 gap-3 my-5 md:gap-5 border-b p-3 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all ease-in-out">
 
             <div className="shrink-0 aspect-square w-[50px] md:w-[120px]">
-                {thumbnailUrl && (
-                    <Image
-                        loading="lazy"
-                        src={thumbnailUrl}
-                        alt={name}
-                        width={120}
-                        height={120}
-                        className="object-cover rounded-lg"
-                    />
-                )}
+                <Link href={`/products/${documentId}`}>
+                    {thumbnailUrl && (
+                        <Image
+                            loading="lazy"
+                            src={thumbnailUrl}
+                            alt={name}
+                            width={120}
+                            height={120}
+                            className="object-cover rounded-lg"
+                        />
+                    )}
+                </Link>
             </div>
 
             <div className="w-full flex flex-col">
-                <div className="flex flex-col md:flex-row justify-between mb-3 sm:mb-0">
-                    <div className="text-lg md:text-2xl font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">
-                        {name}
-                    </div>
-                    <div className="text-sm md:text-md max-md:hidden font-bold text-gray-600 mt-2 sm:mt-0">
-                        MRP : ₹{price}
-                    </div>
-                    <div className="flex justify-between md:hidden w-full">
-                        <div className="text-sm md:text-md font-bold text-gray-600 mt-2 sm:mt-0">
+                <Link href={`/products/${documentId}`}>
+                    <div className="flex flex-col md:flex-row justify-between mb-3 sm:mb-0">
+                        <div className="text-lg md:text-2xl font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-200">
+                            {name}
+                        </div>
+                        <div className="text-sm md:text-md max-md:hidden font-bold text-gray-600 mt-2 sm:mt-0">
                             MRP : ₹{price}
                         </div>
-                        <div className="font-semibold text-lg text-gray-800">
-                            Total: ₹{totalPrice}
+                        <div className="flex justify-between md:hidden w-full">
+                            <div className="text-sm md:text-md font-bold text-gray-600 mt-2 sm:mt-0">
+                                MRP : ₹{price}
+                            </div>
+                            <div className="font-semibold text-lg text-gray-800">
+                                Total: ₹{totalPrice}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Link>
 
                 <div className="text-sm md:text-md font-medium text-gray-500 hidden md:block mb-2">
                     {subtitle}

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react"; // Icons
 import { motion, AnimatePresence } from "framer-motion"; // Animations
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { API_URL, STRAPI_API_TOKEN } from "@/utils/urls";
 import Image from "next/image";
 import { useSession, signIn } from "next-auth/react";
@@ -16,13 +16,13 @@ export default function Page() {
   const [productData, setProductData] = useState(null);
   const Token = STRAPI_API_TOKEN;
   const { data: session, status } = useSession(); // Get session data
-
+  const router = useRouter();
   // useEffect(() => {
   //   if (status === "unauthenticated") {
   //     signIn("google"); // Automatically sign in with Google
   //   }
   // }, [status]);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [cart, setCart] = useState([]);
   const url = API_URL;
   const fetchUrl = `${url}/api/products/${id}?populate=*`;
@@ -36,20 +36,20 @@ export default function Page() {
     ? productData.data
     : {};
 
-  const mainThumbnail = `${thumbnail[selectedColor]?.url}` || "";
+  const mainThumbnail =
+    thumbnail && selectedColor !== null
+      ? `${thumbnail[selectedColor]?.url}` || `${thumbnail[selectedColor]?.url}`
+      : "";
+
   const placeholderThumbnail =
-    `${thumbnail[selectedColor]?.formats?.thumbnail?.url}` || "";
+    thumbnail && selectedColor !== null
+      ? `${thumbnail[selectedColor]?.formats?.thumbnail?.url}` || ""
+      : "";
 
   // Handle main image load
   const handleThumbnailLoad = () => {
     setThumbnailLoaded(true);
   };
-
-  // const thumbnailUrl =
-  //   thumbnail && selectedColor !== null
-  //     ? `${thumbnail[selectedColor]?.url}` ||
-  //       `${url}${thumbnail[selectedColor]?.url}`
-  //     : "";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,6 +90,7 @@ export default function Page() {
 
   const handleOrderSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const orderData = {
       stripeId: id, // Assuming COD for now
@@ -118,9 +119,6 @@ export default function Page() {
       }
 
       const result = await response.json();
-      alert("Order placed successfully!");
-      console.log("Order created:", result);
-
       // Reset form and UI if needed
       setFormData({
         firstName: "",
@@ -130,9 +128,16 @@ export default function Page() {
         postalCode: "",
         phoneNumber: "",
       });
+      console.log("Order created:", result);
+
+      const newOrderId = result?.data?.documentId; // Get order ID
+      router.push(`/success?orderId=${newOrderId}`);
     } catch (error) {
-      console.error("Error placing order:", error);
-      alert(`Error placing order: ${error.message}`);
+      const errorText =
+        error.message === "Internal Server Error"
+          ? "Server Error: Please try again later."
+          : error.message;
+      router.push(`/fail?error=${encodeURIComponent(errorText)}`);
     }
   };
 
@@ -347,13 +352,27 @@ export default function Page() {
 
           {/* Product Details */}
           <div className="flex items-center gap-4">
-            {thumbnailUrl && (
+            {!thumbnailLoaded && placeholderThumbnail && (
               <Image
                 width={200}
                 height={200}
-                src={thumbnailUrl}
+                src={placeholderThumbnail}
+                alt="Thumbnail Placeholder"
+                className="w-20 h-20 object-cover rounded-lg border blur-md"
+                priority
+              />
+            )}
+
+            {/* Load Main Thumbnail */}
+            {mainThumbnail && (
+              <Image
+                width={200}
+                height={200}
+                src={`${url}${mainThumbnail}`}
                 alt="Product Image"
                 className="w-20 h-20 object-cover rounded-lg border"
+                priority
+                onLoad={handleThumbnailLoad}
               />
             )}
             <div>
@@ -389,9 +408,40 @@ export default function Page() {
         <div className="max-w-lg mx-auto">
           <button
             type="submit"
-            className="w-full py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-300"
+            disabled={isSubmitting}
+            className={`w-full py-4 text-white font-semibold rounded-lg transition duration-300 ${
+              isSubmitting
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
           >
-            Complete Order
+            {isSubmitting ? (
+              <div className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                <span>Processing...</span>
+              </div>
+            ) : (
+              "Complete Order"
+            )}
           </button>
         </div>
       </form>
