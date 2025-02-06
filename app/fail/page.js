@@ -2,12 +2,14 @@
 
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Suspense } from "react";
 
-export default function FailPage() {
-  // Get query parameter "error" from the URL
+// Move the main component logic into its own client component
+function FailContent() {
   const searchParams = useSearchParams();
   const errorMessage =
-    searchParams.get("error") || "An unknown error occurred. Please try again.";
+    searchParams.get("error") ||
+    "An unknown error occurred. Please try again.";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -26,3 +28,15 @@ export default function FailPage() {
     </div>
   );
 }
+
+// Wrap FailContent in Suspense to satisfy Next.js requirements
+export default function FailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <FailContent />
+    </Suspense>
+  );
+}
+
+// Export as dynamic to force runtime rendering instead of static pre-rendering
+export const dynamic = "force-dynamic";
