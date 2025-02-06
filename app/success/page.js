@@ -1,11 +1,11 @@
 "use client";
 
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle } from "lucide-react"; // Icons
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const searchParams = useSearchParams();
   const orderId = searchParams.get("orderId"); // Fetch order ID from URL
   const whatsappNumber = "+923299172889";
@@ -49,3 +49,15 @@ export default function SuccessPage() {
     </div>
   );
 }
+
+// Wrap the main component in Suspense
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
+  );
+}
+
+// Force dynamic rendering to avoid pre-rendering issues
+export const dynamic = "force-dynamic";
