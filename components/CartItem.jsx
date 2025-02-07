@@ -68,6 +68,7 @@ const CartItem = ({ data, onTotalPrice }) => {
                         email: session.user.email,
                         productId: documentId,
                         quantity: selectedQuantity,
+
                     });
 
                     // Update the cart state after modifying the quantity
@@ -103,7 +104,7 @@ const CartItem = ({ data, onTotalPrice }) => {
         };
 
         fetchData();
-    }, [fetchUrl]);
+    }, [fetchUrl, Token]);
 
 
     const [totalPriceCheck, setTotalPriceCheck] = useState([]);

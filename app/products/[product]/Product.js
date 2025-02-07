@@ -1,6 +1,6 @@
 //app/products/[product]/Product.js
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,12 +9,17 @@ import ProductDetail from "@/components/ProductDetails";
 import RelatedProducts from "@/components/RelatedProducts";
 import { getDiscountedPricePercentage } from "@/utils/percentage";
 import { useSession, signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
+import { FaWhatsapp } from "react-icons/fa";
 
 const Product = ({ product }) => {
+  const pathname = usePathname(); // Yeh URL ka path dega
+  const searchParams = useSearchParams(); // Yeh query parameters fetch karega
+  const [fullUrl, setFullUrl] = useState("");
+
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null); // State for color
@@ -24,8 +29,20 @@ const Product = ({ product }) => {
   const router = useRouter();
   const [cart, setCart] = useState([]);
   const url = process.env.NEXT_PUBLIC_API_URL;
-
   const [number, setNumber] = useState(0);
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // Construct the full URL
+      setFullUrl(
+        `${window.location.origin}${pathname}?${searchParams.toString()}`
+      );
+    }
+  }, [pathname, searchParams]);
+
+  const colorNumber = number; // Fetch order ID from URL
+  const whatsappNumber = "+923299172889";
+  const whatsappMessage = `Hello, I Can Help this Product My product Url is ${fullUrl} and Color Number is ${colorNumber}`;
 
   const handleShowError = () => {
     if (!selectedSize || !selectedColor) {
@@ -230,11 +247,22 @@ const Product = ({ product }) => {
           </button>
           {/* BuyNow Button */}
           <button
-            className="w-full py-4 rounded-full bg-blue-600 text-white text-lg font-medium transition-transform active:scale-95 mb-10 hover:bg-blue-800 flex items-center justify-center gap-2 shadow-lg"
+            className="w-full py-4 rounded-full bg-blue-600 text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:bg-blue-800 flex items-center justify-center gap-2 shadow-lg"
             onClick={handleBuyNow}
           >
             Buy Now
           </button>
+          <Link
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+              whatsappMessage
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <button className="w-full py-4 rounded-full bg-green-500 text-white text-lg font-medium transition-transform active:scale-95 mb-10 hover:bg-green-600 flex items-center justify-center gap-2 shadow-lg">
+              <FaWhatsapp size={24} /> Contact on WhatsApp
+            </button>
+          </Link>
           {/* Product Description */}
           <div>
             <div className="text-lg font-bold mb-5">Product Details</div>

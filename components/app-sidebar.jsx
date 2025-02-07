@@ -34,10 +34,6 @@ const Sidebar = () => {
     };
     useEffect(() => {
         setIsClient(true);
-        if (session) {// Debugging line
-            console.log("session:", session);
-        }
-
         const fetchCookieData = async () => {
             try {
                 const response = await axios.get("/api/protected", {

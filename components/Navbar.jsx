@@ -23,17 +23,12 @@ const Navbar = ({ isOpen, onToggle }) => {
   const [publicId, setPublicId] = useState(null);
 
   const [cart, setCart] = useState([]);
-  console.log("cart is", cart?.length);
 
   useEffect(() => {
     if (session) {
-      // Log session to check if email is available
-      console.log("Session data:", session);
-
       axios
         .get(`/api/cart/${session.user.email}`)
         .then((res) => {
-          console.log("Cart data:", res.data); // Log the response data
           setCart(res.data.items || []); // Set cart data to state
         })
         .catch((error) => {
@@ -64,12 +59,6 @@ const Navbar = ({ isOpen, onToggle }) => {
     }
   };
   useEffect(() => {
-    console.log("status:", status); // Debugging line
-    console.log("userData:", userData);
-    if (session) {// Debugging line
-      console.log("session:", session);
-    }
-
     const fetchCookieData = async () => {
       try {
         const response = await axios.get("/api/protected", {

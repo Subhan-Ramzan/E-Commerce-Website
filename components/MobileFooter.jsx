@@ -17,9 +17,6 @@ const MobileFooter = () => {
     const router = useRouter();
 
     useEffect(() => {
-        console.log("status:", status); // Debugging line
-        console.log("userData:", userData); // Debugging line
-
         const fetchCookieData = async () => {
             try {
                 const response = await axios.get("/api/protected", {

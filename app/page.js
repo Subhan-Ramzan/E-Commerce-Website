@@ -21,14 +21,14 @@ export default async function Home() {
 
     return (
       <>
-          <div className="md:w-[90vw] w-[95vw] mx-auto">
-        <Category />
-        {/* Pass the CoverImg data to HeroSection */}
-        <HeroSection CoverImages={CoverImg?.data[0]?.CoverImage || []} />
-        <HomeHeading />
-        <ProductCard products={products} />
-        {/* <FeaturedProducts products={products} /> */}
-      </div>
+        <div className="md:min-w-[90vw] w-[95vw] mx-auto">
+          <Category />
+          {/* Pass the CoverImg data to HeroSection */}
+          <HeroSection CoverImages={CoverImg?.data[0]?.CoverImage || []} />
+          <HomeHeading />
+          <ProductCard products={products} />
+          {/* <FeaturedProducts products={products} /> */}
+        </div>
       </>
     );
   } catch (error) {

@@ -1,4 +1,3 @@
-// app/layout.js
 import { Inter } from "next/font/google";
 import "./globals.css";
 import ClientSessionProvider from "./ClientSessionProvider";
@@ -9,6 +8,7 @@ import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
 import SearchBar from "@/components/SearchNavbar";
 import ReduxProvider from "./ReduxProvider"; // Import the new ReduxProvider component
+import WhatsAppButton from "@/components/WhatsAppButton"; // WhatsApp Button Import
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,7 +18,15 @@ export const metadata = {
     "Discover the latest trends in fashion and shop for clothing, accessories, and more at New Fashion.",
   keywords: "fashion, online store, clothing, accessories, trendy wear",
   author: "New Fashion Team",
-  viewport: "width=device-width, initial-scale=1.0",
+  icons: {
+    icon: "/favicon.ico", 
+  },
+};
+
+// ✅ Move viewport to a separate export
+export const viewport = {
+  width: "device-width",
+  initialScale: 1.0,
 };
 
 export default function RootLayout({ children }) {
@@ -28,13 +36,16 @@ export default function RootLayout({ children }) {
         <ClientSessionProvider>
           <Sidebar />
           <ProductProvider>
-              <Navbar />
-              <SearchBar />
-              <div className="pt-16 max-md:pt-32">{children}</div>
-              <MobileFooter />
-              <Footer />
+            <Navbar />
+            <SearchBar />
+            <div className="pt-16 max-md:pt-32 min-h-[90vh]">{children}</div>
+            <MobileFooter />
+            <Footer />
           </ProductProvider>
         </ClientSessionProvider>
+
+        {/* WhatsApp Floating Button */}
+        <WhatsAppButton />
       </body>
     </html>
   );

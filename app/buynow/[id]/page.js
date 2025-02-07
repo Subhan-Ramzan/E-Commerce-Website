@@ -188,7 +188,7 @@ export default function Page() {
                   <Image
                     width={200}
                     height={200}
-                    src={`${url}${mainThumbnail}`}
+                    src={`${mainThumbnail}`}
                     alt="Product Image"
                     className="w-20 h-20 object-cover rounded-lg border"
                     priority
@@ -368,7 +368,7 @@ export default function Page() {
               <Image
                 width={200}
                 height={200}
-                src={`${url}${mainThumbnail}`}
+                src={`${mainThumbnail}`}
                 alt="Product Image"
                 className="w-20 h-20 object-cover rounded-lg border"
                 priority

@@ -31,11 +31,11 @@ const ProductItem = ({ product }) => {
         {/* Placeholder Thumbnail */}
         {!imageLoaded && (
           <Image
-            // src={`${url}${placeholderThumbnail}`}
-            src={placeholderThumbnail}
+            src={`${url}${placeholderThumbnail}`}
             alt={product?.name || "Product Image"}
-            layout="fill"
-            objectFit="cover"
+            width={300} // ✅ Specify width
+            height={200} // ✅ Specify height
+            style={{ objectFit: "cover" }} // ✅ Instead of objectFit prop, use style
             className="rounded-t-lg blur-md"
           />
         )}
@@ -43,11 +43,11 @@ const ProductItem = ({ product }) => {
         {/* Main Thumbnail (Loaded Image) */}
         {mainThumbnail && (
           <Image
-            // src={`${url}${mainThumbnail}`}
-            src={mainThumbnail}
+            src={`${url}${mainThumbnail}`}
             alt={product?.name || "Product Image"}
-            layout="fill"
-            objectFit="cover"
+            width={300}
+            height={200}
+            style={{ objectFit: "cover" }}
             className={`rounded-t-lg transition-opacity ${
               imageLoaded ? "opacity-100" : "opacity-0"
             }`}

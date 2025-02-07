@@ -34,24 +34,19 @@ const ProgressiveCarouselImage = ({ image, alt, containerClass, imageClass }) =>
       {/* Placeholder Thumbnail */}
       {!imageLoaded && (
         <Image
-          // src={`${url}${placeholderImage}`}
           src={placeholderImage}
           alt={alt}
-          layout="fill"
-          objectFit="cover"
-          className={`${imageClass} blur-md`}
+          fill // ✅ Replaces layout="fill"
+          className={`${imageClass} blur-md object-cover`} // ✅ Add object-cover directly in className
         />
       )}
-      {/* Main Thumbnail */}
+      {/* Main Image */}
       {mainImage && (
         <Image
-          // src={`${url}${mainImage}`}
           src={mainImage}
           alt={alt}
-          layout="fill"
-          objectFit="cover"
-          className={`${imageClass} transition-opacity ${imageLoaded ? "opacity-100" : "opacity-0"
-            }`}
+          fill // ✅ Replaces layout="fill"
+          className={`${imageClass} transition-opacity ${imageLoaded ? "opacity-100" : "opacity-0"} object-cover`}
           onLoad={() => setImageLoaded(true)}
         />
       )}
@@ -64,7 +59,7 @@ const ProgressiveCarouselImage = ({ image, alt, containerClass, imageClass }) =>
  * Isi tarah thumbnail ke liye bhi placeholder pehle dikhata hai,
  * phir main image load hone par use show karta hai.
  */
-const ProgressiveThumbnailImage = ({ image, alt, containerClass, imageClass }) => {
+const ProgressiveThumbnailImage = ({ image, alt, containerClass, imageClass, isFirstImage }) => {
   const [thumbLoaded, setThumbLoaded] = useState(false);
   const placeholderImage =
     image?.formats?.thumbnail?.url || "/default-thumbnail.jpg";
@@ -74,23 +69,19 @@ const ProgressiveThumbnailImage = ({ image, alt, containerClass, imageClass }) =
     <div className={`relative ${containerClass}`}>
       {!thumbLoaded && (
         <Image
-          // src={`${url}${placeholderImage}`}
           src={placeholderImage}
           alt={alt}
-          layout="fill"
-          objectFit="cover"
-          className={`${imageClass} blur-md`}
+          fill // ✅ Replaces layout="fill"
+          className={`${imageClass} blur-md object-cover`}
         />
       )}
       {mainImage && (
         <Image
-          // src={`${url}${mainImage}`}
           src={mainImage}
           alt={alt}
-          layout="fill"
-          objectFit="cover"
-          className={`${imageClass} transition-opacity ${thumbLoaded ? "opacity-100" : "opacity-0"
-            }`}
+          fill // ✅ Replaces layout="fill"
+          priority={isFirstImage}
+          className={`${imageClass} transition-opacity ${thumbLoaded ? "opacity-100" : "opacity-0"} object-cover`}
           onLoad={() => setThumbLoaded(true)}
         />
       )}
@@ -117,6 +108,7 @@ const ProductDetail = ({ images, thumbnail }) => {
         <CarouselWithNoSSR
           selectedItem={selectedIndex}
           onChange={handleOnChange}
+          showThumbs={false}
           infiniteLoop={true}
           showIndicators={false}
           thumbWidth={60}
@@ -150,6 +142,7 @@ const ProductDetail = ({ images, thumbnail }) => {
                 alt={`Product Image ${index + 1}`}
                 containerClass="w-[70vh] md:h-[70vh] h-[50vh]"
                 imageClass="rounded-t-lg object-cover"
+                isFirstImage={index === 0} // ✅ Only first image gets priority
               />
             </div>
           ))}

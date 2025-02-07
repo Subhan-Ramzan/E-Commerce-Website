@@ -30,7 +30,7 @@ function SuccessContent() {
 
         {/* WhatsApp Button */}
         {orderId && (
-          <a
+          <Link
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
               whatsappMessage
             )}`}
@@ -39,7 +39,7 @@ function SuccessContent() {
             className="block mt-4 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-300"
           >
             Contact on WhatsApp
-          </a>
+          </Link>
         )}
 
         <Link href="/" className="block mt-4 text-blue-600 hover:underline">
