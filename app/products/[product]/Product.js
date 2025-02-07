@@ -1,6 +1,6 @@
 //app/products/[product]/Product.js
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,6 +16,14 @@ import Image from "next/image";
 import { FaWhatsapp } from "react-icons/fa";
 
 const Product = ({ product }) => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ProductContent product={product} />
+    </Suspense>
+  );
+};
+
+const ProductContent = ({ product }) => {
   const pathname = usePathname(); // Yeh URL ka path dega
   const searchParams = useSearchParams(); // Yeh query parameters fetch karega
   const [fullUrl, setFullUrl] = useState("");
@@ -30,7 +38,7 @@ const Product = ({ product }) => {
   const [cart, setCart] = useState([]);
   const url = process.env.NEXT_PUBLIC_API_URL;
   const [number, setNumber] = useState(0);
-  
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       // Construct the full URL

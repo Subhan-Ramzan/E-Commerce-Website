@@ -7,8 +7,8 @@ import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
 import SearchBar from "@/components/SearchNavbar";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import { Suspense } from "react"; // ✅ Import Suspense for handling hydration
+import ReduxProvider from "./ReduxProvider"; // Import the new ReduxProvider component
+import WhatsAppButton from "@/components/WhatsAppButton"; // WhatsApp Button Import
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -37,16 +37,14 @@ export default function RootLayout({ children }) {
           <Sidebar />
           <ProductProvider>
             <Navbar />
-            <Suspense fallback={<div>Loading search...</div>}>
-              <SearchBar /> {/* ✅ Wrapped SearchBar in Suspense to fix hydration issues */}
-            </Suspense>
+            <SearchBar />
             <div className="pt-16 max-md:pt-32 min-h-[90vh]">{children}</div>
             <MobileFooter />
             <Footer />
           </ProductProvider>
         </ClientSessionProvider>
 
-        {/* ✅ WhatsApp Floating Button */}
+        {/* WhatsApp Floating Button */}
         <WhatsAppButton />
       </body>
     </html>
