@@ -7,8 +7,13 @@ import MobileFooter from "@/components/MobileFooter";
 import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
 import SearchBar from "@/components/SearchNavbar";
-import ReduxProvider from "./ReduxProvider"; // Import the new ReduxProvider component
-import WhatsAppButton from "@/components/WhatsAppButton"; // WhatsApp Button Import
+import ReduxProvider from "./ReduxProvider";
+import dynamic from "next/dynamic";
+
+// ✅ Lazy Load WhatsAppButton to prevent server-side errors
+const WhatsAppButton = dynamic(() => import("@/components/WhatsAppButton"), {
+  ssr: false, // Prevents issues with `useSearchParams`
+});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +24,7 @@ export const metadata = {
   keywords: "fashion, online store, clothing, accessories, trendy wear",
   author: "New Fashion Team",
   icons: {
-    icon: "/favicon.ico", 
+    icon: "/favicon.ico",
   },
 };
 
@@ -44,7 +49,7 @@ export default function RootLayout({ children }) {
           </ProductProvider>
         </ClientSessionProvider>
 
-        {/* WhatsApp Floating Button */}
+        {/* ✅ WhatsApp Floating Button (Lazy Loaded) */}
         <WhatsAppButton />
       </body>
     </html>
