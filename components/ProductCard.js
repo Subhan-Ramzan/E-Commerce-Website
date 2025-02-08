@@ -25,7 +25,7 @@ const ProductItem = ({ product }) => {
       className="transform overflow-hidden bg-white duration-200 hover:scale-105 cursor-pointer shadow-lg rounded-lg flex flex-col"
     >
       {/* Product Image */}
-      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[300px]">
+      <div className="relative w-full h-[200px] md:h-[250px] lg:h-[300px] overflow-hidden">
         {/* Placeholder Thumbnail */}
         {!imageLoaded && (
           <Image
