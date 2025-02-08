@@ -31,7 +31,7 @@ const ProductItem = ({ product }) => {
         {/* Placeholder Thumbnail */}
         {!imageLoaded && (
           <Image
-            src={`${url}${placeholderThumbnail}`}
+            src={`${placeholderThumbnail}`}
             alt={product?.name || "Product Image"}
             width={300} // ✅ Specify width
             height={200} // ✅ Specify height
@@ -43,7 +43,7 @@ const ProductItem = ({ product }) => {
         {/* Main Thumbnail (Loaded Image) */}
         {mainThumbnail && (
           <Image
-            src={`${url}${mainThumbnail}`}
+            src={`${mainThumbnail}`}
             alt={product?.name || "Product Image"}
             width={300}
             height={200}

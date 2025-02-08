@@ -63,7 +63,7 @@
     "react-toastify": "^10.0.6",
     "react-transition-group": "^4.4.5",
     "redis": "^4.7.0",
-    "shadcn-ui": "^0.9.2",
+    "shadcn-ui": "^0.9.4",
     "slick-carousel": "^1.8.1",
     "socket.io-client": "^4.8.1",
     "stripe": "^17.5.0",

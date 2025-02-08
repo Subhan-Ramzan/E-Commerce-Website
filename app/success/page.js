@@ -2,12 +2,12 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle } from "lucide-react"; // Icons
+import { CheckCircle } from "lucide-react"; 
 import Link from "next/link";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("orderId"); // Fetch order ID from URL
+  const orderId = searchParams.get("orderId"); 
   const whatsappNumber = "+923299172889";
   const whatsappMessage = `Hello, I Can Help this Order my order ID is ${orderId}`;
 
@@ -41,6 +41,12 @@ function SuccessContent() {
             Contact on WhatsApp
           </Link>
         )}
+        <Link
+          href="/profile"
+          className="block mt-4 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition duration-300"
+        >
+          Check Your Order
+        </Link>
 
         <Link href="/" className="block mt-4 text-blue-600 hover:underline">
           Back to Home

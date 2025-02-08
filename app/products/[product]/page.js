@@ -1,6 +1,8 @@
 // app/products/[product]/page.js
 import Product from "./Product";
 import { fetchDataFromApi } from "@/utils/api";
+import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 // ✅ Generate static paths for products
 export async function generateStaticParams() {
@@ -32,7 +34,22 @@ export async function generateMetadata({ params }) {
 
 // ✅ Fix `params` inside ProductPage
 export default async function ProductPage({ params }) {
-  if (!params) return <div>Loading...</div>; // ✅ Prevent undefined params
+  if (!params)
+    return (
+      <div className="flex items-center justify-center h-screen bg-white dark:bg-gray-900">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="flex flex-col items-center"
+        >
+          <Loader2 className="h-12 w-12 animate-spin text-blue-600" />
+          <p className="mt-4 text-lg font-medium text-gray-700 dark:text-gray-300">
+            Loading...
+          </p>
+        </motion.div>
+      </div>
+    ); // ✅ Prevent undefined params
 
   const { product } = await params; // ✅ Await params properly
 

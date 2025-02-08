@@ -17,11 +17,11 @@ export default function Page() {
   const Token = STRAPI_API_TOKEN;
   const { data: session, status } = useSession(); // Get session data
   const router = useRouter();
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     signIn("google"); // Automatically sign in with Google
-  //   }
-  // }, [status]);
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      signIn("google"); // Automatically sign in with Google
+    }
+  }, [status]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cart, setCart] = useState([]);
   const url = API_URL;
