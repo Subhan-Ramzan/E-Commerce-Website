@@ -8,7 +8,7 @@ import { ProductProvider } from "@/context/ProductContext";
 import Sidebar from "@/components/app-sidebar";
 import SearchBar from "@/components/SearchNavbar";
 import ReduxProvider from "./ReduxProvider";
-import WhatsAppWrapper from "./WhatsAppWrapper"; // ✅ Import the client wrapper
+// import WhatsAppWrapper from "./WhatsAppWrapper"; // ✅ Import the client wrapper
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -45,7 +45,7 @@ export default function RootLayout({ children }) {
         </ClientSessionProvider>
 
         {/* ✅ WhatsApp Floating Button (Client Component Wrapper) */}
-        <WhatsAppWrapper />
+        {/* <WhatsAppWrapper /> */}
       </body>
     </html>
   );
