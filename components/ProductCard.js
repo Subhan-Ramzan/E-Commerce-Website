@@ -7,17 +7,15 @@ import { API_URL } from "@/utils/urls";
 
 // New component for each product item
 const ProductItem = ({ product }) => {
-  const url = API_URL;
   const mainThumbnail = product?.thumbnail?.[0]?.url || "";
   const placeholderThumbnail =
-    product?.thumbnail?.[0]?.formats?.thumbnail?.url ||
-    "/default-thumbnail.jpg";
+    product?.thumbnail?.[0]?.formats?.thumbnail?.url || "/default-thumbnail.jpg";
   const discountPercentage = getDiscountedPricePercentage(
     product?.original_price,
     product?.price
   );
 
-  // Hook is now at the top level of ProductItem
+  // Hook to handle image loading state
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -31,11 +29,11 @@ const ProductItem = ({ product }) => {
         {/* Placeholder Thumbnail */}
         {!imageLoaded && (
           <Image
-            src={`${placeholderThumbnail}`}
+            src={placeholderThumbnail}
             alt={product?.name || "Product Image"}
-            width={300} // ✅ Specify width
-            height={200} // ✅ Specify height
-            style={{ objectFit: "cover" }} // ✅ Instead of objectFit prop, use style
+            width={300}
+            height={200}
+            style={{ objectFit: "cover" }}
             className="rounded-t-lg blur-md"
           />
         )}
@@ -43,7 +41,7 @@ const ProductItem = ({ product }) => {
         {/* Main Thumbnail (Loaded Image) */}
         {mainThumbnail && (
           <Image
-            src={`${mainThumbnail}`}
+            src={mainThumbnail}
             alt={product?.name || "Product Image"}
             width={300}
             height={200}
