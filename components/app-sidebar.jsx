@@ -63,7 +63,7 @@ const Sidebar = () => {
 
     const data = [
         { id: 1, name: "Home", url: "/" },
-        { id: 2, name: "About", url: "/about" },
+        { id: 2, name: "Orders", url: "/profile" },
         { id: 3, name: "Categories", subMenu: true },
         { id: 4, name: "Contact", url: "/contact" },
     ];
@@ -202,7 +202,7 @@ const Sidebar = () => {
                                 <li className="group py-4 px-5 border-b hover:bg-gray-800 transition-colors">
                                     <Link href={item.url} className="flex items-center gap-2 text-gray-300 group-hover:text-white">
                                         {item.name === "Home" && <FaHome size={18} />}
-                                        {item.name === "About" && <FaInfoCircle size={18} />}
+                                        {item.name === "Orders" && <FaInfoCircle size={18} />}
                                         {item.name === "Contact" && <FaPhoneAlt size={18} />}
                                         <span>{item.name}</span>
                                     </Link>

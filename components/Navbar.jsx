@@ -41,7 +41,6 @@ const Navbar = ({ isOpen, onToggle }) => {
     setHandleFaBar(!handleFaBar);
   };
 
-  // Handle search functionality
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
@@ -162,7 +161,7 @@ const Navbar = ({ isOpen, onToggle }) => {
             </li>
 
             <li className="hover:text-blue-500">
-              <Link href="https://wa.me/+923250826305" target="_blank" rel="noopener noreferrer">
+              <Link href="https://wa.me/+923299172889" target="_blank" rel="noopener noreferrer">
                 Contact
               </Link>
             </li>

@@ -1,8 +1,11 @@
 import { API_URL } from "@/utils/urls";
 import axios from "axios";
 
-export async function GET(req, { params }) {
-  const { email } = params;
+export async function GET(req) {
+  // Extract the email from the URL
+  const url = new URL(req.url);
+  const email = url.pathname.split("/").pop();
+
   const strapiUrl = `${API_URL}/api/cart/${email}`;
   const strapiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
 

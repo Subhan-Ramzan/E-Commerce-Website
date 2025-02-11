@@ -53,11 +53,11 @@ const ProductContent = ({ product }) => {
   const whatsappMessage = `Hello, I Can Help this Product My product Url is ${fullUrl} and Color Number is ${colorNumber}`;
 
   const handleShowError = () => {
-    if (!selectedSize || !selectedColor) {
-      setShowError(true); // Show the error if no size or color is selected
-      return false; // Prevent further action
+    if (!selectedSize || selectedColor === null) {
+      setShowError(true);
+      return false;
     }
-    return true; // Allow action if size and color are selected
+    return true;
   };
 
   const handleBuyNow = () => {
@@ -68,7 +68,7 @@ const ProductContent = ({ product }) => {
   };
 
   const handleAddToCart = (productId) => {
-    if (!selectedSize || !selectedColor) {
+    if (!selectedSize || selectedColor === null) {
       setShowError(true);
       return;
     }
