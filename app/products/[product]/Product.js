@@ -1,4 +1,3 @@
-//app/products/[product]/Product.js
 "use client";
 import React, { Suspense, useEffect, useState } from "react";
 import { IoMdHeartEmpty } from "react-icons/io";
@@ -38,6 +37,7 @@ const ProductContent = ({ product }) => {
   const [cart, setCart] = useState([]);
   const url = process.env.NEXT_PUBLIC_API_URL;
   const [number, setNumber] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false); // State for checking if image is loaded
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -105,6 +105,7 @@ const ProductContent = ({ product }) => {
       });
     }
   };
+
   const images = p ? p[`image${number}`] : "";
 
   return (
@@ -234,6 +235,9 @@ const ProductContent = ({ product }) => {
                     width={150} // Fixed width
                     height={150} // Fixed height
                     className="object-cover rounded w-36 h-36"
+                    placeholder="blur"
+                    blurDataURL={`${thumbnail.url}?w=10&h=10&fit=crop&auto=format`} // Use a low-resolution image as placeholder
+                    onLoad={() => setImageLoaded(true)} // Mark image as loaded
                   />
                 </div>
               ))}

@@ -1,4 +1,3 @@
-//app/buynow/[id]/page.js
 "use client";
 import React, { useEffect, useState } from "react";
 import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react"; // Icons
@@ -17,11 +16,7 @@ export default function Page() {
   const Token = STRAPI_API_TOKEN;
   const { data: session, status } = useSession(); // Get session data
   const router = useRouter();
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     signIn("google"); // Automatically sign in with Google
-  //   }
-  // }, [status]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [cart, setCart] = useState([]);
   const url = API_URL;
@@ -100,7 +95,9 @@ export default function Page() {
       Address: formData.address,
       PostalCode: formData.postalCode || "N/A",
       PhoneNumber: formData.phoneNumber,
-      selectedColor: selectedColor,
+      selectedColor: parseInt(selectedColor, 10), // Ensure selectedColor is an integer
+      Complete: false, // Default to false
+      Option: "Processing", // Default status
     };
 
     try {
@@ -115,11 +112,12 @@ export default function Page() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error.message || "Failed to place order");
+        throw new Error(errorData.error?.message || "Failed to place order");
       }
 
       const result = await response.json();
-      // Reset form and UI if needed
+
+      // Reset form and redirect to success page
       setFormData({
         firstName: "",
         lastName: "",
@@ -128,16 +126,18 @@ export default function Page() {
         postalCode: "",
         phoneNumber: "",
       });
-      console.log("Order created:", result);
 
-      const newOrderId = result?.data?.documentId; // Get order ID
+      const newOrderId = result?.documentId; // Get order ID from the response
       router.push(`/success?orderId=${newOrderId}`);
     } catch (error) {
+      console.error("Error placing order:", error);
       const errorText =
         error.message === "Internal Server Error"
           ? "Server Error: Please try again later."
           : error.message;
       router.push(`/fail?error=${encodeURIComponent(errorText)}`);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

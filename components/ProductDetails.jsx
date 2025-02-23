@@ -5,7 +5,6 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import dynamic from "next/dynamic";
 import { RiArrowLeftSLine, RiArrowRightSLine } from "react-icons/ri";
 import Image from "next/image";
-import { API_URL } from "@/utils/urls";
 
 // Dynamically import Carousel with ssr: false to avoid SSR issues
 const CarouselWithNoSSR = dynamic(
@@ -14,21 +13,29 @@ const CarouselWithNoSSR = dynamic(
     ssr: false,
   }
 );
-const url = API_URL
+
+/**
+ * Cloudinary Image Optimizer
+ * Ye function Cloudinary ke URLs ko optimize karta hai
+ */
+const getCloudinaryURL = (imageUrl, width = 800, height = 600) => {
+  if (!imageUrl) return "/default-thumbnail.jpg"; // Default image
+  return imageUrl.replace(
+    "/upload/",
+    `/upload/w_${width},h_${height},c_fill/`
+  );
+};
 
 /**
  * ProgressiveCarouselImage:
- * Pehle low-res thumbnail (formats.thumbnail.url) show karta hai,
- * phir high-res image (url) load hote hi uski jagah le leta hai.
- *
- * containerClass aur imageClass se styling same rakhi gayi hai.
+ * Placeholder thumbnail dikhata hai pehle, phir high-res image load hone par replace hoti hai.
  */
 const ProgressiveCarouselImage = ({ image, alt, containerClass, imageClass }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  // Agar placeholder available na ho to default thumbnail use karo.
-  const placeholderImage =
-    image?.formats?.thumbnail?.url || "/default-thumbnail.jpg";
-  const mainImage = image?.url;
+
+  const mainImage = getCloudinaryURL(image?.url);
+  const placeholderImage = getCloudinaryURL(image?.formats?.thumbnail?.url, 100, 100);
+
   return (
     <div className={`relative ${containerClass}`}>
       {/* Placeholder Thumbnail */}
@@ -36,34 +43,31 @@ const ProgressiveCarouselImage = ({ image, alt, containerClass, imageClass }) =>
         <Image
           src={placeholderImage}
           alt={alt}
-          fill // ✅ Replaces layout="fill"
-          className={`${imageClass} blur-md object-cover`} // ✅ Add object-cover directly in className
+          fill
+          className={`${imageClass} blur-md object-cover`}
         />
       )}
       {/* Main Image */}
-      {mainImage && (
-        <Image
-          src={mainImage}
-          alt={alt}
-          fill // ✅ Replaces layout="fill"
-          className={`${imageClass} transition-opacity ${imageLoaded ? "opacity-100" : "opacity-0"} object-cover`}
-          onLoad={() => setImageLoaded(true)}
-        />
-      )}
+      <Image
+        src={mainImage}
+        alt={alt}
+        fill
+        className={`${imageClass} transition-opacity ${imageLoaded ? "opacity-100" : "opacity-0"} object-cover`}
+        onLoad={() => setImageLoaded(true)}
+      />
     </div>
   );
 };
 
 /**
  * ProgressiveThumbnailImage:
- * Isi tarah thumbnail ke liye bhi placeholder pehle dikhata hai,
- * phir main image load hone par use show karta hai.
+ * Thumbnail ke liye bhi pehle low-res image dikhata hai, phir high-res load hoti hai.
  */
 const ProgressiveThumbnailImage = ({ image, alt, containerClass, imageClass, isFirstImage }) => {
   const [thumbLoaded, setThumbLoaded] = useState(false);
-  const placeholderImage =
-    image?.formats?.thumbnail?.url || "/default-thumbnail.jpg";
-  const mainImage = image?.url;
+
+  const mainImage = getCloudinaryURL(image?.url, 100, 100);
+  const placeholderImage = getCloudinaryURL(image?.formats?.thumbnail?.url, 50, 50);
 
   return (
     <div className={`relative ${containerClass}`}>
@@ -71,35 +75,28 @@ const ProgressiveThumbnailImage = ({ image, alt, containerClass, imageClass, isF
         <Image
           src={placeholderImage}
           alt={alt}
-          fill // ✅ Replaces layout="fill"
+          fill
           className={`${imageClass} blur-md object-cover`}
         />
       )}
-      {mainImage && (
-        <Image
-          src={mainImage}
-          alt={alt}
-          fill // ✅ Replaces layout="fill"
-          priority={isFirstImage}
-          className={`${imageClass} transition-opacity ${thumbLoaded ? "opacity-100" : "opacity-0"} object-cover`}
-          onLoad={() => setThumbLoaded(true)}
-        />
-      )}
+      <Image
+        src={mainImage}
+        alt={alt}
+        fill
+        priority={isFirstImage}
+        className={`${imageClass} transition-opacity ${thumbLoaded ? "opacity-100" : "opacity-0"} object-cover`}
+        onLoad={() => setThumbLoaded(true)}
+      />
     </div>
   );
 };
 
-const ProductDetail = ({ images, thumbnail }) => {
-  // State to track the current slide index
+const ProductDetail = ({ images }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Handle slide change event
   const handleOnChange = (index) => {
     setSelectedIndex(index);
   };
-
-  // Agar aap API URL use karna chahte hain, to yahaan add kar sakte hain
-  // const url = process.env.NEXT_PUBLIC_API_URL;
 
   return (
     <div className="text-white text-[20px] w-full max-w-[1360px] mx-auto sticky top-[50px]">
@@ -134,7 +131,6 @@ const ProductDetail = ({ images, thumbnail }) => {
             </button>
           )}
         >
-          {/* Main Images */}
           {images?.map((image, index) => (
             <div key={index} className="flex justify-center">
               <ProgressiveCarouselImage
@@ -142,7 +138,7 @@ const ProductDetail = ({ images, thumbnail }) => {
                 alt={`Product Image ${index + 1}`}
                 containerClass="w-[70vh] md:h-[70vh] h-[50vh]"
                 imageClass="rounded-t-lg object-cover"
-                isFirstImage={index === 0} // ✅ Only first image gets priority
+                isFirstImage={index === 0}
               />
             </div>
           ))}
@@ -154,7 +150,7 @@ const ProductDetail = ({ images, thumbnail }) => {
         {images?.map((image, index) => (
           <button
             key={index}
-            onClick={() => setSelectedIndex(index)} // Change the slide on thumbnail click
+            onClick={() => setSelectedIndex(index)}
             className={`border-2 ${selectedIndex === index ? "border-white" : "border-transparent"
               } p-1 rounded-md hover:border-white transition`}
           >
