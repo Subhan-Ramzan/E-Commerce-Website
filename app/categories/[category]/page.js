@@ -66,11 +66,11 @@ export default async function CategoryPage({ params }) {
   );
 
   if (!categoryData?.data?.length) {
-    console.warn(`Category '${params.category}' not found.`);
+    console.warn(`Category \u0027${params.category}\u0027 not found.`);
     return (
       <div className="w-full min-h-[80vh]">
         <div className="bg-red-100 text-red-600 p-4 text-center font-medium">
-          Category '{params.category}' not found. Showing all available products.
+          Category &apos;{params.category}&apos; not found. Showing all available products.
         </div>
         <Category initialCategory={""} initialProducts={products} slug="" />
       </div>
