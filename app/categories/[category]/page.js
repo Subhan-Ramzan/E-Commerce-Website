@@ -1,27 +1,41 @@
 import Category from "./Category";
 import { fetchDataFromApi } from "@/utils/api";
 
+// Function to fetch data safely with error handling
+async function safeFetchData(endpoint) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`);
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch (e) {
+      console.error("Invalid JSON response:", text);
+      return null;
+    }
+  } catch (error) {
+    console.error("API Fetch Error:", error);
+    return null;
+  }
+}
+
 // Generate static paths for categories
 export async function generateStaticParams() {
-  const category = await fetchDataFromApi("/api/categories?populate=*");
+  const category = await safeFetchData("/api/categories?populate=*");
 
   if (!category || !category.data) {
-    return []; // Return an empty array to avoid the error
+    console.error("No category data found");
+    return []; // Return an empty array to avoid errors
   }
 
-  const params = category.data.map((c) => ({
-    category: c.slug,
-  }));
-
-  return params;
+  return category.data.map((c) => ({ category: c.slug }));
 }
 
 // Generate metadata for categories
 export async function generateMetadata({ params }) {
-  // Await params before accessing
-  const par = await params;
-  const category = await fetchDataFromApi(
-    `/api/categories?filters[slug][$eq]=${par?.category}` // Use "category" here
+  if (!params?.category) return { title: "Category" };
+  
+  const category = await safeFetchData(
+    `/api/categories?filters[slug][$eq]=${params.category}`
   );
 
   return {
@@ -31,24 +45,32 @@ export async function generateMetadata({ params }) {
 
 // Render the CategoryPage
 export default async function CategoryPage({ params }) {
-  // Await the category param to ensure it's available
-  const { category } = params; // This will now work correctly
-  const categoryData = await fetchDataFromApi(
-    `/api/categories?filters[slug][$eq]=${category}` // Use "category" here
+  if (!params?.category) {
+    console.error("Missing category param");
+    return (
+      <div className="w-full min-h-[80vh] text-center p-4">
+        <div className="bg-red-100 text-red-600 p-4 font-medium">
+          No category specified.
+        </div>
+      </div>
+    );
+  }
+
+  const categoryData = await safeFetchData(
+    `/api/categories?filters[slug][$eq]=${params.category}`
   );
 
-  // Fetch all products if no category found
-  const products = await fetchDataFromApi(
+  // Fetch all products if no category is found
+  const products = await safeFetchData(
     `/api/products?populate=*&pagination[page]=1&pagination[pageSize]=6`
   );
 
-  // Handle no category found
   if (!categoryData?.data?.length) {
+    console.warn(`Category '${params.category}' not found.`);
     return (
       <div className="w-full min-h-[80vh]">
         <div className="bg-red-100 text-red-600 p-4 text-center font-medium">
-          Category &apos;{category}&apos; not found. Showing all available
-          products.
+          Category '{params.category}' not found. Showing all available products.
         </div>
         <Category initialCategory={""} initialProducts={products} slug="" />
       </div>
@@ -59,7 +81,7 @@ export default async function CategoryPage({ params }) {
     <Category
       initialCategory={categoryData}
       initialProducts={products}
-      slug={category}
+      slug={params.category}
     />
   );
 }
