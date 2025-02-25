@@ -38,6 +38,7 @@ const ProductContent = ({ product }) => {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const [number, setNumber] = useState(0);
   const [imageLoaded, setImageLoaded] = useState(false); // State for checking if image is loaded
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -62,9 +63,12 @@ const ProductContent = ({ product }) => {
 
   const handleBuyNow = () => {
     if (handleShowError()) {
+      setLoading(true); // Loader start
       router.push(`/buynow/${p?.documentId}?selectedColor=${selectedColor}`);
+    } else {
+      // Scroll only if size or color is not selected
+      window.scrollBy({ top: -100, behavior: "smooth" });
     }
-    window.scrollBy({ top: -100, behavior: "smooth" });
   };
 
   const handleAddToCart = (productId) => {
@@ -213,7 +217,7 @@ const ProductContent = ({ product }) => {
           </div>
           <div className="mb-10">
             <div className="flex justify-between mb-2">
-              <div className="text-md font-semibold">Select thumbnail</div>
+              <div className="text-md font-semibold">Select Color</div>
             </div>
             <div id="colorGrid" className="grid grid-cols-3 gap-2">
               {p?.thumbnail.map((thumbnail, i) => (
@@ -259,11 +263,43 @@ const ProductContent = ({ product }) => {
           </button>
           {/* BuyNow Button */}
           <button
-            className="w-full py-4 rounded-full bg-blue-600 text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:bg-blue-800 flex items-center justify-center gap-2 shadow-lg"
-            onClick={handleBuyNow}
+            className={`w-full py-4 rounded-full text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:bg-blue-800 flex items-center justify-center gap-2 shadow-lg ${
+              loading
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+            onClick={!loading ? handleBuyNow : null} // Prevent multiple clicks
+            disabled={loading} // Disable button when loading
           >
-            Buy Now
+            {loading ? (
+              <div className="flex items-center justify-center gap-2">
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
+                </svg>
+                <span>Processing...</span>
+              </div>
+            ) : (
+              "Buy Now"
+            )}
           </button>
+
           <Link
             href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
               whatsappMessage
