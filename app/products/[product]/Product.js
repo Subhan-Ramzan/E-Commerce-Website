@@ -192,7 +192,7 @@ const ProductContent = ({ product }) => {
               </div>
             )}
             <div id="sizesGrid" className="grid grid-cols-3 gap-2">
-              {p?.size.data.map((item, i) => (
+              {p?.size?.data.map((item, i) => (
                 <div
                   key={i}
                   className={`border rounded-md text-center py-3 font-medium ${
