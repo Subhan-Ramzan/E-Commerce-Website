@@ -10,11 +10,6 @@ import { motion } from "framer-motion";
 export default function ProfilePage() {
   const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn("google"); // Automatically sign in with Google
-    }
-  }, [status]);
 
   if (status === "loading") {
     return (

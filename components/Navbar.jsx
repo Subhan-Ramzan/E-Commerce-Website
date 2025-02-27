@@ -24,6 +24,23 @@ const Navbar = ({ isOpen, onToggle }) => {
 
   const [cart, setCart] = useState([]);
 
+  const [guestId, setGuestId] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      let storedGuestId = localStorage.getItem("guestId");
+      if (!storedGuestId) {
+        storedGuestId = `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        localStorage.setItem("guestId", storedGuestId);
+      }
+      setGuestId(storedGuestId);
+    }
+  }, [guestId]);
+
+  if (guestId !== null) {
+    console.log(guestId)
+  }
+
   useEffect(() => {
     if (session) {
       axios

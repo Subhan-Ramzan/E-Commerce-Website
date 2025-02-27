@@ -6,6 +6,7 @@ import CartItem from "@/components/CartItem";
 import { useSession, signIn } from "next-auth/react"; // Add next-auth for session management
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useCallback } from "react";
 
 const Cart = () => {
   const [loading, setLoading] = useState(false);
@@ -13,33 +14,31 @@ const Cart = () => {
 
   const router = useRouter();
   const [cart, setCart] = useState([]);
-  
-  useEffect(() => {
-    if (session) {
-      axios
-        .get(`/api/cart/${session.user.email}`)
-        .then((res) => {
-          setCart(res.data.items || []); // Set cart data to state
-        })
-        .catch((error) => {
-          console.log("Error fetching cart:", error);
-        });
-    }
-  }, [session]);
 
-  // Redirect to Google login if the user is not authenticated
+  const fetchCart = useCallback(() => {
+    let guestId = localStorage.getItem("guestId");
+    const userEmail = session ? session.user.email : guestId;
+
+    axios
+      .get(`/api/cart/${userEmail}`)
+      .then((res) => {
+        setCart(res.data.items || []);
+      })
+      .catch((error) => {
+        console.log("Error fetching cart:", error);
+      });
+  }, [session]); // `session` is a dependency here
+
   useEffect(() => {
-    if (status === "unauthenticated") {
-      signIn("google"); // Trigger Google login
-    }
-  }, [status]);
+    fetchCart();
+  }, [session, fetchCart]); // `fetchCart` is now stable due to `useCallback`
 
   const [totalPrice, setTotalPrice] = useState([]);
 
   // Function to receive data from child
   const TotalPriceData = (data) => {
     setTotalPrice(data);
-  }
+  };
 
   return (
     <div className="w-[90vw] mx-auto md:py-20">
@@ -52,9 +51,7 @@ const Cart = () => {
             </div>
           </div>
           {cart?.length > 0 ? (
-            totalPrice?.map((item, index) => (
-              <p key={index}>{item}</p>
-            ))
+            totalPrice?.map((item, index) => <p key={index}>{item}</p>)
           ) : (
             <p>No items in the cart</p>
           )}
@@ -75,6 +72,7 @@ const Cart = () => {
                     quantity: item.quantity,
                   }}
                   onTotalPrice={TotalPriceData}
+                  onItemRemoved={fetchCart}
                 />
               ))}
             </div>
@@ -104,7 +102,14 @@ const Cart = () => {
               {/* BUTTON START */}
               <button className="w-full py-4 rounded-full bg-black text-white text-lg font-medium transition-transform active:scale-95 mb-3 hover:opacity-75 flex items-center gap-2 justify-center">
                 Checkout
-                {loading && <Image alt="Spinner" width={100} height={100} src="/spinner.svg" />}
+                {loading && (
+                  <Image
+                    alt="Spinner"
+                    width={100}
+                    height={100}
+                    src="/spinner.svg"
+                  />
+                )}
               </button>
               {/* BUTTON END */}
             </div>

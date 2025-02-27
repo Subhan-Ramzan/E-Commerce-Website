@@ -98,6 +98,7 @@ export default function Page() {
       selectedColor: parseInt(selectedColor, 10), // Ensure selectedColor is an integer
       Complete: false, // Default to false
       Option: "Processing", // Default status
+      userEmail: session?.user?.email || "guest", // Include userEmail
     };
 
     try {

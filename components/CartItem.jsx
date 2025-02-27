@@ -6,72 +6,71 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import Link from "next/link";
 
-const CartItem = ({ data, onTotalPrice }) => {
+const CartItem = ({ data, onTotalPrice, onItemRemoved  }) => {
     const safeData = data || {};
-    // Destructure with fallback values (quantity defaults to 1)
     const { documentId, quantity } = safeData;
-    // const { documentId, quantity } = data;
     const [productData, setProductData] = useState(null);
     const { data: session } = useSession();
     const Token = STRAPI_API_TOKEN;
 
     const [selectedQuantity, setSelectedQuantity] = useState(quantity);
     const [cart, setCart] = useState([]);
-    const [isItemRemoved, setIsItemRemoved] = useState(false); // Track item removal
+    const [isItemRemoved, setIsItemRemoved] = useState(false);
     const prevQuantity = useRef(quantity);
 
     const handleQuantityChange = (event) => {
         const newQuantity = parseInt(event.target.value);
         setSelectedQuantity(newQuantity);
     };
-    const [inputValue, setInputValue] = useState('');
 
+    const fetchGuestId = () => {
+        let guestId = localStorage.getItem("guestId");
+        if (!guestId) {
+            guestId = `guest_${new Date().getTime()}`; // Unique guest ID
+            localStorage.setItem("guestId", guestId);
+        }
+        return guestId;
+    };
 
-    const url = API_URL;
-    const fetchUrl = `${url}/api/products/${documentId}?populate=*`;
+    const userEmail = session?.user?.email || fetchGuestId(); // Use session email or guest ID
 
     // Function to remove the item from the cart
     const HandleRemoveCart = useCallback(async () => {
-        if (session?.user?.email) {
-            try {
-                const response = await axios.delete(`/api/cart`, {
-                    data: {
-                        email: session.user.email,
-                        productId: documentId,
-                    },
-                    headers: {
-                        Authorization: `Bearer ${STRAPI_API_TOKEN}`,
-                    },
-                });
+        try {
+            const response = await axios.delete(`/api/cart`, {
+                data: {
+                    email: userEmail,
+                    productId: documentId,
+                },
+                headers: {
+                    Authorization: `Bearer ${STRAPI_API_TOKEN}`,
+                },
+            });
+            onItemRemoved();
 
-                // Trigger a cart update and re-render
-                setCart(response.data.items || []);
-            } catch (error) {
-                console.error("Error removing cart item:", error);
-            }
+            setCart(response.data.items || []);
+        } catch (error) {
+            console.error("Error removing cart item:", error);
         }
-    }, [session?.user?.email, documentId]); // Add dependencies that the function relies on
+    }, [userEmail, documentId, onItemRemoved]);
 
     useEffect(() => {
         if (isItemRemoved) {
-            HandleRemoveCart(); // Remove the cart item when the state changes
-            setIsItemRemoved(false); // Reset state after removal
+            HandleRemoveCart();
+            setIsItemRemoved(false);
         }
-    }, [HandleRemoveCart, isItemRemoved]); // Now HandleRemoveCart is memoized
-
+    }, [HandleRemoveCart, isItemRemoved]);
 
     useEffect(() => {
-        if (session?.user?.email && selectedQuantity !== prevQuantity.current) {
+        if (selectedQuantity !== prevQuantity.current) {
             const updateCart = async () => {
                 try {
                     const response = await axios.put(`/api/cart`, {
-                        email: session.user.email,
+                        email: userEmail,
                         productId: documentId,
                         quantity: selectedQuantity,
-
                     });
 
-                    // Update the cart state after modifying the quantity
                     setCart(response.data.items || []);
                     prevQuantity.current = selectedQuantity;
                 } catch (error) {
@@ -81,15 +80,15 @@ const CartItem = ({ data, onTotalPrice }) => {
 
             updateCart();
         }
-    }, [selectedQuantity, session, documentId]);
+    }, [selectedQuantity, userEmail, documentId]);
+
+    const fetchUrl = `${API_URL}/api/products/${documentId}?populate=*`;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await fetch(fetchUrl, {
-                    headers: {
-                        Authorization: `Bearer ${Token}`,
-                    },
+                    headers: { Authorization: `Bearer ${Token}` },
                 });
 
                 if (!response.ok) {
@@ -106,25 +105,13 @@ const CartItem = ({ data, onTotalPrice }) => {
         fetchData();
     }, [fetchUrl, Token]);
 
-
-    const [totalPriceCheck, setTotalPriceCheck] = useState([]);
-
-    if (!productData) {
-        return <div>Loading...</div>;
-    }
+    if (!productData) return <div>Loading...</div>;
 
     const { name, price, subtitle, thumbnail } = productData.data;
-
-    const thumbnailUrl = `${thumbnail[0].url}`;
-    // const thumbnailUrl = `${url}${thumbnail[0].url}`;
-    const totalPrice = price * selectedQuantity;
-    const totalPrice2 = totalPrice
-
-    const Domain = process.env.NEXT_PULIC_DOMAIN
+    const thumbnailUrl = thumbnail[0]?.url || "";
 
     return (
         <div className="flex py-5 gap-3 my-5 md:gap-5 border-b p-3 bg-white shadow-lg rounded-lg hover:shadow-2xl transition-all ease-in-out">
-
             <div className="shrink-0 aspect-square w-[50px] md:w-[120px]">
                 <Link href={`/products/${documentId}`}>
                     {thumbnailUrl && (
@@ -154,7 +141,7 @@ const CartItem = ({ data, onTotalPrice }) => {
                                 MRP : ₹{price}
                             </div>
                             <div className="font-semibold text-lg text-gray-800">
-                                Total: ₹{totalPrice}
+                                Total: ₹{price * selectedQuantity}
                             </div>
                         </div>
                     </div>
@@ -167,8 +154,7 @@ const CartItem = ({ data, onTotalPrice }) => {
                 <div className="flex flex-col sm:flex-row justify-between items-center">
                     <div className="flex justify-between md:hidden items-center w-full">
                         <div className="flex items-center gap-1">
-                            <div className="font-semibold">Size:</div>
-                            55x32
+                            <div className="font-semibold">Size:</div> 55x32
                         </div>
 
                         <div className="flex items-center gap-1">
@@ -186,14 +172,13 @@ const CartItem = ({ data, onTotalPrice }) => {
                             </select>
                         </div>
                         <RiDeleteBin6Line
-                            onClick={() => setIsItemRemoved(true)} // Set state to trigger item removal
+                            onClick={() => setIsItemRemoved(true)}
                             className="md:hidden cursor-pointer text-red-500 text-[20px] transition-colors duration-300"
                         />
                     </div>
                     <div className="flex items-center max-md:hidden gap-2 sm:gap-10 text-gray-600 text-sm sm:text-md">
                         <div className="flex items-center gap-1">
-                            <div className="font-semibold">Size:</div>
-                            55x32
+                            <div className="font-semibold">Size:</div> 55x32
                         </div>
 
                         <div className="flex items-center gap-1">
@@ -210,17 +195,13 @@ const CartItem = ({ data, onTotalPrice }) => {
                                 ))}
                             </select>
                         </div>
-                        <RiDeleteBin6Line
-                            onClick={() => setIsItemRemoved(true)} // Set state to trigger item removal
-                            className="md:hidden cursor-pointer text-red-500 hover:text-red-700 text-[20px] transition-colors duration-300"
-                        />
                         <div className="font-semibold max-md:hidden text-lg text-gray-800">
-                            Total: ₹{totalPrice}
+                            Total: ₹{price * selectedQuantity}
                         </div>
                     </div>
 
                     <RiDeleteBin6Line
-                        onClick={() => setIsItemRemoved(true)} // Set state to trigger item removal
+                        onClick={() => setIsItemRemoved(true)}
                         className="max-md:hidden cursor-pointer text-red-500 hover:text-red-700 text-[20px] transition-colors duration-300"
                     />
                 </div>

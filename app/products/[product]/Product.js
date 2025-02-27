@@ -71,43 +71,51 @@ const ProductContent = ({ product }) => {
     }
   };
 
+  useEffect(() => {
+    if (!session) {
+      const storedCart = JSON.parse(localStorage.getItem("guestCart")) || [];
+      setCart(storedCart);
+    }
+  }, [session]);
+
   const handleAddToCart = (productId) => {
     if (!selectedSize || selectedColor === null) {
       setShowError(true);
       return;
     }
-    notify();
-    if (session) {
-      axios
-        .post("/api/cart", {
-          email: session.user.email,
-          productId,
-        })
-        .then((res) => {
-          console.log("Item added to cart:", res.data);
-          setCart(res.data.items || []);
-        })
-        .catch((error) => {
-          console.log("Error adding item to cart:", error);
-        });
-    } else {
-      signIn("google"); // Automatically sign in with Google
-    }
+
+    notify(); // Notification har case mein chalega
+
+    let guestId = localStorage.getItem("guestId");
+    const userEmail = session ? session.user.email : guestId; // Agar session ho to email, warna guestId
+
+    axios
+      .post("/api/cart", {
+        email: userEmail,
+        productId,
+      })
+      .then((res) => {
+        console.log("Item added to cart:", res.data);
+        setCart(res.data.items || []);
+      })
+      .catch((error) => {
+        console.log("Error adding item to cart:", error);
+      });
   };
 
+  console.log(cart);
+
   const notify = () => {
-    if (session) {
-      toast.success("Success. Check your cart!", {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-      });
-    }
+    toast.success("Success. Check your cart!", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   };
 
   const images = p ? p[`image${number}`] : "";

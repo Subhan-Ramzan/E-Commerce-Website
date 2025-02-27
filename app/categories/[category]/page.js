@@ -27,7 +27,7 @@ export async function generateStaticParams() {
     return []; // Return an empty array to avoid errors
   }
 
-  return category.data.map((c) => ({ category: c.slug }));
+  return category?.data?.map((c) => ({ category: c?.slug }));
 }
 
 // Generate metadata for categories
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
   if (!params?.category) return { title: "Category" };
   
   const category = await safeFetchData(
-    `/api/categories?filters[slug][$eq]=${params.category}`
+    `/api/categories?filters[slug][$eq]=${params?.category}`
   );
 
   return {
@@ -57,7 +57,7 @@ export default async function CategoryPage({ params }) {
   }
 
   const categoryData = await safeFetchData(
-    `/api/categories?filters[slug][$eq]=${params.category}`
+    `/api/categories?filters[slug][$eq]=${params?.category}`
   );
 
   // Fetch all products if no category is found
@@ -66,11 +66,11 @@ export default async function CategoryPage({ params }) {
   );
 
   if (!categoryData?.data?.length) {
-    console.warn(`Category \u0027${params.category}\u0027 not found.`);
+    console.warn(`Category \u0027${params?.category}\u0027 not found.`);
     return (
       <div className="w-full min-h-[80vh]">
         <div className="bg-red-100 text-red-600 p-4 text-center font-medium">
-          Category &apos;{params.category}&apos; not found. Showing all available products.
+          Category &apos;{params?.category}&apos; not found. Showing all available products.
         </div>
         <Category initialCategory={""} initialProducts={products} slug="" />
       </div>
