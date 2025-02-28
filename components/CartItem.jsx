@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import axios from "axios";
 import Link from "next/link";
 
-const CartItem = ({ data, onTotalPrice, onItemRemoved  }) => {
+const CartItem = ({ data, onTotalPrice, onItemRemoved }) => {
     const safeData = data || {};
     const { documentId, quantity } = safeData;
     const [productData, setProductData] = useState(null);
@@ -24,13 +24,15 @@ const CartItem = ({ data, onTotalPrice, onItemRemoved  }) => {
     };
 
     const fetchGuestId = () => {
-        let guestId = localStorage.getItem("guestId");
-        if (!guestId) {
-            guestId = `guest_${new Date().getTime()}`; // Unique guest ID
-            localStorage.setItem("guestId", guestId);
-        }
-        return guestId;
-    };
+        if (typeof window !== "undefined") {
+            let guestId = localStorage.getItem("guestId");
+            if (!guestId) {
+                guestId = `guest_${new Date().getTime()}`; // Unique guest ID
+                localStorage.setItem("guestId", guestId);
+            }
+            return guestId;
+        };
+    }
 
     const userEmail = session?.user?.email || fetchGuestId(); // Use session email or guest ID
 

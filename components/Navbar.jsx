@@ -35,7 +35,7 @@ const Navbar = ({ isOpen, onToggle }) => {
       }
       setGuestId(storedGuestId);
     }
-  }, [guestId]);
+  }, []);
 
   if (guestId !== null) {
     console.log(guestId)
