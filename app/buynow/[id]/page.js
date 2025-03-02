@@ -78,6 +78,15 @@ export default function Page() {
     phoneNumber: "",
   });
 
+  const fetchGuestId = () => {
+    if (typeof window !== "undefined") {
+      let guestId = localStorage.getItem("guestId");
+      return guestId;
+    }
+  };
+
+  const UserEmail = session?.user?.email || fetchGuestId(); // Use session email or guest ID
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -98,7 +107,7 @@ export default function Page() {
       selectedColor: parseInt(selectedColor, 10), // Ensure selectedColor is an integer
       Complete: false, // Default to false
       Option: "Processing", // Default status
-      userEmail: session?.user?.email || "guest", // Include userEmail
+      userEmail: UserEmail, // Include userEmail
     };
 
     try {

@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import Link from "next/link";

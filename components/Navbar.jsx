@@ -250,7 +250,7 @@ const Navbar = ({ isOpen, onToggle }) => {
                 )}
               </Link>
             ) : (
-              <Link href="/login">
+              <Link href="/profile">
                 <FaRegCircleUser className="text-2xl md:text-3xl cursor-pointer" />
               </Link>
             )}

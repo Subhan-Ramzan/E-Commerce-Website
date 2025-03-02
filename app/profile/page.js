@@ -1,6 +1,5 @@
 "use client";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import OrdersPage from "@/components/Order/OrdersPage";
@@ -9,7 +8,24 @@ import { motion } from "framer-motion";
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
+  const [userEmail, setUserEmail] = useState(null);
 
+  useEffect(() => {
+    console.log("Session status:", status); // Debugging
+    if (status === "authenticated") {
+      console.log("User is authenticated. Email:", session.user.email); // Debugging
+      setUserEmail(session.user.email);
+    } else if (status === "unauthenticated") {
+      console.log(
+        "User is unauthenticated. Checking localStorage for guestId..."
+      ); // Debugging
+      if (typeof window !== "undefined") {
+        const guestId = localStorage.getItem("guestId");
+        console.log("Guest ID from localStorage:", guestId); // Debugging
+        setUserEmail(guestId);
+      }
+    }
+  }, [status, session?.user?.email]); // Removed session from dependencies
 
   if (status === "loading") {
     return (
@@ -33,7 +49,7 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto p-6">
       <div className="flex items-center gap-4">
         <Image
-          src={session?.user?.image || "/default-avatar.png"}
+          src={session?.user?.image || "/Default-User.png"}
           alt="Profile Picture"
           width={80}
           height={80}
@@ -44,7 +60,7 @@ export default function ProfilePage() {
           <p className="text-gray-600">{session?.user?.email}</p>
         </div>
       </div>
-      <OrdersPage />
+      <OrdersPage userEmail={userEmail} />
     </div>
   );
 }

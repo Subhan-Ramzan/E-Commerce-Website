@@ -46,7 +46,7 @@ const HeroSection = ({ CoverImages }) => {
         )}
       >
         {CoverImages?.map((CoverImage, index) => (
-          <div key={index} className="relative w-[90vw] h-[32vh] sm:h-[40vh] lg:h-[55vh] mx-auto">
+          <div key={index} className="relative w-[90vw] h-[32vh] sm:h-[40vh] lg:h-[60vh] mx-auto">
             {/* Thumbnail Image */}
             {!imageLoaded[index] && (
               <Image

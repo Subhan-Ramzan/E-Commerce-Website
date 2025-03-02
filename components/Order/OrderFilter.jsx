@@ -1,4 +1,3 @@
-// components/OrderFilter.jsx
 import React from 'react';
 
 const OrderFilter = () => {
@@ -11,7 +10,7 @@ const OrderFilter = () => {
           <label htmlFor="order-type" className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white">Select order type</label>
           <select
             id="order-type"
-            defaultValue="All orders" // Use defaultValue instead of selected
+            defaultValue="All orders"
             className="block w-full min-w-[8rem] rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
           >
             <option value="All orders">All orders</option>
@@ -28,7 +27,7 @@ const OrderFilter = () => {
           <label htmlFor="duration" className="sr-only mb-2 block text-sm font-medium text-gray-900 dark:text-white">Select duration</label>
           <select
             id="duration"
-            defaultValue="this week" // Use defaultValue instead of selected
+            defaultValue="this week"
             className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
           >
             <option value="this week">this week</option>
