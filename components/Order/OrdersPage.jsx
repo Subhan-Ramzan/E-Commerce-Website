@@ -4,9 +4,9 @@ import OrderFilter from './OrderFilter';
 import Pagination from './Pagination';
 import OrderList from './OrderList';
 import { Loader2 } from 'lucide-react';
+import { API_URL } from '@/utils/urls';
 
-// Define your Strapi API token (you can also import it from a config file)
-const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN; // Ensure this is set in your environment variables
+const STRAPI_API_TOKEN = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN; 
 
 const OrdersPage = ({ userEmail }) => {
   const [orders, setOrders] = useState([]);
@@ -18,7 +18,7 @@ const OrdersPage = ({ userEmail }) => {
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          `http://127.0.0.1:1337/api/orders?userEmail=${userEmail}`,
+          `${API_URL}/api/orders?userEmail=${userEmail}`,
           {
             method: "GET",
             headers: {
