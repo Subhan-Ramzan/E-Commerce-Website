@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { API_URL } from '@/utils/urls';
+import { API_URL, STRAPI_API_TOKEN } from '@/utils/urls';
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -14,8 +14,10 @@ export default function OrderDetailPage() {
     const fetchOrder = async () => {
       try {
         const res = await fetch(`${API_URL}/api/orders/${id}?populate=*`, {
+          method: "GET",
           headers: {
-            Authorization: `Bearer YOUR_STRAPI_API_TOKEN`,
+            Authorization: `Bearer ${STRAPI_API_TOKEN}`, // Add Bearer token here
+            "Content-Type": "application/json",
           },
         });
 
@@ -37,8 +39,8 @@ export default function OrderDetailPage() {
   if (error) return <div className="text-center py-20 text-red-500">{error}</div>;
   if (!order) return <div className="text-center py-20">Order not found.</div>;
 
-  const thumbnailUrl = order.thumbnail?.data?.attributes?.url
-    ? `${API_URL}${order.thumbnail.data.attributes.url}`
+  const thumbnailUrl = order?.thumbnail?.data?.url
+    ? `${API_URL}${order?.thumbnail.data.attributes.url}`
     : '/placeholder.jpg';
 
   return (
@@ -62,7 +64,7 @@ export default function OrderDetailPage() {
         <div className="p-8 space-y-8">
           <div className="text-center">
             <span className="inline-block bg-purple-100 text-purple-800 text-sm px-4 py-1 rounded-full">
-              Status: {order.Option}
+              Status: {order?.Option}
             </span>
           </div>
 
@@ -72,12 +74,12 @@ export default function OrderDetailPage() {
               Customer Information
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-600">
-              <p><strong>Name:</strong> {order.FirstName} {order.LastName}</p>
-              <p><strong>Email:</strong> {order.userEmail}</p>
-              <p><strong>Phone:</strong> {order.PhoneNumber}</p>
-              <p><strong>City:</strong> {order.City}</p>
-              <p><strong>Address:</strong> {order.Address}</p>
-              <p><strong>Postal Code:</strong> {order.PostalCode || 'N/A'}</p>
+              <p><strong>Name:</strong> {order?.FirstName} {order?.LastName}</p>
+              <p><strong>Email:</strong> {order?.userEmail}</p>
+              <p><strong>Phone:</strong> {order?.PhoneNumber}</p>
+              <p><strong>City:</strong> {order?.City}</p>
+              <p><strong>Address:</strong> {order?.Address}</p>
+              <p><strong>Postal Code:</strong> {order?.PostalCode || 'N/A'}</p>
             </div>
           </section>
 
@@ -87,9 +89,9 @@ export default function OrderDetailPage() {
               Order Details
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-gray-600">
-              <p><strong>Stripe ID:</strong> {order.stripeId}</p>
-              <p><strong>Selected Color:</strong> {order.selectedColor}</p>
-              <p><strong>Complete:</strong> {order.Complete ? '✅ Yes' : '❌ No'}</p>
+              <p><strong>Stripe ID:</strong> {order?.stripeId}</p>
+              <p><strong>Selected Color:</strong> {order?.selectedColor}</p>
+              <p><strong>Complete:</strong> {order?.Complete ? '✅ Yes' : '❌ No'}</p>
             </div>
           </section>
 
